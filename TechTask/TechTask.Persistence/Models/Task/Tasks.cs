@@ -20,7 +20,7 @@ namespace TechTask.Persistence.Models.Task
         public WorkBalance Balance { get; set; }
         public int? TeamId { get; set; }     
         public Guid? TrackerId { get; set; }
-        public Guid? AssigneeId { get; set; }    
+        public Guid? UserId { get; set; }       
     }
 }
         

@@ -1,10 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.EntityFrameworkCore;
+using TechTask.Persistence.Context;
 
 namespace TechTask.Persistence.Helper
 {
-    class DbSeeder
-    {
+    public class DbSeeder
+    { 
+        public static void Seed(AppDbContext context)
+        {
+            context.Database.Migrate(); 
+        }
     }
 }
