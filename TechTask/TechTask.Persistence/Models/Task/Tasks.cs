@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using TechTask.Persistence.Common;
 using TechTask.Persistence.Models.Task.Enums;
 using TechTask.Persistence.Models.Users;
 
 namespace TechTask.Persistence.Models.Task
 {
-    public class Tasks
+    public class Tasks : IBaseClass
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -17,9 +18,9 @@ namespace TechTask.Persistence.Models.Task
         public TaskPriority Priority { get; set; }
         public TaskStatus Status { get; set; }
         public WorkBalance Balance { get; set; }
-        public int TeamId { get; set; }     
-        public Guid TrackerId { get; set; }
-        public Guid AssigneeId { get; set; }    
+        public int? TeamId { get; set; }     
+        public Guid? TrackerId { get; set; }
+        public Guid? AssigneeId { get; set; }    
     }
 }
         

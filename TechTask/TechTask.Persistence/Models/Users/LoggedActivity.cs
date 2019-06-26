@@ -1,8 +1,9 @@
 ﻿using System;
+using TechTask.Persistence.Common;
 
 namespace TechTask.Persistence.Models.Users
 {
-    public class LoggedActivity
+    public class LoggedActivity : IBaseClass
     {
         public int Id { get; set; }
         public string Description { get; set; }
