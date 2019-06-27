@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using TechTask.Application.Users;
 using TechTask.Infrastructure.Services;
 using TechTask.Persistence.Context;
@@ -62,6 +64,7 @@ namespace TechTask.API.Controllers
         }
 
         [HttpGet("{id}", Name = "SingleUser")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetUser(Guid id)
         {
             var user = _context.Users.SingleOrDefault(u => u.Id == id);
