@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TechTask.Infrastructure.Services;
 using TechTask.Persistence.Context;
 
 namespace TechTask.API.Controllers
