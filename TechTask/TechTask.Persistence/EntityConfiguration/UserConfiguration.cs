@@ -15,7 +15,6 @@ namespace TechTask.Persistence.EntityConfiguration
             builder.Property(b => b.LastName).IsRequired().HasMaxLength(50);
             builder.Property(b => b.DateOfBirth).IsRequired();
             builder.Property(b => b.Role).IsRequired();
-            builder.Property(b => b.TeamId).IsRequired();
         }
     }
 }
