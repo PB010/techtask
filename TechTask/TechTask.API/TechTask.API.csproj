@@ -9,16 +9,13 @@
     <PackageReference Include="FluentValidation.Aspnetcore" Version="8.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TechTask.Application\TechTask.Application.csproj" />
     <ProjectReference Include="..\TechTask.Infrastructure\TechTask.Infrastructure.csproj" />
     <ProjectReference Include="..\TechTask.Persistence\TechTask.Persistence.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>
