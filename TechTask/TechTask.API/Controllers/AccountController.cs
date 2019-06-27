@@ -1,48 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using TechTask.Application.Users;
-using TechTask.Infrastructure.Services;
-using TechTask.Persistence.Context;
-using TechTask.Persistence.Models.Users;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using TechTask.Application.Interfaces;
+using TechTask.Application.Users.Commands;
+using TechTask.Application.Users.Models;
 
 namespace TechTask.API.Controllers
 {
     [Route("/api/account/")]
     [ApiController]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
-        private readonly AppDbContext _context;
-        private readonly ITokenAuthenticationService _service;
-
-        public AccountController(AppDbContext context, ITokenAuthenticationService service)
-        {
-            _context = context;
-            _service = service;
-        }
+    
 
         [HttpPost("registration/")]
-        public IActionResult Registration([FromBody] UserForCreationDto user)
+        public async Task<UserForLoginDto> Registration([FromBody] RegisterUserCommand user)
         {
-            var userForDb = new User
-            {
-                Id = new Guid(),
-                Email = user.Email,
-                Password = user.Password,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                DateOfBirth = user.DateOfBirth,
-                Role = user.Role
-            };
-
-            _context.Users.Add(userForDb);
-            _context.SaveChanges();
-
-            return CreatedAtRoute("SingleUser",
-                new {id = userForDb.Id},
-                userForDb);
+            return await _mediator.Send(user);
         }
 
         [HttpPost("login/")]
@@ -74,5 +52,8 @@ namespace TechTask.API.Controllers
 
             return Ok(user);
         }
+
+        public AccountController(IMediator mediator, ITokenAuthenticationService service) : base(mediator, service)
+        {}
     }
 }

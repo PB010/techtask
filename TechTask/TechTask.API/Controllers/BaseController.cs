@@ -1,16 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TechTask.Infrastructure.Services;
-using TechTask.Persistence.Context;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using TechTask.Application.Interfaces;
 
 namespace TechTask.API.Controllers
 {
     public class BaseController : Controller
     {
-        internal readonly AppDbContext _context;
+        private readonly IMediator _mediator;
+        internal readonly ITokenAuthenticationService _service;
 
-        public BaseController(AppDbContext context)
+        public BaseController(IMediator mediator, ITokenAuthenticationService service)
         {
-            _context = context;
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _service = service ?? throw new ArgumentNullException(nameof(service));
         }
     }
 }

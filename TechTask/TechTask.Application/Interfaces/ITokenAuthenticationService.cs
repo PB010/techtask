@@ -1,6 +1,7 @@
 ﻿using TechTask.Application.Users;
+using TechTask.Application.Users.Models;
 
-namespace TechTask.Infrastructure.Services
+namespace TechTask.Application.Interfaces
 {
     public interface ITokenAuthenticationService
     {
