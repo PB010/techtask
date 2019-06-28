@@ -1,11 +1,13 @@
 ﻿using FluentValidation;
 using MediatR;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
 using TechTask.Application.Users.Models;
+using TechTask.Persistence.Context;
 using TechTask.Persistence.Models.Users;
 using TechTask.Persistence.Models.Users.Enums;
 
@@ -68,13 +70,15 @@ namespace TechTask.Application.Users.Commands
 
     public class RegisterCommandValidation : AbstractValidator<RegisterUserCommand>
     {
-        public RegisterCommandValidation()
+        public RegisterCommandValidation(AppDbContext context)
         {
-            RuleFor(x => x.Email).NotEmpty().EmailAddress();
+            RuleFor(x => x.Email).Must(m => !context.Users.Any(e => e.Email == m))
+                .WithMessage("This email is already registered.")
+                .NotEmpty().EmailAddress();
             RuleFor(x => x.Password).NotEmpty();
             RuleFor(x => x.FirstName).MaximumLength(50).NotEmpty();
             RuleFor(x => x.LastName).MaximumLength(50).NotEmpty();
-            RuleFor(x => x.DateOfBirth).NotEmpty();
+            RuleFor(x => x.DateOfBirth).NotEmpty(); 
         }
     }
 }

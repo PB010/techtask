@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 using TechTask.Application.Users.Commands;
 using TechTask.Application.Users.Models;
+using TechTask.Application.Users.Queries;
 
 namespace TechTask.API.Controllers
 {
@@ -30,17 +32,11 @@ namespace TechTask.API.Controllers
             return await _mediator.Send(command);
         }
 
-        //[HttpGet("{id}", Name = "SingleUser")]
-        //public IActionResult GetUser(Guid id)
-        //{
-        //    var user = _user.GetSingleUserAsync(id);
-        //
-        //    if (user == null)
-        //        return NotFound();
-        //
-        //    return Ok(user);
-        //}
-
+        [HttpGet("{id}")]
+        public async Task<UserDetailsDto> UserDetails([FromRoute] Guid id)
+        {
+            return await _mediator.Send(new GetUserDataQuery{Id = id});
+        }
         
     }
 }

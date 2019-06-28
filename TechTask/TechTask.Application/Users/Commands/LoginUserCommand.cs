@@ -57,8 +57,8 @@ namespace TechTask.Application.Users.Commands
     {
         public LoginUserValidator(IUserService service)
         {
-            RuleFor(x => new LoginUserCommand {Email = x.Email, Password = x.Password})
-                .Must(service.UserExistsCheck).WithErrorCode("404")
+            RuleFor(x => new {x.Email, x.Password})
+                .Must(m => service.UserExists(m.Email, m.Password)).WithErrorCode("404")
                 .WithMessage("Invalid email or password, please try again.");
         }
     }
