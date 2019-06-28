@@ -59,6 +59,7 @@ namespace TechTask.API
             });
 
             services.AddScoped<ITokenAuthenticationService, TokenAuthenticationService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddMediatR(typeof(RegisterUserCommand));
             services.AddMvc()

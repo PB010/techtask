@@ -7,8 +7,6 @@ namespace TechTask.Persistence.Models.Users
 {
     public class User
     {
-        //add createdat/updatedat for every entity as shadow
-        //property when calling savechanges
         public Guid Id { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }

@@ -5,7 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using TechTask.Application.Interfaces;
-using TechTask.Application.Users;
+using TechTask.Application.Users.Commands;
 using TechTask.Infrastructure.Authentication;
 
 namespace TechTask.Infrastructure.Services
@@ -16,15 +16,11 @@ namespace TechTask.Infrastructure.Services
 
         public TokenAuthenticationService(IOptions<TokenManagement> tokenManagement)
         {
-            _tokenManagement = tokenManagement.Value;
+            _tokenManagement = tokenManagement.Value ?? throw new ArgumentNullException(nameof(tokenManagement));
         }
 
-       public bool IsAuthenticated(UserForLoginDto user, out string token)
+       public string GenerateToken(LoginUserCommand user)
        {
-           token = string.Empty;
-           
-           // if user isnt valid return false
-           
            var claim = new[]
            {
                new Claim(ClaimTypes.Email, user.Email)
@@ -39,10 +35,8 @@ namespace TechTask.Infrastructure.Services
                claim,
                expires: DateTime.Now.AddMinutes(_tokenManagement.AccessExpiration),
                signingCredentials: credentials);
-           
-           token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
-           
-           return true;
+
+           return new JwtSecurityTokenHandler().WriteToken(jwtToken); 
        }
     }
 }

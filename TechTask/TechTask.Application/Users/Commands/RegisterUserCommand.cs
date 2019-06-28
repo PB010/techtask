@@ -18,7 +18,6 @@ namespace TechTask.Application.Users.Commands
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
-        public Roles Role { get; set; }
         public int? TeamId { get; set; }
 
         public static Expression<Func<RegisterUserCommand, User>> Projection
@@ -33,7 +32,7 @@ namespace TechTask.Application.Users.Commands
                     FirstName = p.FirstName,
                     LastName = p.LastName,
                     DateOfBirth = p.DateOfBirth,
-                    Role = p.Role
+                    Role = Roles.User
                 };
             }
         }
@@ -76,7 +75,6 @@ namespace TechTask.Application.Users.Commands
             RuleFor(x => x.FirstName).MaximumLength(50).NotEmpty();
             RuleFor(x => x.LastName).MaximumLength(50).NotEmpty();
             RuleFor(x => x.DateOfBirth).NotEmpty();
-            RuleFor(x => x.Role).NotEmpty();
         }
     }
 }
