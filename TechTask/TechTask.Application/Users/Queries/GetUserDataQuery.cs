@@ -1,6 +1,9 @@
 ﻿using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using System;
+using System.Security.Authentication;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
@@ -16,29 +19,40 @@ namespace TechTask.Application.Users.Queries
     public class GetUserDataHandler : IRequestHandler<GetUserDataQuery, UserDetailsDto>
     {
         private readonly IUserService _userService;
-    
-        public GetUserDataHandler(IUserService userService)
+        private readonly ITokenAuthenticationService _authService;
+        private readonly IHttpContextAccessor _accessor;
+
+        public GetUserDataHandler(IUserService userService, ITokenAuthenticationService authService
+        , IHttpContextAccessor accessor)
         {
-            _userService = userService;
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+            _authService = authService ?? throw new ArgumentNullException(nameof(authService));
+            _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
         }
 
         public async Task<UserDetailsDto> Handle(GetUserDataQuery request, CancellationToken cancellationToken)
         {
-            //var currentUser = jwt
             var userFromDb = await _userService.GetSingleUserAsync(request.Id);
             var userDetails = UserDetailsDto.ConvertToUserDetails(userFromDb);
 
-            return userDetails;
+
+            if (_accessor.HttpContext.User.IsInRole("Admin") ||
+                _accessor.HttpContext.User.HasClaim(c => c.Type == ClaimTypes.Email &&
+                                                         c.Value == userFromDb.Email))
+                return userDetails;
+
+            throw new AuthenticationException("Unauthorized access.");
         }
     }
     
     public class GetUserDataValidator : AbstractValidator<GetUserDataQuery>
     {
-        public GetUserDataValidator(IUserService service)
+        public GetUserDataValidator(IUserService service, IHttpContextAccessor context)
         {
             RuleFor(x => x.Id)
                 .Must(m => !service.UserExists(m))
-                .WithErrorCode("404").WithMessage("This user doesn't exist.");
+                .WithMessage("This user doesn't exist.")
+                .WithErrorCode("404");
         }
     }
 }

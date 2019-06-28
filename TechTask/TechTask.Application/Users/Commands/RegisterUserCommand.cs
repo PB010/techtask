@@ -75,7 +75,7 @@ namespace TechTask.Application.Users.Commands
             RuleFor(x => x.Email).Must(m => !context.Users.Any(e => e.Email == m))
                 .WithMessage("This email is already registered.")
                 .NotEmpty().EmailAddress();
-            RuleFor(x => x.Password).NotEmpty();
+            RuleFor(x => x.Password).MinimumLength(6).MaximumLength(100).NotEmpty();
             RuleFor(x => x.FirstName).MaximumLength(50).NotEmpty();
             RuleFor(x => x.LastName).MaximumLength(50).NotEmpty();
             RuleFor(x => x.DateOfBirth).NotEmpty(); 

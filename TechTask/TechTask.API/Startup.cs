@@ -61,6 +61,7 @@ namespace TechTask.API
             services.AddScoped<ITokenAuthenticationService, TokenAuthenticationService>();
             services.AddScoped<IUserService, UserService>();
 
+            services.AddHttpContextAccessor();
             services.AddMediatR(typeof(RegisterUserCommand));
             services.AddMvc()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RegisterCommandValidation>());

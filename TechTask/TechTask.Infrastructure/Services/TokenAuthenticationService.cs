@@ -18,20 +18,22 @@ namespace TechTask.Infrastructure.Services
         private readonly AppDbContext _context;
         private readonly TokenManagement _tokenManagement;
 
+    
+
         public TokenAuthenticationService(IOptions<TokenManagement> tokenManagement, AppDbContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _tokenManagement = tokenManagement.Value ?? throw new ArgumentNullException(nameof(tokenManagement));
         }
 
-       public string GenerateToken(LoginUserCommand user)
-       {
-           var claim = new Claim[2];
-           var userRole = _context.Users.Single(u => u.Email == user.Email &&
-                                                              u.Password == user.Password);
+        public string GenerateToken(LoginUserCommand user)
+        {
+            var claim = new Claim[3];
+            var userRole = _context.Users.Single(u => u.Email == user.Email &&
+                                                      u.Password == user.Password);
 
-           switch (userRole.Role)
-           {
+            switch (userRole.Role)
+            {
                 case Roles.Admin:
                     claim[0] = new Claim(ClaimTypes.Email, user.Email);
                     claim[1] = new Claim(ClaimTypes.Role, "Admin");
@@ -42,20 +44,20 @@ namespace TechTask.Infrastructure.Services
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
-           }
+            }
 
 
-           var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenManagement.Secret));
-           var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-           
-           var jwtToken = new JwtSecurityToken(
-               _tokenManagement.Issuer,
-               _tokenManagement.Audience,
-               claim,
-               expires: DateTime.Now.AddMinutes(_tokenManagement.AccessExpiration),
-               signingCredentials: credentials);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenManagement.Secret));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-           return new JwtSecurityTokenHandler().WriteToken(jwtToken); 
-       }
+            var jwtToken = new JwtSecurityToken(
+                _tokenManagement.Issuer,
+                _tokenManagement.Audience,
+                claim,
+                expires: DateTime.Now.AddMinutes(_tokenManagement.AccessExpiration),
+                signingCredentials: credentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(jwtToken);
+        }
     }
 }

@@ -33,6 +33,7 @@ namespace TechTask.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<UserDetailsDto> UserDetails([FromRoute] Guid id)
         {
             return await _mediator.Send(new GetUserDataQuery{Id = id});
