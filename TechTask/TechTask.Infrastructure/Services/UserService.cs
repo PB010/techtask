@@ -25,6 +25,13 @@ namespace TechTask.Infrastructure.Services
                 .SingleOrDefaultAsync(u => u.Id == id);
 
             return user;
+        }   
+
+        public async void RemoveUserFromTeamAsync(Guid id)
+        {
+            var userToRemove = await _context.Users.SingleOrDefaultAsync(u => u.Id == id);
+
+            userToRemove.TeamId = null;
         }
 
         public bool UserExists(string email, string password)

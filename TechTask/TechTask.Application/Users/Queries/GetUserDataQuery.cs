@@ -50,7 +50,7 @@ namespace TechTask.Application.Users.Queries
         public GetUserDataValidator(IUserService service, IHttpContextAccessor context)
         {
             RuleFor(x => x.Id)
-                .Must(m => !service.UserExists(m))
+                .Must(service.UserExists)
                 .WithMessage("This user doesn't exist.")
                 .WithErrorCode("404");
         }

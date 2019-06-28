@@ -33,10 +33,15 @@ namespace TechTask.API.Controllers
         }
 
         [HttpGet("{id}")]
-        [AllowAnonymous]
         public async Task<UserDetailsDto> UserDetails([FromRoute] Guid id)
         {
             return await _mediator.Send(new GetUserDataQuery{Id = id});
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<Unit> RemoveUserFromTeam([FromRoute] Guid id)
+        {
+            return await _mediator.Send(new RemoveUserFromTeamCommand {Id = id});
         }
         
     }
