@@ -10,7 +10,7 @@ using TechTask.Application.Users.Queries;
 
 namespace TechTask.API.Controllers
 {
-    [Route("/api/account/")]
+    [Route("/api/users/")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class AccountController : BaseController

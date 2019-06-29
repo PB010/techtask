@@ -31,7 +31,9 @@ namespace TechTask.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                //.ConfigureApiBehaviorOptions(options => { options.SuppressModelStateInvalidFilter = true; })
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RegisterCommandValidation>());
 
             services.AddDbContext<AppDbContext>(o => o.UseSqlServer(Configuration["ConnectionString"],
                 b => b.MigrationsAssembly(typeof(AppDbContext).GetTypeInfo().Assembly
@@ -63,9 +65,6 @@ namespace TechTask.API
 
             services.AddHttpContextAccessor();
             services.AddMediatR(typeof(RegisterUserCommand));
-            services.AddMvc()
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RegisterCommandValidation>());
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -20,7 +20,6 @@ namespace TechTask.Application.Users.Commands
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
-        public int? TeamId { get; set; }
 
         public static Expression<Func<RegisterUserCommand, User>> Projection
         {
