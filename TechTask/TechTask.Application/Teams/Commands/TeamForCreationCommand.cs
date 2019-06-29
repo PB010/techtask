@@ -1,12 +1,14 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
 using TechTask.Application.Teams.Models;
+using TechTask.Persistence.Models.Task;
 using TechTask.Persistence.Models.Users;
 
 namespace TechTask.Application.Teams.Commands
@@ -23,8 +25,6 @@ namespace TechTask.Application.Teams.Commands
                 {
                     Name = p.Name,
                     HoursOfWorkOnAllTasks = 0,
-                    //Tasks = new List<Tasks>(),
-                    //Users = new List<User>()
                 };
             }
         }
@@ -57,6 +57,8 @@ namespace TechTask.Application.Teams.Commands
             await _teamService.SaveChangesAsync();
 
             var teamToReturn = TeamDetailsDto.ConvertToDetailsDto(teamToAdd);
+            teamToReturn.Tasks = new List<Tasks>();
+            teamToReturn.Users = new List<User>();
 
             return teamToReturn;
         }
