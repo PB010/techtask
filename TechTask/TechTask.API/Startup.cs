@@ -62,6 +62,7 @@ namespace TechTask.API
 
             services.AddScoped<ITokenAuthenticationService, TokenAuthenticationService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ITeamService, TeamService>();
 
             services.AddHttpContextAccessor();
             services.AddMediatR(typeof(RegisterUserCommand));

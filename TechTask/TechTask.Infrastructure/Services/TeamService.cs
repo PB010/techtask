@@ -1,17 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading.Tasks;
+using TechTask.Application.Interfaces;
 using TechTask.Persistence.Context;
 using TechTask.Persistence.Models.Users;
 
 namespace TechTask.Infrastructure.Services
 {
-    public class TeamService
+    public class TeamService : ITeamService
     {
         private readonly AppDbContext _context;
 
         public TeamService(AppDbContext context)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public async Task<Team> GetTeamAsync(int id, bool includeChild)
