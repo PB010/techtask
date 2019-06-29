@@ -13,9 +13,9 @@ namespace TechTask.API.Controllers
     [Route("/api/users/")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
-    public class AccountController : BaseController
+    public class UsersController : BaseController   
     {
-        public AccountController(IMediator mediator) : base(mediator)
+        public UsersController(IMediator mediator) : base(mediator)
         {}
 
         [HttpPost("registration/")]

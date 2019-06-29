@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190629172240_ChangedHoursOfWorkOnAllTasksColumnToInt.cs" />
+    <Compile Remove="Migrations\20190629172240_ChangedHoursOfWorkOnAllTasksColumnToInt.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.4" />
   </ItemGroup>
 
