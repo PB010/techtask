@@ -49,9 +49,9 @@ namespace TechTask.Application.Users.Commands
     {
         private readonly IUserService _service;
 
-        public RegisterCommandHandler(IUserService service)
+        public RegisterCommandHandler(IUserService userService)
         {
-            _service = service ?? throw new ArgumentNullException(nameof(service));
+            _service = userService ?? throw new ArgumentNullException(nameof(userService));
         }
 
         public async Task<UserForLoginDto> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
