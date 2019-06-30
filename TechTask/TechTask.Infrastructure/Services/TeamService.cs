@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
 using TechTask.Persistence.Context;
@@ -24,6 +25,18 @@ namespace TechTask.Infrastructure.Services
                     .SingleOrDefaultAsync(t => t.Id == id);
 
             return await _context.Teams.SingleOrDefaultAsync(t => t.Id == id);
+        }
+
+        public async Task<IEnumerable<Team>> GetAllTeamsAsync(bool includeChild)
+        {
+            if (includeChild)
+                return await _context.Teams.Include(t => t.Tasks)
+                    .Include(t => t.Users)
+                    .ToListAsync();
+
+            return await _context.Teams.Include(t => t.Tasks)
+                .Include(t => t.Users)
+                .ToListAsync();
         }
 
         public void AddTeam(Team team)
