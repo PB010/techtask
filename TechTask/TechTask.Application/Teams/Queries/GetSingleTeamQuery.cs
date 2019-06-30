@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
@@ -38,14 +37,6 @@ namespace TechTask.Application.Teams.Queries
                 throw new AuthenticationException();
 
             return TeamDetailsDto.ConvertToTeamDetailsDto(teamFromDb);
-        }
-    }
-
-    public class GetSingleTeamValidator : AbstractValidator<GetSingleTeamQuery>
-    {
-        public GetSingleTeamValidator() 
-        {
-            
         }
     }
 }
