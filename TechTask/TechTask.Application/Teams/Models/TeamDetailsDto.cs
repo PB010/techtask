@@ -6,7 +6,7 @@ using TechTask.Persistence.Models.Users;
 
 namespace TechTask.Application.Teams.Models
 {
-    public class TeamDetailsDto
+    public class TeamDetailsFullDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -14,11 +14,11 @@ namespace TechTask.Application.Teams.Models
         public List<Tasks> Tasks { get; set; }
         public List<User> Users { get; set; }
 
-        public static Expression<Func<Team, TeamDetailsDto>> Projection
+        public static Expression<Func<Team, TeamDetailsFullDto>> ProjectionFull
         {
             get
             {
-                return p => new TeamDetailsDto
+                return p => new TeamDetailsFullDto
                 {
                     Id = p.Id,
                     Name = p.Name,
@@ -29,9 +29,9 @@ namespace TechTask.Application.Teams.Models
             }
         }
 
-        public static TeamDetailsDto ConvertToDetailsDto(Team team)
+        public static TeamDetailsFullDto ConvertToTeamDtoFull(Team team)
         {
-            return Projection.Compile().Invoke(team);
+            return ProjectionFull.Compile().Invoke(team);
         }
     }
 }

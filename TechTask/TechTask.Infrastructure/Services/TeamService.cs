@@ -34,9 +34,7 @@ namespace TechTask.Infrastructure.Services
                     .Include(t => t.Users)
                     .ToListAsync();
 
-            return await _context.Teams.Include(t => t.Tasks)
-                .Include(t => t.Users)
-                .ToListAsync();
+            return await _context.Teams.ToListAsync();
         }
 
         public void AddTeam(Team team)

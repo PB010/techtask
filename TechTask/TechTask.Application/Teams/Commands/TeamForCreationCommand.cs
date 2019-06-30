@@ -56,7 +56,7 @@ namespace TechTask.Application.Teams.Commands
             _teamService.AddTeam(teamToAdd);
             await _teamService.SaveChangesAsync();
 
-            var teamToReturn = TeamDetailsDto.ConvertToDetailsDto(teamToAdd);
+            var teamToReturn = TeamDetailsDto.ConvertToTeamDetailsDto(teamToAdd);
             teamToReturn.Tasks = new List<Tasks>();
             teamToReturn.Users = new List<User>();
 
