@@ -7,6 +7,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20190629172240_ChangedHoursOfWorkOnAllTasksColumnToInt.cs" />
     <Compile Remove="Migrations\20190629172240_ChangedHoursOfWorkOnAllTasksColumnToInt.Designer.cs" />
+    <Compile Remove="Migrations\20190701175844_ChangedShadowPropertiesData.cs" />
+    <Compile Remove="Migrations\20190701175844_ChangedShadowPropertiesData.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

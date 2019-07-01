@@ -29,8 +29,8 @@ namespace TechTask.Persistence.EntityConfiguration
                     Password = "Will123",
                     Role = Roles.Admin,
                     TeamId = 1,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now
+                    CreatedAt = DateTime.Parse("01/07/2019 16:22"),
+                    UpdatedAt = DateTime.Parse("01/07/2019 16:22")
                 },
                 new 
                 {
@@ -41,8 +41,8 @@ namespace TechTask.Persistence.EntityConfiguration
                     Email = "john.s@tech.com",
                     Password = "John123",
                     Role = Roles.User,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now
+                    CreatedAt = DateTime.Parse("01/07/2019 16:22"),
+                    UpdatedAt = DateTime.Parse("01/07/2019 16:22")
                 },
                 new 
                 {
@@ -54,8 +54,8 @@ namespace TechTask.Persistence.EntityConfiguration
                     Password = "Jane123",
                     Role = Roles.Admin,
                     TeamId = 2,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now
+                    CreatedAt = DateTime.Parse("01/07/2019 16:22"),
+                    UpdatedAt = DateTime.Parse("01/07/2019 16:22")
                 },
                 new 
                 {
@@ -66,8 +66,8 @@ namespace TechTask.Persistence.EntityConfiguration
                     Email = "anthony.r@tech.com",
                     Password = "Anthony123",
                     Role = Roles.User,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now
+                    CreatedAt = DateTime.Parse("01/07/2019 16:22"),
+                    UpdatedAt = DateTime.Parse("01/07/2019 16:22")
                 });
         }
     }

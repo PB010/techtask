@@ -17,22 +17,22 @@ namespace TechTask.Persistence.EntityConfiguration
                 {
                     Id = 1,
                     Name = "Low",
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now
+                    CreatedAt = DateTime.Parse("01/07/2019 16:22"),
+                    UpdatedAt = DateTime.Parse("01/07/2019 16:22")
                 },
                 new 
                 {
                     Id = 2,
                     Name = "Normal",
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now
+                    CreatedAt = DateTime.Parse("01/07/2019 16:22"),
+                    UpdatedAt = DateTime.Parse("01/07/2019 16:22")
                 },
                 new 
                 {
                     Id = 3,
                     Name = "Urgent",
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now
+                    CreatedAt = DateTime.Parse("01/07/2019 16:22"),
+                    UpdatedAt = DateTime.Parse("01/07/2019 16:22")
                 });
         }
     }
