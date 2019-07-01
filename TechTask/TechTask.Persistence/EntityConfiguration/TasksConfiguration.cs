@@ -11,7 +11,7 @@ namespace TechTask.Persistence.EntityConfiguration
             builder.HasKey(b => b.Id);
             builder.Property(b => b.Name).IsRequired().HasMaxLength(50);
             builder.Property(b => b.Description).IsRequired().HasMaxLength(300);
-            builder.Property(b => b.EstimatedTimeToFinish).IsRequired();
+            builder.Property(b => b.EstimatedTimeToFinishInHours).IsRequired();
             builder.Property(b => b.Status).IsRequired();
         }
     }

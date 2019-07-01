@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TechTask.Persistence.Context;
 
 namespace TechTask.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190701144417_ChangedHourCalculationInTasksFromDateTimeToInt")]
+    partial class ChangedHourCalculationInTasksFromDateTimeToInt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,29 +65,6 @@ namespace TechTask.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TaskPriorities");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2019, 7, 1, 18, 9, 0, 996, DateTimeKind.Local).AddTicks(4660),
-                            Name = "Low",
-                            UpdatedAt = new DateTime(2019, 7, 1, 18, 9, 0, 998, DateTimeKind.Local).AddTicks(1331)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2019, 7, 1, 18, 9, 0, 998, DateTimeKind.Local).AddTicks(3652),
-                            Name = "Normal",
-                            UpdatedAt = new DateTime(2019, 7, 1, 18, 9, 0, 998, DateTimeKind.Local).AddTicks(3665)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(2019, 7, 1, 18, 9, 0, 998, DateTimeKind.Local).AddTicks(3692),
-                            Name = "Urgent",
-                            UpdatedAt = new DateTime(2019, 7, 1, 18, 9, 0, 998, DateTimeKind.Local).AddTicks(3696)
-                        });
                 });
 
             modelBuilder.Entity("TechTask.Persistence.Models.Task.Tasks", b =>
@@ -102,7 +81,7 @@ namespace TechTask.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(300);
 
-                    b.Property<int>("EstimatedTimeToFinishInHours");
+                    b.Property<int>("EstimatedTimeToFinish");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -186,18 +165,18 @@ namespace TechTask.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2019, 7, 1, 18, 9, 1, 5, DateTimeKind.Local).AddTicks(4989),
+                            CreatedAt = new DateTime(2019, 7, 1, 17, 44, 16, 864, DateTimeKind.Local).AddTicks(8273),
                             HoursOfWorkOnAllTasks = 0,
                             Name = "Alpha",
-                            UpdatedAt = new DateTime(2019, 7, 1, 18, 9, 1, 5, DateTimeKind.Local).AddTicks(5038)
+                            UpdatedAt = new DateTime(2019, 7, 1, 17, 44, 16, 866, DateTimeKind.Local).AddTicks(5766)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2019, 7, 1, 18, 9, 1, 5, DateTimeKind.Local).AddTicks(8148),
+                            CreatedAt = new DateTime(2019, 7, 1, 17, 44, 16, 866, DateTimeKind.Local).AddTicks(8149),
                             HoursOfWorkOnAllTasks = 0,
                             Name = "Beta",
-                            UpdatedAt = new DateTime(2019, 7, 1, 18, 9, 1, 5, DateTimeKind.Local).AddTicks(8175)
+                            UpdatedAt = new DateTime(2019, 7, 1, 17, 44, 16, 866, DateTimeKind.Local).AddTicks(8167)
                         });
                 });
 
@@ -240,7 +219,7 @@ namespace TechTask.Persistence.Migrations
                         new
                         {
                             Id = new Guid("bfd23b66-1a4e-41de-4aa7-08d6fae3b08b"),
-                            CreatedAt = new DateTime(2019, 7, 1, 18, 9, 1, 13, DateTimeKind.Local).AddTicks(2418),
+                            CreatedAt = new DateTime(2019, 7, 1, 17, 44, 16, 872, DateTimeKind.Local).AddTicks(1743),
                             DateOfBirth = new DateTime(1984, 9, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "will.s@tech.com",
                             FirstName = "Will",
@@ -248,24 +227,24 @@ namespace TechTask.Persistence.Migrations
                             Password = "Will123",
                             Role = 0,
                             TeamId = 1,
-                            UpdatedAt = new DateTime(2019, 7, 1, 18, 9, 1, 13, DateTimeKind.Local).AddTicks(2462)
+                            UpdatedAt = new DateTime(2019, 7, 1, 17, 44, 16, 872, DateTimeKind.Local).AddTicks(1783)
                         },
                         new
                         {
                             Id = new Guid("76aebd31-0235-4ef3-a123-08d6fbc1bdcd"),
-                            CreatedAt = new DateTime(2019, 7, 1, 18, 9, 1, 13, DateTimeKind.Local).AddTicks(5997),
+                            CreatedAt = new DateTime(2019, 7, 1, 17, 44, 16, 872, DateTimeKind.Local).AddTicks(5492),
                             DateOfBirth = new DateTime(1993, 4, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "john.s@tech.com",
                             FirstName = "John",
                             LastName = "Smith",
                             Password = "John123",
                             Role = 1,
-                            UpdatedAt = new DateTime(2019, 7, 1, 18, 9, 1, 13, DateTimeKind.Local).AddTicks(6019)
+                            UpdatedAt = new DateTime(2019, 7, 1, 17, 44, 16, 872, DateTimeKind.Local).AddTicks(5514)
                         },
                         new
                         {
                             Id = new Guid("ed09fe47-84c0-47b5-8007-ae2ea4350a8b"),
-                            CreatedAt = new DateTime(2019, 7, 1, 18, 9, 1, 13, DateTimeKind.Local).AddTicks(9120),
+                            CreatedAt = new DateTime(2019, 7, 1, 17, 44, 16, 872, DateTimeKind.Local).AddTicks(8665),
                             DateOfBirth = new DateTime(1973, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "jane.w@tech.com",
                             FirstName = "Jane",
@@ -273,19 +252,19 @@ namespace TechTask.Persistence.Migrations
                             Password = "Jane123",
                             Role = 0,
                             TeamId = 2,
-                            UpdatedAt = new DateTime(2019, 7, 1, 18, 9, 1, 13, DateTimeKind.Local).AddTicks(9147)
+                            UpdatedAt = new DateTime(2019, 7, 1, 17, 44, 16, 872, DateTimeKind.Local).AddTicks(8682)
                         },
                         new
                         {
                             Id = new Guid("f3c88d42-fb42-43c4-a9d4-1a738a2bd20c"),
-                            CreatedAt = new DateTime(2019, 7, 1, 18, 9, 1, 13, DateTimeKind.Local).AddTicks(9201),
+                            CreatedAt = new DateTime(2019, 7, 1, 17, 44, 16, 872, DateTimeKind.Local).AddTicks(8736),
                             DateOfBirth = new DateTime(1988, 3, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "anthony.r@tech.com",
                             FirstName = "Anthony",
                             LastName = "Russell",
                             Password = "Anthony123",
                             Role = 1,
-                            UpdatedAt = new DateTime(2019, 7, 1, 18, 9, 1, 13, DateTimeKind.Local).AddTicks(9210)
+                            UpdatedAt = new DateTime(2019, 7, 1, 17, 44, 16, 872, DateTimeKind.Local).AddTicks(8745)
                         });
                 });
 
