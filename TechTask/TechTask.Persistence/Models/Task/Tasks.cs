@@ -15,7 +15,7 @@ namespace TechTask.Persistence.Models.Task
         public int TotalHoursOfWork { get; set; }   
         public List<Comment> Comments { get; set; }
         public List<LoggedActivity> Log { get; set; }   
-        public TaskPriority Priority { get; set; }
+        public int TaskPriorityId { get; set; }
         public TaskStatus Status { get; set; }
         public WorkBalance Balance { get; set; }
         public int TeamId { get; set; }     

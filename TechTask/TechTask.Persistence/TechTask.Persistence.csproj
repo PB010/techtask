@@ -9,6 +9,8 @@
     <Compile Remove="Migrations\20190629172240_ChangedHoursOfWorkOnAllTasksColumnToInt.Designer.cs" />
     <Compile Remove="Migrations\20190701175844_ChangedShadowPropertiesData.cs" />
     <Compile Remove="Migrations\20190701175844_ChangedShadowPropertiesData.Designer.cs" />
+    <Compile Remove="Migrations\20190701183503_ChangedFromNavigationPropertyToForeignKey.cs" />
+    <Compile Remove="Migrations\20190701183503_ChangedFromNavigationPropertyToForeignKey.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
