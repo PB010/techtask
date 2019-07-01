@@ -37,12 +37,12 @@ namespace TechTask.Infrastructure.Services
                 case Roles.Admin:
                     claim[0] = new Claim(ClaimTypes.Email, user.Email);
                     claim[1] = new Claim(ClaimTypes.Role, "Admin");
-                    claim[2] = new Claim(ClaimTypes.Authentication, $"{userRole.TeamId}");
+                    claim[2] = new Claim("TeamId", $"{userRole.TeamId}");
                     break;
                 case Roles.User:
                     claim[0] = new Claim(ClaimTypes.Email, user.Email);
                     claim[1] = new Claim(ClaimTypes.Role, "User");
-                    claim[2] = new Claim(ClaimTypes.Authentication, $"{userRole.TeamId}");
+                    claim[2] = new Claim("TeamId", $"{userRole.TeamId}");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

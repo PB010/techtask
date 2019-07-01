@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
 using TechTask.Application.Teams.Models;
+using TechTask.Application.Users.Models;
 using TechTask.Persistence.Models.Task;
 using TechTask.Persistence.Models.Users;
 
@@ -58,7 +59,7 @@ namespace TechTask.Application.Teams.Commands
 
             var teamToReturn = TeamDetailsDto.ConvertToTeamDetailsDto(teamToAdd);
             teamToReturn.Tasks = new List<Tasks>();
-            teamToReturn.Users = new List<User>();
+            teamToReturn.Users = new List<UserDetailsDto>();
 
             return teamToReturn;
         }

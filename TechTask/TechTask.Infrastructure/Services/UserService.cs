@@ -17,7 +17,7 @@ namespace TechTask.Infrastructure.Services
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<User> GetSingleUserAsync(Guid id)
+        public async Task<User> GetUserAsync(Guid id)
         {
             var user = await _context.Users.Include(u => u.Comments)
                 .Include(u => u.Tasks)

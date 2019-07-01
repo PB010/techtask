@@ -16,7 +16,7 @@ namespace TechTask.API.Controllers
     public class TeamsController : BaseController
     {
         public TeamsController(IMediator mediator) : base(mediator)
-        {}
+        { }
 
         [HttpPost]
         public async Task<TeamDetailsDto> CreateTeam([FromBody] TeamForCreationCommand command)
@@ -28,6 +28,21 @@ namespace TechTask.API.Controllers
         public async Task<IEnumerable<TeamDetailsDto>> GetAllTeams()
         {
             return await _mediator.Send(new GetAllTeamsQuery());
+        }
+
+        [HttpGet("{id}")]
+        public async Task<TeamDetailsDto> GetSingleTeam([FromRoute] int id)
+        {
+            return await _mediator.Send(new GetSingleTeamQuery { Id = id });
+        }
+
+        [HttpPost("{id}")]
+        public async Task<TeamDetailsDto> AssignUserToTeam([FromRoute] int id,
+            [FromBody] AssignUserToTeamCommand command)
+        {
+            command.Id = id;
+
+            return await _mediator.Send(command);
         }
     }
 }

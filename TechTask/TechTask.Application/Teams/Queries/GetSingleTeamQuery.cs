@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
 using System.Security.Authentication;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
@@ -31,12 +30,15 @@ namespace TechTask.Application.Teams.Queries
         {
             var teamFromDb = await _teamService.GetTeamAsync(request.Id, true);
 
-            if (!_accessor.HttpContext.User.IsInRole("Admin") ||
-                !_accessor.HttpContext.User.HasClaim(c => c.Type == ClaimTypes.Authentication &&
-                                                         teamFromDb.Users.Any(t => $"{t.TeamId}" == c.Value)))
-                throw new AuthenticationException();
+            if (teamFromDb == null)
+                throw new ArgumentNullException();
 
-            return TeamDetailsDto.ConvertToTeamDetailsDto(teamFromDb);
+            if (_accessor.HttpContext.User.IsInRole("Admin") ||
+                _accessor.HttpContext.User.HasClaim(c => c.Type == "TeamId" &&
+                                                          teamFromDb.Users.Any(t => $"{t.TeamId}" == c.Value)))
+                return TeamDetailsDto.ConvertToTeamDetailsDto(teamFromDb);
+
+            throw new AuthenticationException();
         }
     }
 }

@@ -22,6 +22,9 @@ namespace TechTask.Infrastructure.Services
             if (includeChild)
                 return await _context.Teams.Include(t => t.Tasks)
                     .Include(t => t.Users)
+                    .ThenInclude(u => u.Comments)
+                    .Include(t => t.Users)
+                    .ThenInclude(u => u.Log)
                     .SingleOrDefaultAsync(t => t.Id == id);
 
             return await _context.Teams.SingleOrDefaultAsync(t => t.Id == id);
@@ -32,6 +35,9 @@ namespace TechTask.Infrastructure.Services
             if (includeChild)
                 return await _context.Teams.Include(t => t.Tasks)
                     .Include(t => t.Users)
+                    .ThenInclude(u => u.Comments)
+                    .Include(t => t.Users)
+                    .ThenInclude(u => u.Log)
                     .ToListAsync();
 
             return await _context.Teams.ToListAsync();

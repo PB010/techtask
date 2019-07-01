@@ -32,7 +32,7 @@ namespace TechTask.Application.Users.Queries
 
         public async Task<UserDetailsDto> Handle(GetUserDataQuery request, CancellationToken cancellationToken)
         {
-            var userFromDb = await _userService.GetSingleUserAsync(request.Id);
+            var userFromDb = await _userService.GetUserAsync(request.Id);
             var userDetails = UserDetailsDto.ConvertToUserDetails(userFromDb);
 
 

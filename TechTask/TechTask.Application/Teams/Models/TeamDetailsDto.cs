@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using TechTask.Application.Users.Models;
 using TechTask.Persistence.Models.Task;
 using TechTask.Persistence.Models.Users;
 
@@ -12,7 +14,7 @@ namespace TechTask.Application.Teams.Models
         public string Name { get; set; }
         public int HoursOfWorkOnAllTasks { get; set; }
         public List<Tasks> Tasks { get; set; }
-        public List<User> Users { get; set; }
+        public IEnumerable<UserDetailsDto> Users { get; set; }
 
         public static Expression<Func<Team, TeamDetailsDto>> Projection
         {
@@ -24,7 +26,7 @@ namespace TechTask.Application.Teams.Models
                     Name = p.Name,
                     HoursOfWorkOnAllTasks = p.HoursOfWorkOnAllTasks,
                     Tasks = p.Tasks,
-                    Users = p.Users
+                    Users = p.Users.Select(UserDetailsDto.ConvertToUserDetails)
                 };
             }
         }
