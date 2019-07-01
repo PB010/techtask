@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -50,6 +51,16 @@ namespace TechTask.API.Controllers
             [FromBody] RemoveUserFromTeamCommand command)
         {
             command.Id = id;
+
+            return await _mediator.Send(command);
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<TeamDetailsDto> UpdateTeamName([FromRoute] int id,
+            [FromBody] JsonPatchDocument<UpdateTeamNameCommand> name)
+        {
+            var command = new UpdateTeamNameCommand{Id = id};
+            name.ApplyTo(command);
 
             return await _mediator.Send(command);
         }
