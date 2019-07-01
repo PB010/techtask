@@ -17,7 +17,7 @@ namespace TechTask.Persistence.Models.Task
         public List<LoggedActivity> Log { get; set; }   
         public int TaskPriorityId { get; set; }
         public TaskStatus Status { get; set; }
-        public WorkBalance Balance { get; set; }
+        public WorkBalance Balance { get; set; }        
         public int TeamId { get; set; }     
         public Guid? TrackerId { get; set; }
         public Guid? UserId { get; set; }       

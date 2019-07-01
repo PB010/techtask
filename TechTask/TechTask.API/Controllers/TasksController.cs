@@ -21,6 +21,8 @@ namespace TechTask.API.Controllers
         public async Task<TaskDetailsDto> CreateATask([FromRoute] int teamId,
             [FromBody] CreateNewTaskCommand command)
         {
+            command.TeamId = teamId;
+
             return await _mediator.Send(command);
         }
     }

@@ -13,11 +13,13 @@ using TechTask.Persistence.Context;
 using TechTask.Persistence.Models.Task;
 using TechTask.Persistence.Models.Task.Enums;
 using TechTask.Persistence.Models.Users;
+using TaskStatus = TechTask.Persistence.Models.Task.Enums.TaskStatus;
 
 namespace TechTask.Application.TeamTasks.Commands
 {
     public class CreateNewTaskCommand : IRequest<TaskDetailsDto>
     {
+        public int TeamId { get; set; } 
         public string Name { get; set; }
         public string Description { get; set; }
         public int EstimatedTimeToFinishInHours { get; set; }
@@ -39,26 +41,48 @@ namespace TechTask.Application.TeamTasks.Commands
                     Comments = p.Comments,
                     Log = p.Log,
                     EstimatedTimeToFinishInHours = p.EstimatedTimeToFinishInHours,
-                    //Priority = p.PriorityId
+                    TaskPriorityId = p.PriorityId,
+                    TotalHoursOfWork = 0,
+                    TrackerId = p.TrackerId,
+                    UserId = p.UserId,
+                    TeamId = p.TeamId
                 };
             }
+        }
+            
+        public static Tasks ConvertToTask(CreateNewTaskCommand command)
+        {
+            return Projection.Compile().Invoke(command);
         }
     }
 
     public class CreateNewTaskHandler : IRequestHandler<CreateNewTaskCommand, TaskDetailsDto>
     {
         private readonly ITasksService _tasksService;
+        private readonly ITeamService _teamService;
         private readonly IHttpContextAccessor _accessor;
 
-        public CreateNewTaskHandler(ITasksService tasksService, IHttpContextAccessor accessor)
+        public CreateNewTaskHandler(ITasksService tasksService, ITeamService teamService,
+            IHttpContextAccessor accessor)
         {
             _tasksService = tasksService ?? throw new ArgumentNullException(nameof(tasksService));
+            _teamService = teamService ?? throw new ArgumentNullException(nameof(teamService));
             _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
         }
 
         public async Task<TaskDetailsDto> Handle(CreateNewTaskCommand request, CancellationToken cancellationToken)
         {
-            throw new AbandonedMutexException();
+            var teamFromDb = await _teamService.GetTeamAsync(request.TeamId, false);
+            if (teamFromDb == null)
+                throw new ArgumentNullException();
+
+            var taskToAdd = CreateNewTaskCommand.ConvertToTask(request);
+            taskToAdd.Status = taskToAdd.UserId == null ? TaskStatus.Unassigned : TaskStatus.Assigned;
+            
+            _tasksService.AddTasks(taskToAdd);
+            await _tasksService.SaveChangesAsync();
+
+            return TaskDetailsDto.ConvertToTaskDetailsDto(taskToAdd);
         }
     }
 
