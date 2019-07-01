@@ -7,7 +7,6 @@ namespace TechTask.Application.Interfaces
     public interface IUserService
     {
         Task<User> GetUserAsync(Guid id);
-        void RemoveUserFromTeamAsync(Guid id);
         bool UserExists(string email, string password);
         bool UserExists(Guid id);
         void AddUser(User user);

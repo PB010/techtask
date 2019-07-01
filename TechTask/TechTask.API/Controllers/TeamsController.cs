@@ -44,5 +44,14 @@ namespace TechTask.API.Controllers
 
             return await _mediator.Send(command);
         }
+
+        [HttpDelete("{id}/removeFromTeam")]
+        public async Task<Unit> RemoveUserFromTeam([FromRoute] int id,
+            [FromBody] RemoveUserFromTeamCommand command)
+        {
+            command.Id = id;
+
+            return await _mediator.Send(command);
+        }
     }
 }

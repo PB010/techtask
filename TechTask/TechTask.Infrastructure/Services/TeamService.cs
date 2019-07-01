@@ -41,6 +41,11 @@ namespace TechTask.Infrastructure.Services
                     .ToListAsync();
 
             return await _context.Teams.ToListAsync();
+        }   
+
+        public void RemoveUserFromTeam(User user)
+        {
+            user.TeamId = null;
         }
 
         public void AddTeam(Team team)
