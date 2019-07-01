@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TechTask.Application.Users.Commands;
 using TechTask.Application.Users.Models;
@@ -36,6 +37,12 @@ namespace TechTask.API.Controllers
         public async Task<UserDetailsDto> UserDetails([FromRoute] Guid id)
         {
             return await _mediator.Send(new GetUserDataQuery{Id = id});
+        }
+
+        [HttpGet]
+        public async Task<IEnumerable<UserDetailsDto>> GetAllUsers()
+        {
+            return await _mediator.Send(new GetAllUsersQuery());
         }
     }
 }

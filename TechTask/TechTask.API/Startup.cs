@@ -32,7 +32,7 @@ namespace TechTask.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                //.ConfigureApiBehaviorOptions(options => { options.SuppressModelStateInvalidFilter = true; })
+                .ConfigureApiBehaviorOptions(options => { options.SuppressModelStateInvalidFilter = true; })
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RegisterCommandValidation>());
 
             services.AddDbContext<AppDbContext>(o => o.UseSqlServer(Configuration["ConnectionString"],

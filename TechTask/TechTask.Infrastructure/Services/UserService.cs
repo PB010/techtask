@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
@@ -25,7 +26,14 @@ namespace TechTask.Infrastructure.Services
                 .SingleOrDefaultAsync(u => u.Id == id);
 
             return user;
-        }   
+        }
+
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        {
+            return await _context.Users.Include(u => u.Comments)
+                .Include(u => u.Log)
+                .ToListAsync();
+        }
 
         public bool UserExists(string email, string password)
         {
