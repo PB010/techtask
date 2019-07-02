@@ -1,83 +1,58 @@
-﻿using FluentValidation;
+﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
-using System;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
 using TechTask.Application.Users.Models;
 using TechTask.Persistence.Context;
 using TechTask.Persistence.Models.Users;
-using TechTask.Persistence.Models.Users.Enums;
 
 namespace TechTask.Application.Users.Commands
 {
     public class RegisterUserCommand : IRequest<UserForLoginDto>
     {
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public DateTime DateOfBirth { get; set; }
-
-        public static Expression<Func<RegisterUserCommand, User>> Projection
-        {
-            get
-            {
-                return p => new User
-                {
-                    Id = new Guid(),
-                    Email = p.Email,
-                    Password = p.Password,
-                    FirstName = p.FirstName,
-                    LastName = p.LastName,
-                    DateOfBirth = p.DateOfBirth,
-                    Role = Roles.User
-                };
-            }
-        }
-
-        public static User ConvertRegisteredUser(RegisterUserCommand command)
-        {
-            return Projection.Compile().Invoke(command);
-        }
-            
+        public UserForRegistrationDto UserForRegistrationDto { get; set; }
     }
 
     public class RegisterCommandHandler : IRequestHandler<RegisterUserCommand, UserForLoginDto>
     {
         private readonly IUserService _service;
+        private readonly IMapper _mapper;
 
-        public RegisterCommandHandler(IUserService userService)
+        public RegisterCommandHandler(IUserService userService, IMapper mapper)
         {
-            _service = userService ?? throw new ArgumentNullException(nameof(userService));
+            _service = userService;
+            _mapper = mapper;
         }
 
         public async Task<UserForLoginDto> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            var user = RegisterUserCommand.ConvertRegisteredUser(request);
+            var user = _mapper.Map<User>(request.UserForRegistrationDto);
 
-            _service.AddUser(user);
-            await _service.SaveChangesAsync();
+            await _service.AddUser(user);
 
-            var loginUser = UserForLoginDto.ConvertToLoginDto(user);
-
-            return loginUser;
+            return _mapper.Map<UserForLoginDto>(user);
         }
     }
 
-    public class RegisterCommandValidation : AbstractValidator<RegisterUserCommand>
+    public class UserForRegistrationValidation : AbstractValidator<UserForRegistrationDto>
     {
-        public RegisterCommandValidation(AppDbContext context)
+        public UserForRegistrationValidation(AppDbContext context)
         {
             RuleFor(x => x.Email).Must(m => !context.Users.Any(e => e.Email == m))
                 .WithMessage("This email is already registered.")
-                .NotEmpty().EmailAddress();
-            RuleFor(x => x.Password).MinimumLength(6).MaximumLength(100).NotEmpty();
-            RuleFor(x => x.FirstName).MaximumLength(50).NotEmpty();
-            RuleFor(x => x.LastName).MaximumLength(50).NotEmpty();
-            RuleFor(x => x.DateOfBirth).NotEmpty(); 
+                .NotEmpty().WithMessage("Email field shouldn't be empty or null.")
+                .EmailAddress().WithMessage("Please provide a valid email format.");
+            RuleFor(x => x.Password).MinimumLength(6).WithMessage("Password shouldn't be shorter than 6 characters.")
+                .MaximumLength(100).WithMessage("Password shouldn't be longer than 100 characters.")
+                .NotEmpty().WithMessage("Password field shouldn't be empty or null.");
+            RuleFor(x => x.FirstName).MaximumLength(50).WithMessage("First Name shouldn't be longer than 50 characters.")
+                .NotEmpty().WithMessage("First Name field shouldn't be empty or null.");
+            RuleFor(x => x.LastName).MaximumLength(50).WithMessage("Last Name shouldn't be longer than 50 characters.")
+                .NotEmpty().WithMessage("Last Name field shouldn't be empty or null.");
+            RuleFor(x => x.DateOfBirth).NotEmpty().WithMessage("Date Of Birth field shouldn't be empty or null."); 
         }
     }
 }

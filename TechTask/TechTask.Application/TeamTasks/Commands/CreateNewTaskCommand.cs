@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
@@ -68,21 +69,22 @@ namespace TechTask.Application.TeamTasks.Commands
         public CreateNewTaskHandler(ITasksService tasksService, ITeamService teamService,
             IUserService userService, IHttpContextAccessor accessor)
         {
-            _tasksService = tasksService ?? throw new ArgumentNullException(nameof(tasksService));
-            _teamService = teamService ?? throw new ArgumentNullException(nameof(teamService));
-            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
-            _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
+            _tasksService = tasksService;
+            _teamService = teamService;
+            _userService = userService;
+            _accessor = accessor;
         }
 
         public async Task<TaskDetailsDto> Handle(CreateNewTaskCommand request, CancellationToken cancellationToken)
         {
+            throw new EncoderFallbackException();
             var teamFromDb = await _teamService.GetTeamAsync(request.TeamId, true);
             if (teamFromDb == null)
                 throw new ArgumentNullException();
             
             if (request.UserId != null &&
                 teamFromDb.Users.All(u => u.Id != request.UserId))
-            {
+            { 
                 throw new HttpRequestException("Bad request");
             }
             
@@ -102,8 +104,8 @@ namespace TechTask.Application.TeamTasks.Commands
                 taskToAdd.TrackerLastName = userToMap.LastName;
             }
 
-            _tasksService.AddTasks(taskToAdd);
-            await _tasksService.SaveChangesAsync();
+            _tasksService.AddTask(taskToAdd);
+            //await _tasksService.SaveChangesAsync();
 
             var taskFromDbForMapping = await _tasksService.GetTaskAsync(taskToAdd.Id, true);
             var taskToReturn = TaskDetailsDto.TaskDetailsWithNoUsers(taskFromDbForMapping);

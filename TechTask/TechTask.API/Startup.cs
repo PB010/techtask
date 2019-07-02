@@ -1,4 +1,5 @@
-﻿using FluentValidation.AspNetCore;
+﻿using AutoMapper;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -13,6 +14,7 @@ using System.Text;
 using TechTask.Application.Interfaces;
 using TechTask.Application.Users.Commands;
 using TechTask.Infrastructure.Authentication;
+using TechTask.Infrastructure.Mappings;
 using TechTask.Infrastructure.Services;
 using TechTask.Persistence.Context;
 using TechTask.Persistence.Helper;
@@ -33,7 +35,7 @@ namespace TechTask.API
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 //.ConfigureApiBehaviorOptions(options => { options.SuppressModelStateInvalidFilter = true; })
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RegisterCommandValidation>());
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<UserForRegistrationValidation>());
 
             services.AddDbContext<AppDbContext>(o => o.UseSqlServer(Configuration["ConnectionString"],
                 b => b.MigrationsAssembly(typeof(AppDbContext).GetTypeInfo().Assembly
@@ -67,6 +69,7 @@ namespace TechTask.API
 
             services.AddHttpContextAccessor();
             services.AddMediatR(typeof(RegisterUserCommand));
+            services.AddAutoMapper(typeof(MappingProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

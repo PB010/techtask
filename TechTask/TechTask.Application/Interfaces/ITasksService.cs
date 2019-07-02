@@ -8,7 +8,7 @@ namespace TechTask.Application.Interfaces
     {
         Task<Tasks> GetTaskAsync(int id, bool includeAllChildren);
         Task<IEnumerable<Tasks>> GetAllTasksAsync();
-        void AddTasks(Tasks task);
+        void AddTask(Tasks task);
         /// Task<int> SaveChangesAsync();
     }
 }

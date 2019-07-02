@@ -21,13 +21,14 @@ namespace TechTask.API.Controllers
 
         [HttpPost("registration/")]
         [AllowAnonymous]
-        public async Task<UserForLoginDto> Registration([FromBody] RegisterUserCommand command)
+        public async Task<UserForLoginDto> Registration([FromBody] UserForRegistrationDto dto)
         {
-            return await _mediator.Send(command);
+            return await _mediator.Send(new RegisterUserCommand{UserForRegistrationDto = dto});
         }
 
         [HttpPost("login/")]
         [AllowAnonymous]
+        
         public async Task<UserWithTokenDto> Login([FromBody] LoginUserCommand command)
         {
             return await _mediator.Send(command);

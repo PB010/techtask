@@ -41,7 +41,7 @@ namespace TechTask.Infrastructure.Services
                 .ToListAsync();
         }
 
-        public void AddTasks(Tasks task)
+        public void AddTask(Tasks task)
         {
             _context.Tasks.Add(task);
         }

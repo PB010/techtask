@@ -22,8 +22,8 @@ namespace TechTask.Infrastructure.Services
 
         public TokenAuthenticationService(IOptions<TokenManagement> tokenManagement, AppDbContext context)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-            _tokenManagement = tokenManagement.Value ?? throw new ArgumentNullException(nameof(tokenManagement));
+            _context = context;
+            _tokenManagement = tokenManagement.Value;
         }
 
         public string GenerateToken(LoginUserCommand user)

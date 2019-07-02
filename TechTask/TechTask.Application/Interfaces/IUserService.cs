@@ -11,7 +11,6 @@ namespace TechTask.Application.Interfaces
         Task<IEnumerable<User>> GetAllUsersAsync();
         bool UserExists(string email, string password);
         bool UserExists(Guid id);
-        void AddUser(User user);
-        Task<int> SaveChangesAsync();
+        Task<int> AddUser(User user);
     }
 }

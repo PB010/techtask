@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
@@ -14,7 +13,7 @@ namespace TechTask.Infrastructure.Services
 
         public TeamService(AppDbContext context)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _context = context;
         }
 
         public async Task<Team> GetTeamAsync(int id, bool includeChild)

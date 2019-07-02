@@ -15,7 +15,7 @@ namespace TechTask.Infrastructure.Services
 
         public UserService(AppDbContext context)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _context = context;
         }
 
         public async Task<User> GetUserAsync(Guid id)
@@ -50,13 +50,9 @@ namespace TechTask.Infrastructure.Services
             return userToCheckById;
         }
 
-        public void AddUser(User user)  
+        public async Task<int> AddUser(User user)  
         {
             _context.Users.Add(user);
-        }
-
-        public async Task<int> SaveChangesAsync()
-        {
             return await _context.SaveChangesAsync();
         }
     }
