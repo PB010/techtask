@@ -9,6 +9,6 @@ namespace TechTask.Application.Interfaces
         Task<Tasks> GetTaskAsync(int id, bool includeAllChildren);
         Task<IEnumerable<Tasks>> GetAllTasksAsync();
         void AddTasks(Tasks task);
-        Task<int> SaveChangesAsync();
+        /// Task<int> SaveChangesAsync();
     }
 }
