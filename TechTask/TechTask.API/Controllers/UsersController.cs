@@ -29,9 +29,9 @@ namespace TechTask.API.Controllers
         [HttpPost("login/")]
         [AllowAnonymous]
         
-        public async Task<UserWithTokenDto> Login([FromBody] LoginUserCommand command)
+        public async Task<UserWithTokenDto> Login([FromBody] UserForLoginDto dto)
         {
-            return await _mediator.Send(command);
+            return await _mediator.Send(new LoginUserCommand{UserForLoginDto = dto});
         }
 
         [HttpGet("{id}")]

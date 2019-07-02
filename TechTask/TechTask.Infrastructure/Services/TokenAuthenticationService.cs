@@ -6,7 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using TechTask.Application.Interfaces;
-using TechTask.Application.Users.Commands;
+using TechTask.Application.Users.Models;
 using TechTask.Infrastructure.Authentication;
 using TechTask.Persistence.Context;
 using TechTask.Persistence.Models.Users.Enums;
@@ -26,9 +26,9 @@ namespace TechTask.Infrastructure.Services
             _tokenManagement = tokenManagement.Value;
         }
 
-        public string GenerateToken(LoginUserCommand user)
+        public string GenerateToken(UserForLoginDto user)
         {
-            var claim = new Claim[4];
+            var claim = new Claim[4];   
             var userRole = _context.Users.Single(u => u.Email == user.Email &&
                                                       u.Password == user.Password);
 

@@ -17,7 +17,10 @@ namespace TechTask.Infrastructure.Mappings
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(
                     src => Roles.User));
 
-          
+            CreateMap<UserForLoginDto, UserWithTokenDto>().ForMember(dest => dest.Status,
+                opt => opt.MapFrom(src => "Successful login."));
+
+
         }
     }
 }

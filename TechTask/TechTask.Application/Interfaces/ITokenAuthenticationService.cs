@@ -1,9 +1,9 @@
-﻿using TechTask.Application.Users.Commands;
+﻿using TechTask.Application.Users.Models;
 
 namespace TechTask.Application.Interfaces
 {
     public interface ITokenAuthenticationService
     {
-        string GenerateToken(LoginUserCommand user);
+        string GenerateToken(UserForLoginDto user);
     }
 }
