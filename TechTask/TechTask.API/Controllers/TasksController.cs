@@ -11,7 +11,7 @@ using TechTask.Application.TeamTasks.Queries;
 
 namespace TechTask.API.Controllers
 {
-    [Route("/api/teams/{teamId}/tasks")]
+    [Route("/api/teams/{teamId}/tasks/")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class TasksController : BaseController
@@ -29,9 +29,16 @@ namespace TechTask.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<TaskDetailsDto>> GetTeamsTasks([FromRoute] int teamId)
+        public async Task<IEnumerable<TaskDetailsDto>> GetAllTasksForTeam([FromRoute] int teamId)
         {
-            return await _mediator.Send(new GetAllTeamTasksQuery{TeamId = teamId});
+            return await _mediator.Send(new GetAllTasksForTeamQuery{TeamId = teamId});
+        }
+
+        [HttpGet("{id}")]
+        public async Task<TaskDetailsDto> GetTaskForTeam([FromRoute] int teamId,
+            [FromRoute] int id)
+        {
+            return await _mediator.Send(new GetSingleTaskForTeamQuery {Id = id, TeamId = teamId});
         }
     }
 }

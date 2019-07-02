@@ -9,23 +9,23 @@ using TechTask.Application.TeamTasks.Models;
 
 namespace TechTask.Application.TeamTasks.Queries
 {
-    public class GetAllTeamTasksQuery : IRequest<IEnumerable<TaskDetailsDto>>
+    public class GetAllTasksForTeamQuery : IRequest<IEnumerable<TaskDetailsDto>>
     {
         public int TeamId { get; set; }
     }
         
-    public class GetAllTeamTasksHandler : IRequestHandler<GetAllTeamTasksQuery, IEnumerable<TaskDetailsDto>>
+    public class GetAllTasksForTeamHandler : IRequestHandler<GetAllTasksForTeamQuery, IEnumerable<TaskDetailsDto>>
     {
         private readonly ITasksService _taskService;
         private readonly ITeamService _teamService;
 
-        public GetAllTeamTasksHandler(ITasksService taskService, ITeamService teamService)
+        public GetAllTasksForTeamHandler(ITasksService taskService, ITeamService teamService)
         {
             _taskService = taskService ?? throw new ArgumentNullException(nameof(taskService));
             _teamService = teamService ?? throw new ArgumentNullException(nameof(teamService));
         }
 
-        public async Task<IEnumerable<TaskDetailsDto>> Handle(GetAllTeamTasksQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<TaskDetailsDto>> Handle(GetAllTasksForTeamQuery request, CancellationToken cancellationToken)
         {
             var teamForTask = await _teamService.GetTeamAsync(request.TeamId, false);
 
