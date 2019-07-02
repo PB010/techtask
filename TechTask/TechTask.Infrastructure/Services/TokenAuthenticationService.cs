@@ -28,7 +28,7 @@ namespace TechTask.Infrastructure.Services
 
         public string GenerateToken(LoginUserCommand user)
         {
-            var claim = new Claim[3];
+            var claim = new Claim[4];
             var userRole = _context.Users.Single(u => u.Email == user.Email &&
                                                       u.Password == user.Password);
 
@@ -38,11 +38,13 @@ namespace TechTask.Infrastructure.Services
                     claim[0] = new Claim(ClaimTypes.Email, user.Email);
                     claim[1] = new Claim(ClaimTypes.Role, "Admin");
                     claim[2] = new Claim("TeamId", $"{userRole.TeamId}");
+                    claim[3] = new Claim("Id", $"{userRole.Id}");
                     break;
                 case Roles.User:
                     claim[0] = new Claim(ClaimTypes.Email, user.Email);
                     claim[1] = new Claim(ClaimTypes.Role, "User");
                     claim[2] = new Claim("TeamId", $"{userRole.TeamId}");
+                    claim[3] = new Claim("Id", $"{userRole.Id}");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

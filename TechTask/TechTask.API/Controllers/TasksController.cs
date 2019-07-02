@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using System.Threading.Tasks;
+using FluentValidation.AspNetCore;
 using TechTask.Application.TeamTasks.Commands;
 using TechTask.Application.TeamTasks.Models;
 

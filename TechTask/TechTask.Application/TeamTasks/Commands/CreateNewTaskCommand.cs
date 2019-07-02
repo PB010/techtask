@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
@@ -75,13 +76,21 @@ namespace TechTask.Application.TeamTasks.Commands
 
         public async Task<TaskDetailsDto> Handle(CreateNewTaskCommand request, CancellationToken cancellationToken)
         {
-            var teamFromDb = await _teamService.GetTeamAsync(request.TeamId, false);
+            var teamFromDb = await _teamService.GetTeamAsync(request.TeamId, true);
             if (teamFromDb == null)
                 throw new ArgumentNullException();
-
+            
+            if (request.UserId != null &&
+                teamFromDb.Users.All(u => u.Id != request.UserId))
+            {
+                throw new HttpRequestException("Bad request");
+            }
+            
             var taskToAdd = CreateNewTaskCommand.ConvertToTask(request);
             taskToAdd.Status = taskToAdd.UserId == null ? TaskStatus.Unassigned : TaskStatus.Assigned;
-
+            taskToAdd.TrackerId = _accessor.HttpContext.User.IsInRole("Admin")
+                ? new Guid(_accessor.HttpContext.User.Claims.Single(c => c.Type == "Id").Value)
+                : taskToAdd.TrackerId;
 
             _tasksService.AddTasks(taskToAdd);
             await _tasksService.SaveChangesAsync();
@@ -89,9 +98,6 @@ namespace TechTask.Application.TeamTasks.Commands
             var taskFromDbForMapping = await _tasksService.GetTaskAsync(taskToAdd.Id, true);
             var taskToReturn = TaskDetailsDto.TaskDetailsWithNoUsers(taskFromDbForMapping);
 
-
-            if (taskFromDbForMapping.User == null)
-                return taskToReturn;
 
             if (taskFromDbForMapping.TrackerId != null)
             {
@@ -102,6 +108,8 @@ namespace TechTask.Application.TeamTasks.Commands
                 taskToReturn.TrackerName = $"{userToMap.FirstName} {userToMap.LastName}";
             }
 
+            if (taskFromDbForMapping.User == null)
+                return taskToReturn;
 
             taskToReturn.UserOnTask = $"{taskFromDbForMapping.User.FirstName} {taskFromDbForMapping.User.LastName}";
             
@@ -113,10 +121,12 @@ namespace TechTask.Application.TeamTasks.Commands
     {
         public CreateNewTaskValidator(AppDbContext context)
         {
-            RuleFor(x => x.Name).MaximumLength(100).NotEmpty();
-            RuleFor(x => x.Description).MaximumLength(500).NotEmpty();
+            RuleFor(x => x.Name).MaximumLength(100).NotNull().NotEmpty();
+            RuleFor(x => x.Description).MaximumLength(500).NotNull().NotEmpty();
             RuleFor(x => x.EstimatedTimeToFinishInHours).NotEmpty();
-            RuleFor(x => x.PriorityId).Must(m => context.TaskPriorities.Any(p => p.Id == m)).NotEmpty();
+            RuleFor(x => x.PriorityId).Must(m => context.TaskPriorities
+                    .Any(p => p.Id == m))
+                .NotEmpty();
         }
     }
 }
