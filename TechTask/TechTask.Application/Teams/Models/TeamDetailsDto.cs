@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using TechTask.Application.Users.Models;
 using TechTask.Persistence.Models.Task;
@@ -26,7 +25,7 @@ namespace TechTask.Application.Teams.Models
                     Name = p.Name,
                     HoursOfWorkOnAllTasks = p.HoursOfWorkOnAllTasks,
                     Tasks = p.Tasks,
-                    Users = p.Users.Select(UserDetailsDto.ConvertToUserDetails)
+                    //Users = p.Users.Select(UserDetailsDto.ConvertToUserDetails)
                 };
             }
         }

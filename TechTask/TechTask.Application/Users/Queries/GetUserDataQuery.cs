@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -21,19 +22,21 @@ namespace TechTask.Application.Users.Queries
         private readonly IUserService _userService;
         private readonly ITokenAuthenticationService _authService;
         private readonly IHttpContextAccessor _accessor;
+        private readonly IMapper _mapper;
 
         public GetUserDataHandler(IUserService userService, ITokenAuthenticationService authService
-        , IHttpContextAccessor accessor)
+        , IHttpContextAccessor accessor, IMapper mapper)
         {
-            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
-            _authService = authService ?? throw new ArgumentNullException(nameof(authService));
-            _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
+            _userService = userService;
+            _authService = authService;
+            _accessor = accessor;
+            _mapper = mapper;
         }
 
         public async Task<UserDetailsDto> Handle(GetUserDataQuery request, CancellationToken cancellationToken)
         {
             var userFromDb = await _userService.GetUserAsync(request.Id);
-            var userDetails = UserDetailsDto.ConvertToUserDetails(userFromDb);
+            var userDetails = _mapper.Map<UserDetailsDto>(userFromDb);
 
 
             if (_accessor.HttpContext.User.IsInRole("Admin") ||

@@ -69,7 +69,7 @@ namespace TechTask.API
 
             services.AddHttpContextAccessor();
             services.AddMediatR(typeof(RegisterUserCommand));
-            services.AddAutoMapper(typeof(MappingProfile));
+            services.AddAutoMapper(typeof(UserMappingProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

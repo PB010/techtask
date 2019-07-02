@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,7 +32,8 @@ namespace TechTask.Application.Users.Queries
 
             var users = await _userService.GetAllUsersAsync();
 
-            return users.Select(UserDetailsDto.ConvertToUserDetails);
+            throw new Exception();
+            //return users.Select(UserDetailsDto.ConvertToUserDetails);
         }
     }
 }
