@@ -92,21 +92,24 @@ namespace TechTask.Application.TeamTasks.Commands
                 ? new Guid(_accessor.HttpContext.User.Claims.Single(c => c.Type == "Id").Value)
                 : taskToAdd.TrackerId;
 
+            if (taskToAdd.TrackerId != null)
+            {
+                var userToMap = await _userService
+                    .GetUserAsync(taskToAdd.TrackerId ??
+                                  throw new ArgumentNullException());
+
+                taskToAdd.TrackerFirstName = userToMap.FirstName;
+                taskToAdd.TrackerLastName = userToMap.LastName;
+            }
+
             _tasksService.AddTasks(taskToAdd);
             await _tasksService.SaveChangesAsync();
 
             var taskFromDbForMapping = await _tasksService.GetTaskAsync(taskToAdd.Id, true);
             var taskToReturn = TaskDetailsDto.TaskDetailsWithNoUsers(taskFromDbForMapping);
-
-
-            if (taskFromDbForMapping.TrackerId != null)
-            {
-                var userToMap = await _userService
-                    .GetUserAsync(taskFromDbForMapping.TrackerId ??
-                                  throw new ArgumentNullException());
-
-                taskToReturn.TrackerName = $"{userToMap.FirstName} {userToMap.LastName}";
-            }
+            taskToReturn.TrackerName = taskFromDbForMapping.TrackerId == null
+                ? null
+                : $"{taskToAdd.TrackerFirstName} {taskToAdd.TrackerLastName}";
 
             if (taskFromDbForMapping.User == null)
                 return taskToReturn;

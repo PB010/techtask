@@ -49,5 +49,34 @@ namespace TechTask.Application.TeamTasks.Models
         {
             return ProjectionNoUsers.Compile().Invoke(task);
         }
+
+        public static Expression<Func<Tasks, TaskDetailsDto>> ProjectionFull
+        {
+            get
+            {
+                return p => new TaskDetailsDto
+                {
+                    Id = p.Id,
+                    Balance = p.Balance.ToString(),
+                    Comments = p.Comments,
+                    Description = p.Description,
+                    EstimatedTimeToFinishInHours = p.EstimatedTimeToFinishInHours,
+                    Log = p.Log,
+                    Name = p.Name,
+                    TeamName = p.Team.Name,
+                    Priority = p.TaskPriority,
+                    TotalHoursOfWork = p.TotalHoursOfWork,
+                    Status = p.Status.ToString(),
+                    AdminApprovalOfTaskCompletion = p.AdminApprovalOfTaskCompletion.ToString(),
+                    UserOnTask = $"{p.User.FirstName} {p.User.LastName}",
+                    TrackerName = $"{p.TrackerFirstName} {p.TrackerLastName}"
+                };
+            }
+        }
+
+        public static TaskDetailsDto TaskDetailsFull(Tasks task)
+        {
+            return ProjectionFull.Compile().Invoke(task);
+        }
     }
 }       

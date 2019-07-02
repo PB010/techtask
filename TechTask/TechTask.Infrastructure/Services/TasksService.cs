@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
 using TechTask.Persistence.Context;
@@ -28,6 +29,16 @@ namespace TechTask.Infrastructure.Services
             return await _context.Tasks.Include(t => t.Team)
                 .Include(t => t.TaskPriority)
                 .SingleOrDefaultAsync(t => t.Id == id);
+        }
+
+        public async Task<IEnumerable<Tasks>> GetAllTasksAsync()
+        {
+            return await _context.Tasks.Include(t => t.Team)
+                .Include(t => t.TaskPriority)
+                .Include(t => t.User)
+                .Include(t => t.Comments)
+                .Include(t => t.Log)
+                .ToListAsync();
         }
 
         public void AddTasks(Tasks task)

@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using FluentValidation.AspNetCore;
 using TechTask.Application.TeamTasks.Commands;
 using TechTask.Application.TeamTasks.Models;
+using TechTask.Application.TeamTasks.Queries;
 
 namespace TechTask.API.Controllers
 {
@@ -25,6 +26,12 @@ namespace TechTask.API.Controllers
             command.TeamId = teamId;
 
             return await _mediator.Send(command);
+        }
+
+        [HttpGet]
+        public async Task<IEnumerable<TaskDetailsDto>> GetTeamsTasks([FromRoute] int teamId)
+        {
+            return await _mediator.Send(new GetAllTeamTasksQuery{TeamId = teamId});
         }
     }
 }

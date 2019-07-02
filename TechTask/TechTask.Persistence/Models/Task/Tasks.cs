@@ -22,7 +22,9 @@ namespace TechTask.Persistence.Models.Task
         public TrackerTaskStatus AdminApprovalOfTaskCompletion { get; set; }
         public int TeamId { get; set; }
         public Team Team { get; set; }
-        public Guid? TrackerId { get; set; }  
+        public Guid? TrackerId { get; set; }
+        public string TrackerFirstName { get; set; }
+        public string TrackerLastName { get; set; } 
         public Guid? UserId { get; set; }
         public User User { get; set; }  
     }
