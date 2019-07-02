@@ -38,6 +38,7 @@ namespace TechTask.Application.TeamTasks.Commands
                     Name = p.Name,
                     Description = p.Description,
                     Balance = WorkBalance.Excellent,
+                    AdminApprovalOfTaskCompletion = TrackerTaskStatus.NotEvaluatedYet,
                     Comments = p.Comments,
                     Log = p.Log,
                     EstimatedTimeToFinishInHours = p.EstimatedTimeToFinishInHours,
@@ -60,13 +61,15 @@ namespace TechTask.Application.TeamTasks.Commands
     {
         private readonly ITasksService _tasksService;
         private readonly ITeamService _teamService;
+        private readonly IUserService _userService;
         private readonly IHttpContextAccessor _accessor;
 
         public CreateNewTaskHandler(ITasksService tasksService, ITeamService teamService,
-            IHttpContextAccessor accessor)
+            IUserService userService, IHttpContextAccessor accessor)
         {
             _tasksService = tasksService ?? throw new ArgumentNullException(nameof(tasksService));
             _teamService = teamService ?? throw new ArgumentNullException(nameof(teamService));
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
         }
 
@@ -78,12 +81,32 @@ namespace TechTask.Application.TeamTasks.Commands
 
             var taskToAdd = CreateNewTaskCommand.ConvertToTask(request);
             taskToAdd.Status = taskToAdd.UserId == null ? TaskStatus.Unassigned : TaskStatus.Assigned;
-            
+
+
             _tasksService.AddTasks(taskToAdd);
             await _tasksService.SaveChangesAsync();
 
-            return TaskDetailsDto.ConvertToTaskDetailsDto(taskToAdd);
-        }
+            var taskFromDbForMapping = await _tasksService.GetTaskAsync(taskToAdd.Id, true);
+            var taskToReturn = TaskDetailsDto.TaskDetailsWithNoUsers(taskFromDbForMapping);
+
+
+            if (taskFromDbForMapping.User == null)
+                return taskToReturn;
+
+            if (taskFromDbForMapping.TrackerId != null)
+            {
+                var userToMap = await _userService
+                    .GetUserAsync(taskFromDbForMapping.TrackerId ??
+                                  throw new ArgumentNullException());
+
+                taskToReturn.TrackerName = $"{userToMap.FirstName} {userToMap.LastName}";
+            }
+
+
+            taskToReturn.UserOnTask = $"{taskFromDbForMapping.User.FirstName} {taskFromDbForMapping.User.LastName}";
+            
+            return taskToReturn;
+        }   
     }
 
     public class CreateNewTaskValidator : AbstractValidator<CreateNewTaskCommand>

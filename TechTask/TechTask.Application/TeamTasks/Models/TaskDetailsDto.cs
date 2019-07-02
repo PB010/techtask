@@ -15,15 +15,15 @@ namespace TechTask.Application.TeamTasks.Models
         public int TotalHoursOfWork { get; set; }
         public List<Comment> Comments { get; set; }
         public List<LoggedActivity> Log { get; set; }
-        public int PriorityId { get; set; }
         public TaskPriority Priority { get; set; }
         public string Status { get; set; }
         public string Balance { get; set; }
+        public string AdminApprovalOfTaskCompletion { get; set; }
         public string TeamName { get; set; }
         public string TrackerName { get; set; }
         public string UserOnTask { get; set; }
 
-        public static Expression<Func<Tasks, TaskDetailsDto>> Projection
+        public static Expression<Func<Tasks, TaskDetailsDto>> ProjectionNoUsers
         {
             get
             {
@@ -36,15 +36,18 @@ namespace TechTask.Application.TeamTasks.Models
                     EstimatedTimeToFinishInHours = p.EstimatedTimeToFinishInHours,
                     Log = p.Log,
                     Name = p.Name,
-                    PriorityId = p.TaskPriorityId,
-                    Status = p.Status.ToString()
-                };
+                    TeamName = p.Team.Name,
+                    Priority = p.TaskPriority,
+                    TotalHoursOfWork = p.TotalHoursOfWork,
+                    Status = p.Status.ToString(),
+                    AdminApprovalOfTaskCompletion = p.AdminApprovalOfTaskCompletion.ToString()
+                };  
             }
         }
 
-        public static TaskDetailsDto ConvertToTaskDetailsDto(Tasks task)
+        public static TaskDetailsDto TaskDetailsWithNoUsers(Tasks task)
         {
-            return Projection.Compile().Invoke(task);
+            return ProjectionNoUsers.Compile().Invoke(task);
         }
     }
 }       

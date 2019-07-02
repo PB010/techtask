@@ -16,11 +16,15 @@ namespace TechTask.Persistence.Models.Task
         public List<Comment> Comments { get; set; }
         public List<LoggedActivity> Log { get; set; }   
         public int TaskPriorityId { get; set; }
+        public TaskPriority TaskPriority { get; set; }  
         public TaskStatus Status { get; set; }
-        public WorkBalance Balance { get; set; }        
-        public int TeamId { get; set; }     
-        public Guid? TrackerId { get; set; }
-        public Guid? UserId { get; set; }       
+        public WorkBalance Balance { get; set; }  
+        public TrackerTaskStatus AdminApprovalOfTaskCompletion { get; set; }
+        public int TeamId { get; set; }
+        public Team Team { get; set; }
+        public Guid? TrackerId { get; set; }  
+        public Guid? UserId { get; set; }
+        public User User { get; set; }  
     }
 }
         
