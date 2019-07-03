@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TechTask.Application.Filters.Validator;
 using TechTask.Application.Teams.Commands;
 using TechTask.Application.Teams.Models;
 using TechTask.Application.Teams.Queries;
@@ -32,12 +33,14 @@ namespace TechTask.API.Controllers
         }
 
         [HttpGet("{teamId}")]
+        [ServiceFilter(typeof(ValidateRouteAttributes))]
         public async Task<TeamDetailsDto> GetSingleTeam([FromRoute] int teamId)
         {
             return await _mediator.Send(new GetSingleTeamQuery { TeamId = teamId });
         }
 
         [HttpPost("{teamId}")]
+        [ServiceFilter(typeof(ValidateRouteAttributes))]
         public async Task<TeamDetailsDto> AssignUserToTeam([FromRoute] int teamId,
             [FromBody] IdAttributesDto dto)
         {
@@ -47,6 +50,7 @@ namespace TechTask.API.Controllers
         }
 
         [HttpDelete("{teamId}/removeFromTeam")]
+        [ServiceFilter(typeof(ValidateRouteAttributes))]
         public async Task<Unit> RemoveUserFromTeam([FromRoute] int teamId,
             [FromBody] RemoveUserFromTeamCommand command)
         {
@@ -54,6 +58,7 @@ namespace TechTask.API.Controllers
         }
 
         [HttpPatch("{teamId}")]
+        [ServiceFilter(typeof(ValidateRouteAttributes))]
         public async Task<TeamDetailsDto> UpdateTeamName([FromRoute] int teamId,
             [FromBody] JsonPatchDocument<UpdateTeamNameCommand> name)
         {

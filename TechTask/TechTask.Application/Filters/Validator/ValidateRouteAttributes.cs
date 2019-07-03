@@ -1,7 +1,8 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using TechTask.Persistence.Context;
 
 namespace TechTask.Application.Filters.Validator
@@ -37,7 +38,7 @@ namespace TechTask.Application.Filters.Validator
 
             if (teamId != null)
             {
-                var teamIdAsInt = (int) teamId;
+                var teamIdAsInt = int.Parse(teamId.ToString());
                 var teamIdCheck = _context.Teams.Any(t => t.Id == teamIdAsInt);
 
                 if (!teamIdCheck)
@@ -52,8 +53,10 @@ namespace TechTask.Application.Filters.Validator
 
             if (taskId != null)
             {
-                var taskIdAsInt = (int) taskId;
-                var taskIdCheck = _context.Tasks.Any(t => t.Id == taskIdAsInt);
+                var taskIdAsInt = int.Parse(taskId.ToString());
+                var taskIdCheck = _context.Teams.Include(t => t.Tasks)
+                    .Single(t => t.Id == int.Parse(teamId.ToString()))
+                    .Tasks.Any(t => t.Id == taskIdAsInt);
 
                 if (!taskIdCheck)
                 {

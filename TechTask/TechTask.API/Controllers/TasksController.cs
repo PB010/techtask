@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TechTask.Application.Filters.Validator;
 using TechTask.Application.TeamTasks.Commands;
 using TechTask.Application.TeamTasks.Models;
 using TechTask.Application.TeamTasks.Queries;
@@ -13,6 +14,7 @@ namespace TechTask.API.Controllers
     [Route("/api/teams/{teamId}/tasks/")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
+    [ServiceFilter(typeof(ValidateRouteAttributes))]
     public class TasksController : BaseController
     {
         public TasksController(IMediator mediator) : base(mediator)
