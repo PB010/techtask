@@ -1,15 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
 using TechTask.Application.Teams.Models;
-using TechTask.Application.Users.Models;
-using TechTask.Persistence.Models.Task;
 using TechTask.Persistence.Models.Users;
 
 namespace TechTask.Application.Teams.Commands
@@ -54,14 +51,16 @@ namespace TechTask.Application.Teams.Commands
 
             var teamToAdd = TeamForCreationCommand.ConvertToTeam(request);
 
-            _teamService.AddTeam(teamToAdd);
-            await _teamService.SaveChangesAsync();
+            await _teamService.AddTeam(teamToAdd);
+            //await _teamService.SaveChangesAsync();
+            //
+            //var teamToReturn = TeamDetailsDto.ConvertToTeamDetailsDto(teamToAdd);
+            //teamToReturn.Tasks = new List<Tasks>();
+            //teamToReturn.Users = new List<UserDetailsDto>();
 
-            var teamToReturn = TeamDetailsDto.ConvertToTeamDetailsDto(teamToAdd);
-            teamToReturn.Tasks = new List<Tasks>();
-            teamToReturn.Users = new List<UserDetailsDto>();
+            //return teamToReturn;
 
-            return teamToReturn;
+            throw new Exception();
         }
     }
 }

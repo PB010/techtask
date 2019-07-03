@@ -39,11 +39,11 @@ namespace TechTask.API.Controllers
 
         [HttpPost("{id}")]
         public async Task<TeamDetailsDto> AssignUserToTeam([FromRoute] int id,
-            [FromBody] AssignUserToTeamCommand command)
+            [FromBody] IdAttributesDto dto)
         {
-            command.Id = id;
+            dto.Id = id;
 
-            return await _mediator.Send(command);
+            return await _mediator.Send(new AssignUserToTeamCommand{IdAttributesDto = dto});
         }
 
         [HttpDelete("{id}/removeFromTeam")]

@@ -1,10 +1,10 @@
-﻿using AutoMapper;
-using System;
+﻿using System;
+using AutoMapper;
 using TechTask.Application.Users.Models;
 using TechTask.Persistence.Models.Users;
 using TechTask.Persistence.Models.Users.Enums;
 
-namespace TechTask.Infrastructure.Mappings
+namespace TechTask.Application.Users.Mapping
 {
     public class UserMappingProfile : Profile
     {

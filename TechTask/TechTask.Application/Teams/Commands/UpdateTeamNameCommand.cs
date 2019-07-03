@@ -37,9 +37,11 @@ namespace TechTask.Application.Teams.Commands
                 throw new ArgumentNullException();
 
             teamFromDb.Name = request.Name;
-            await _teamService.SaveChangesAsync();
+            //await _teamService.SaveChangesAsync();
+            //
+            //return TeamDetailsDto.ConvertToTeamDetailsDto(teamFromDb);
 
-            return TeamDetailsDto.ConvertToTeamDetailsDto(teamFromDb);
+            throw new Exception();
         }
     }
 }   

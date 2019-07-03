@@ -43,8 +43,7 @@ namespace TechTask.Application.Teams.Commands
             if (teamForDb == null)
                 throw new ArgumentNullException();
 
-            _teamService.RemoveUserFromTeam(userForDb);
-            await _teamService.SaveChangesAsync();
+            await _teamService.RemoveUserFromTeam(userForDb);
         }
     }
 

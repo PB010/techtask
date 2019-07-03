@@ -1,8 +1,8 @@
-﻿using FluentValidation;
+﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using System.Security.Authentication;
 using System.Threading;
@@ -15,8 +15,7 @@ namespace TechTask.Application.Teams.Commands
 {
     public class AssignUserToTeamCommand : IRequest<TeamDetailsDto>
     {
-        public int Id { get; set; }
-        public Guid UserId { get; set; }
+        public IdAttributesDto IdAttributesDto { get; set; }
     }
 
     public class AssignUserToTeamHandler : IRequestHandler<AssignUserToTeamCommand, TeamDetailsDto>
@@ -24,47 +23,58 @@ namespace TechTask.Application.Teams.Commands
         private readonly ITeamService _teamService;
         private readonly IUserService _userService;
         private readonly IHttpContextAccessor _accessor;
+        private readonly IMapper _mapper;
 
         public AssignUserToTeamHandler(ITeamService teamService, IUserService userService,
-            IHttpContextAccessor accessor)
+            IHttpContextAccessor accessor, IMapper mapper)
         {
-            _teamService = teamService ?? throw new ArgumentNullException(nameof(teamService));
-            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
-            _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
+            _teamService = teamService;
+            _userService = userService;
+            _accessor = accessor;
+            _mapper = mapper;
         }
 
         public async Task<TeamDetailsDto> Handle(AssignUserToTeamCommand request, CancellationToken cancellationToken)
         {
-            var teamFromDb = await _teamService.GetTeamAsync(request.Id, true);
-            var userFromDb = await _userService.GetUserAsync(request.UserId);
+            var teamFromDb = await _teamService.GetTeamAsync(request.IdAttributesDto.Id, true);
+            var userFromDb = await _userService.GetUserAsync(request.IdAttributesDto.UserId);
 
-            if (teamFromDb == null)
-                throw new ArgumentNullException();
+            //if (teamFromDb == null)
+            //    throw new ArgumentNullException();
 
             if (!_accessor.HttpContext.User.IsInRole("Admin"))
                 throw new AuthenticationException("You don't have permission to do that.");
 
-            teamFromDb.Users.Add(userFromDb);
-            await _teamService.SaveChangesAsync();
+            await _teamService.AssignUserToTeam(teamFromDb, userFromDb);
 
-            var teamToReturn = TeamDetailsDto.ConvertToTeamDetailsDto(teamFromDb);
+            var teamToReturn = _mapper.Map<TeamDetailsDto>(teamFromDb);
 
             return teamToReturn;
         }
 
-        public class AssignUserToTeamValidator : AbstractValidator<AssignUserToTeamCommand>
+        public class IdAttributesValidator : AbstractValidator<IdAttributesDto>
         {
-            public AssignUserToTeamValidator(AppDbContext context)
+            public IdAttributesValidator(AppDbContext context)
             {
                 RuleFor(x => x.UserId).Must(m => context.Users.Any(u => u.Id == m))
                     .WithMessage("There is no such user in DB.")
-                    .WithErrorCode("404");
-                
+                    .WithErrorCode("404");  
+
                 RuleFor(x => x.UserId)
                     .Must(m => context.Teams.Include(t => t.Users)
-                        .All(t => t.Users.Any(u => u.Id != m)))
+                        .All(t => t.Users.All(u => u.Id != m)))
                     .WithMessage("This user is already a part of a team.")
                     .WithErrorCode("400");
+            }
+        }
+
+        public class IdRouteAttributesValidator : AbstractValidator<int>
+        {
+            public IdRouteAttributesValidator(AppDbContext context)
+            {
+                RuleFor(x => x).Must(m => context.Teams.Any(t => t.Id == m))
+                    .WithMessage("This team was not found.")
+                    .WithErrorCode("404");
             }
         }
     }

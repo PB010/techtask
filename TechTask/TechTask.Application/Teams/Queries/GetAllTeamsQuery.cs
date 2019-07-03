@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
@@ -31,12 +30,13 @@ namespace TechTask.Application.Teams.Queries
             {
                 var teamsFromDb = await _teamService.GetAllTeamsAsync(false);
 
-                return teamsFromDb.Select(TeamDetailsDto.ConvertToTeamDetailsDto);
+                //return teamsFromDb.Select(TeamDetailsDto.ConvertToTeamDetailsDto);
             }
 
             var teamsForAdmins = await _teamService.GetAllTeamsAsync(true);
 
-            return teamsForAdmins.Select(TeamDetailsDto.ConvertToTeamDetailsDto);
+            //return teamsForAdmins.Select(TeamDetailsDto.ConvertToTeamDetailsDto);
+            throw new Exception();
         }
     }
 }

@@ -42,18 +42,21 @@ namespace TechTask.Infrastructure.Services
             return await _context.Teams.ToListAsync();
         }   
 
-        public void RemoveUserFromTeam(User user)
+        public async Task<int> RemoveUserFromTeam(User user)
         {
             user.TeamId = null;
+            return await _context.SaveChangesAsync();
         }
 
-        public void AddTeam(Team team)
+        public async Task<int> AssignUserToTeam(Team team, User user)
+        {
+            team.Users.Add(user);
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> AddTeam(Team team)
         {
             _context.Teams.Add(team);
-        }
-
-        public async Task<int> SaveChangesAsync()
-        {
             return await _context.SaveChangesAsync();
         }
     }

@@ -36,7 +36,8 @@ namespace TechTask.Application.Teams.Queries
             if (_accessor.HttpContext.User.IsInRole("Admin") ||
                 _accessor.HttpContext.User.HasClaim(c => c.Type == "TeamId" &&
                                                           teamFromDb.Users.Any(t => $"{t.TeamId}" == c.Value)))
-                return TeamDetailsDto.ConvertToTeamDetailsDto(teamFromDb);
+                //return TeamDetailsDto.ConvertToTeamDetailsDto(teamFromDb);
+                throw new Exception();
 
             throw new AuthenticationException();
         }

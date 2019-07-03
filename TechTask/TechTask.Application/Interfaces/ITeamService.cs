@@ -8,8 +8,8 @@ namespace TechTask.Application.Interfaces
     {
         Task<Team> GetTeamAsync(int id, bool includeChild);
         Task<IEnumerable<Team>> GetAllTeamsAsync(bool includeChild);
-        void RemoveUserFromTeam(User user);
-        void AddTeam(Team team);
-        Task<int> SaveChangesAsync();
+        Task<int> RemoveUserFromTeam(User user);
+        Task<int> AssignUserToTeam(Team team, User user);
+        Task<int> AddTeam(Team team);
     }
 }
