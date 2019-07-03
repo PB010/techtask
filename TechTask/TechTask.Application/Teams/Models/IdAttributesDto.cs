@@ -4,7 +4,7 @@ namespace TechTask.Application.Teams.Models
 {
     public class IdAttributesDto
     {
-        public int Id { get; set; }
+        public int TeamId { get; set; } 
         public Guid UserId { get; set; }
     }
 }

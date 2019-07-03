@@ -1,16 +1,23 @@
-﻿using FluentValidation;
-using System.Linq;
-using TechTask.Persistence.Context;
+﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
+using System;
 
 namespace TechTask.Application.Common.Validators
 {
-    public class IdRouteAttributesValidator : AbstractValidator<int>
+    //public class IdRouteAttributesValidator : AbstractValidator<int>
+    //{
+    //    public IdRouteAttributesValidator(AppDbContext context)
+    //    {
+    //        RuleFor(x => x).Must(m => context.Teams.Any(t => t.UserId == m))
+    //            .WithMessage("This team was not found.")
+    //            .WithErrorCode("404");
+    //    }
+    //}
+    public class Test
     {
-        public IdRouteAttributesValidator(AppDbContext context)
+        public static Guid IdFromRouteValue(IActionContextAccessor accessor)
         {
-            RuleFor(x => x).Must(m => context.Teams.Any(t => t.Id == m))
-                .WithMessage("This team was not found.")
-                .WithErrorCode("404");
+            var id = accessor.ActionContext.RouteData.Values["id"];
+            return new Guid($"{id}");
         }
     }
 }

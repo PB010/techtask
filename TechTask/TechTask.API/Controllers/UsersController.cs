@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TechTask.Application.Common.Validators;
 using TechTask.Application.Users.Commands;
 using TechTask.Application.Users.Models;
 using TechTask.Application.Users.Queries;
@@ -34,10 +35,11 @@ namespace TechTask.API.Controllers
             return await _mediator.Send(new LoginUserCommand{UserForLoginDto = dto});
         }
 
-        [HttpGet("{id}")]
-        public async Task<UserDetailsDto> UserDetails([FromRoute] Guid id)
+        [HttpGet("{userId}")]
+        [ServiceFilter(typeof(ValidateRouteAttributes))]
+        public async Task<UserDetailsDto> UserDetails([FromRoute] Guid userId)
         {
-            return await _mediator.Send(new GetUserDataQuery{Id = id});
+            return await _mediator.Send(new GetUserDataQuery{UserId = userId});
         }
 
         [HttpGet]

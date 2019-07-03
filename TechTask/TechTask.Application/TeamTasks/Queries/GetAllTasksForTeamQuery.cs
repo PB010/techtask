@@ -1,5 +1,5 @@
-﻿using MediatR;
-using System;
+﻿using AutoMapper;
+using MediatR;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -11,29 +11,27 @@ namespace TechTask.Application.TeamTasks.Queries
 {
     public class GetAllTasksForTeamQuery : IRequest<IEnumerable<TaskDetailsDto>>
     {
-        public int TeamId { get; set; }
     }
         
     public class GetAllTasksForTeamHandler : IRequestHandler<GetAllTasksForTeamQuery, IEnumerable<TaskDetailsDto>>
     {
         private readonly ITasksService _taskService;
         private readonly ITeamService _teamService;
+        private readonly IMapper _mapper;
 
-        public GetAllTasksForTeamHandler(ITasksService taskService, ITeamService teamService)
+        public GetAllTasksForTeamHandler(ITasksService taskService, ITeamService teamService,
+            IMapper mapper)
         {
-            _taskService = taskService ?? throw new ArgumentNullException(nameof(taskService));
-            _teamService = teamService ?? throw new ArgumentNullException(nameof(teamService));
+            _taskService = taskService;
+            _teamService = teamService;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<TaskDetailsDto>> Handle(GetAllTasksForTeamQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<TaskDetailsDto>> Handle(GetAllTasksForTeamQuery request,
+            CancellationToken cancellationToken)
         {
-            var teamForTask = await _teamService.GetTeamWithoutEagerLoadingAsync(request.TeamId);
-
-            if (teamForTask == null)
-                throw new ArgumentNullException();
-
             var tasksFromDb = await _taskService.GetAllTasksAsync();
-            var tasksToReturn = tasksFromDb.Select(TaskDetailsDto.TaskDetailsFull);
+            var tasksToReturn = tasksFromDb.Select(t => _mapper.Map<TaskDetailsDto>(t));
 
             return tasksToReturn;
         }

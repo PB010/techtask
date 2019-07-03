@@ -31,14 +31,14 @@ namespace TechTask.API.Controllers
         [HttpGet]
         public async Task<IEnumerable<TaskDetailsDto>> GetAllTasksForTeam([FromRoute] int teamId)
         {
-            return await _mediator.Send(new GetAllTasksForTeamQuery{TeamId = teamId});
+            return await _mediator.Send(new GetAllTasksForTeamQuery());
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{taskId}")]
         public async Task<TaskDetailsDto> GetTaskForTeam([FromRoute] int teamId,
-            [FromRoute] int id)
+            [FromRoute] int taskId)
         {
-            return await _mediator.Send(new GetSingleTaskForTeamQuery {Id = id, TeamId = teamId});
+            return await _mediator.Send(new GetSingleTaskForTeamQuery {TaskId = taskId, TeamId = teamId});
         }
     }
 }

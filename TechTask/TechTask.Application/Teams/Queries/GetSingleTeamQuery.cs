@@ -12,7 +12,7 @@ namespace TechTask.Application.Teams.Queries
 {
     public class GetSingleTeamQuery : IRequest<TeamDetailsDto>
     {
-        public int Id { get; set; }
+        public int TeamId { get; set; }
     }
 
     public class GetSingleTeamHandler : IRequestHandler<GetSingleTeamQuery, TeamDetailsDto>
@@ -23,7 +23,7 @@ namespace TechTask.Application.Teams.Queries
 
         public GetSingleTeamHandler(ITeamService teamService, IHttpContextAccessor accessor,
             IMapper mapper)
-        {
+        {   
             _teamService = teamService;
             _accessor = accessor;
             _mapper = mapper;
@@ -31,7 +31,7 @@ namespace TechTask.Application.Teams.Queries
 
         public async Task<TeamDetailsDto> Handle(GetSingleTeamQuery request, CancellationToken cancellationToken)
         {
-            var teamFromDb = await _teamService.GetTeamWithEagerLoadingAsync(request.Id);
+            var teamFromDb = await _teamService.GetTeamWithEagerLoadingAsync(request.TeamId);
 
             if (_accessor.HttpContext.User.IsInRole("Admin") ||
                 _accessor.HttpContext.User.HasClaim(c => c.Type == "TeamId" &&

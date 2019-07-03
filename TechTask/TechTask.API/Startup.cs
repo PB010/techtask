@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using System.Text;
+using TechTask.Application.Common.Validators;
 using TechTask.Application.Interfaces;
 using TechTask.Application.Users.Commands;
 using TechTask.Application.Users.Mapping;
@@ -66,6 +67,7 @@ namespace TechTask.API
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<ITasksService, TasksService>();
+            services.AddScoped<ValidateRouteAttributes>();
 
             services.AddHttpContextAccessor();
             services.AddMediatR(typeof(RegisterUserCommand));

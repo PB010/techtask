@@ -14,7 +14,6 @@ namespace TechTask.Application.Teams.Commands
 {
     public class RemoveUserFromTeamCommand : IRequest
     {
-        public int Id { get; set; }
         public Guid UserId { get; set; }
     }
 
@@ -38,7 +37,6 @@ namespace TechTask.Application.Teams.Commands
                 throw new AuthenticationException("Unauthorized access.");
 
             var userForDb = await _userService.GetUserAsync(request.UserId);
-            var teamForDb = await _teamService.GetTeamWithoutEagerLoadingAsync(request.Id);
 
             await _teamService.RemoveUserFromTeam(userForDb);
         }
@@ -58,15 +56,4 @@ namespace TechTask.Application.Teams.Commands
                 .WithErrorCode("400");
         }
     }
-
-    //public class RemoveUserFromTeamRouteValidator : AbstractValidator<int>
-    //{
-    //    public RemoveUserFromTeamRouteValidator(AppDbContext context)
-    //    {
-    //        RuleFor(x => x).Must(m => context.Teams.Any(t => t.Id == m))
-    //            .WithMessage("This team was not found.")
-    //            .WithErrorCode("404");
-    //    }
-    //}
-
 }

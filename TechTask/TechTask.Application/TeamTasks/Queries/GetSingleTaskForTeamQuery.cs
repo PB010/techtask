@@ -1,6 +1,6 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Http;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
@@ -10,7 +10,7 @@ namespace TechTask.Application.TeamTasks.Queries
 {
     public class GetSingleTaskForTeamQuery : IRequest<TaskDetailsDto>
     {
-        public int Id { get; set; }
+        public int TaskId { get; set; } 
         public int TeamId { get; set; }
     }
 
@@ -19,33 +19,33 @@ namespace TechTask.Application.TeamTasks.Queries
         private readonly ITasksService _taskService;
         private readonly ITeamService _teamService;
         private readonly IHttpContextAccessor _accessor;
+        private readonly IMapper _mapper;
 
         public GetSingleTaskForTeamHandler(ITasksService taskService, ITeamService teamService,
-            IHttpContextAccessor accessor)
+            IHttpContextAccessor accessor, IMapper mapper)
         {
-            _taskService = taskService ?? throw new ArgumentNullException(nameof(taskService));
-            _teamService = teamService ?? throw new ArgumentNullException(nameof(teamService));
-            _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
+            _taskService = taskService;
+            _teamService = teamService;
+            _accessor = accessor;
+            _mapper = mapper;
         }
 
         public async Task<TaskDetailsDto> Handle(GetSingleTaskForTeamQuery request,
             CancellationToken cancellationToken)
         {
             var teamFromDb = await _teamService.GetTeamWithoutEagerLoadingAsync(request.TeamId);
-            var taskFromDb = await _taskService.GetTaskAsync(request.Id, true);
+            var taskFromDb = await _taskService.GetTaskAsync(request.TaskId, true);
 
             /// De scos in clasa aparte.
             //if (!_accessor.HttpContext.User.IsInRole("Admin") &&
             //    !_accessor.HttpContext.User.HasClaim(c => c.Type == "TeamId" &&
-            //                                              c.Value == $"{teamFromDb.Id}"))
+            //                                              c.Value == $"{teamFromDb.UserId}"))
             //    throw new AuthenticationException("Unauthorized access.");  
 
-            if (teamFromDb == null || taskFromDb == null)
-                throw new ArgumentNullException();
+            //if (teamFromDb == null || taskFromDb == null)
+            //    throw new ArgumentNullException();
 
-            var taskToReturn = TaskDetailsDto.TaskDetailsFull(taskFromDb);
-
-            return taskToReturn;
+            return _mapper.Map<TaskDetailsDto>(taskFromDb);
         }
     }
 

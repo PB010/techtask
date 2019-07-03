@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -14,7 +13,7 @@ namespace TechTask.Application.Users.Queries
 {
     public class GetUserDataQuery : IRequest<UserDetailsDto>
     {
-        public Guid Id { get; set; }
+        public Guid UserId { get; set; }    
     }
 
     public class GetUserDataHandler : IRequestHandler<GetUserDataQuery, UserDetailsDto>
@@ -35,7 +34,7 @@ namespace TechTask.Application.Users.Queries
 
         public async Task<UserDetailsDto> Handle(GetUserDataQuery request, CancellationToken cancellationToken)
         {
-            var userFromDb = await _userService.GetUserAsync(request.Id);
+            var userFromDb = await _userService.GetUserAsync(request.UserId);
             var userDetails = _mapper.Map<UserDetailsDto>(userFromDb);
 
 
@@ -45,17 +44,6 @@ namespace TechTask.Application.Users.Queries
                 return userDetails;
 
             throw new AuthenticationException("Unauthorized access.");
-        }
-    }
-    
-    public class GetUserDataValidator : AbstractValidator<Guid>
-    {
-        public GetUserDataValidator(IUserService service, IHttpContextAccessor context)
-        {
-            RuleFor(x => x)
-                .Must(service.UserExists)
-                .WithMessage("This user doesn't exist.")
-                .WithErrorCode("404");
         }
     }
 }

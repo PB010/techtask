@@ -31,35 +31,33 @@ namespace TechTask.API.Controllers
             return await _mediator.Send(new GetAllTeamsQuery());
         }
 
-        [HttpGet("{id}")]
-        public async Task<TeamDetailsDto> GetSingleTeam([FromRoute] int id)
+        [HttpGet("{teamId}")]
+        public async Task<TeamDetailsDto> GetSingleTeam([FromRoute] int teamId)
         {
-            return await _mediator.Send(new GetSingleTeamQuery { Id = id });
+            return await _mediator.Send(new GetSingleTeamQuery { TeamId = teamId });
         }
 
-        [HttpPost("{id}")]
-        public async Task<TeamDetailsDto> AssignUserToTeam([FromRoute] int id,
+        [HttpPost("{teamId}")]
+        public async Task<TeamDetailsDto> AssignUserToTeam([FromRoute] int teamId,
             [FromBody] IdAttributesDto dto)
         {
-            dto.Id = id;
+            dto.TeamId = teamId;
 
             return await _mediator.Send(new AssignUserToTeamCommand{IdAttributesDto = dto});
         }
 
-        [HttpDelete("{id}/removeFromTeam")]
-        public async Task<Unit> RemoveUserFromTeam([FromRoute] int id,
+        [HttpDelete("{teamId}/removeFromTeam")]
+        public async Task<Unit> RemoveUserFromTeam([FromRoute] int teamId,
             [FromBody] RemoveUserFromTeamCommand command)
         {
-            command.Id = id;
-
             return await _mediator.Send(command);
         }
 
-        [HttpPatch("{id}")]
-        public async Task<TeamDetailsDto> UpdateTeamName([FromRoute] int id,
+        [HttpPatch("{teamId}")]
+        public async Task<TeamDetailsDto> UpdateTeamName([FromRoute] int teamId,
             [FromBody] JsonPatchDocument<UpdateTeamNameCommand> name)
         {
-            var command = new UpdateTeamNameCommand{Id = id};
+            var command = new UpdateTeamNameCommand{TeamId = teamId};
             name.ApplyTo(command);
 
             return await _mediator.Send(command);

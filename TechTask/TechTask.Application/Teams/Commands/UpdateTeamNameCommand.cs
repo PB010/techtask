@@ -11,9 +11,9 @@ namespace TechTask.Application.Teams.Commands
 {
     public class UpdateTeamNameCommand : IRequest<TeamDetailsDto>
     {
-        public int Id { get; set; } 
+        public int TeamId { get; set; } 
         public string Name { get; set; }
-    }
+    }   
 
     public class UpdateTeamNameHandler : IRequestHandler<UpdateTeamNameCommand, TeamDetailsDto>
     {
@@ -34,7 +34,7 @@ namespace TechTask.Application.Teams.Commands
             if (!_accessor.HttpContext.User.IsInRole("Admin"))
                 throw new AuthenticationException("You don't have permission to do that.");
 
-            var teamFromDb = await _teamService.GetTeamWithEagerLoadingAsync(request.Id);
+            var teamFromDb = await _teamService.GetTeamWithEagerLoadingAsync(request.TeamId);
             _teamService.UpdateTeamName(teamFromDb, request.Name);
 
             return _mapper.Map<TeamDetailsDto>(teamFromDb);

@@ -91,7 +91,7 @@ namespace TechTask.Application.TeamTasks.Commands
             var taskToAdd = CreateNewTaskCommand.ConvertToTask(request);
             taskToAdd.Status = taskToAdd.UserId == null ? TaskStatus.Unassigned : TaskStatus.Assigned;
             taskToAdd.TrackerId = _accessor.HttpContext.User.IsInRole("Admin")
-                ? new Guid(_accessor.HttpContext.User.Claims.Single(c => c.Type == "Id").Value)
+                ? new Guid(_accessor.HttpContext.User.Claims.Single(c => c.Type == "UserId").Value)
                 : taskToAdd.TrackerId;
 
             if (taskToAdd.TrackerId != null)
@@ -108,17 +108,17 @@ namespace TechTask.Application.TeamTasks.Commands
             //await _tasksService.SaveChangesAsync();
 
             var taskFromDbForMapping = await _tasksService.GetTaskAsync(taskToAdd.Id, true);
-            var taskToReturn = TaskDetailsDto.TaskDetailsWithNoUsers(taskFromDbForMapping);
-            taskToReturn.TrackerName = taskFromDbForMapping.TrackerId == null
-                ? null
-                : $"{taskToAdd.TrackerFirstName} {taskToAdd.TrackerLastName}";
-
-            if (taskFromDbForMapping.User == null)
-                return taskToReturn;
-
-            taskToReturn.UserOnTask = $"{taskFromDbForMapping.User.FirstName} {taskFromDbForMapping.User.LastName}";
-            
-            return taskToReturn;
+            //var taskToReturn = TaskDetailsDto.TaskDetailsWithNoUsers(taskFromDbForMapping);
+            //taskToReturn.TrackerName = taskFromDbForMapping.TrackerId == null
+            //    ? null
+            //    : $"{taskToAdd.TrackerFirstName} {taskToAdd.TrackerLastName}";
+            //
+            //if (taskFromDbForMapping.User == null)
+            //    return taskToReturn;
+            //
+            //taskToReturn.UserOnTask = $"{taskFromDbForMapping.User.FirstName} {taskFromDbForMapping.User.LastName}";
+            //
+            //return taskToReturn;
         }   
     }
 
