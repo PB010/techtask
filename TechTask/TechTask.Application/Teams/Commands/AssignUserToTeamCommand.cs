@@ -39,9 +39,6 @@ namespace TechTask.Application.Teams.Commands
             var teamFromDb = await _teamService.GetTeamAsync(request.IdAttributesDto.Id, true);
             var userFromDb = await _userService.GetUserAsync(request.IdAttributesDto.UserId);
 
-            //if (teamFromDb == null)
-            //    throw new ArgumentNullException();
-
             if (!_accessor.HttpContext.User.IsInRole("Admin"))
                 throw new AuthenticationException("You don't have permission to do that.");
 

@@ -14,8 +14,8 @@ namespace TechTask.Application.Teams.Commands
 {
     public class RemoveUserFromTeamCommand : IRequest
     {
-        public int Id { get; set; } 
-        public Guid UserId { get; set; }    
+        public int Id { get; set; }
+        public Guid UserId { get; set; }
     }
 
     public class RemoveUserFromTeamHandler : AsyncRequestHandler<RemoveUserFromTeamCommand>
@@ -27,9 +27,9 @@ namespace TechTask.Application.Teams.Commands
         public RemoveUserFromTeamHandler(IUserService userService, ITeamService teamService,
             IHttpContextAccessor accessor)
         {
-            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
-            _teamService = teamService ?? throw new ArgumentNullException(nameof(teamService));
-            _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
+            _userService = userService;
+            _teamService = teamService;
+            _accessor = accessor;
         }
 
         protected override async Task Handle(RemoveUserFromTeamCommand request, CancellationToken cancellationToken)
@@ -39,9 +39,6 @@ namespace TechTask.Application.Teams.Commands
 
             var userForDb = await _userService.GetUserAsync(request.UserId);
             var teamForDb = await _teamService.GetTeamAsync(request.Id, false);
-
-            if (teamForDb == null)
-                throw new ArgumentNullException();
 
             await _teamService.RemoveUserFromTeam(userForDb);
         }
@@ -61,5 +58,15 @@ namespace TechTask.Application.Teams.Commands
                 .WithErrorCode("400");
         }
     }
+
+    //public class RemoveUserFromTeamRouteValidator : AbstractValidator<int>
+    //{
+    //    public RemoveUserFromTeamRouteValidator(AppDbContext context)
+    //    {
+    //        RuleFor(x => x).Must(m => context.Teams.Any(t => t.Id == m))
+    //            .WithMessage("This team was not found.")
+    //            .WithErrorCode("404");
+    //    }
+    //}
 
 }
