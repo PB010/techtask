@@ -32,7 +32,7 @@ namespace TechTask.API.Controllers
         [HttpGet]
         public async Task<IEnumerable<TaskDetailsDto>> GetAllTasksForTeam([FromRoute] int teamId)
         {
-            return await _mediator.Send(new GetAllTasksForTeamQuery());
+            return await _mediator.Send(new GetAllTasksForTeamQuery{TeamId = teamId});
         }
 
         [HttpGet("{taskId}")]

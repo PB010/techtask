@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
 using TechTask.Persistence.Context;
@@ -41,13 +42,20 @@ namespace TechTask.Infrastructure.Services
                 .ToListAsync();
         }
 
-        public void AddTask(Tasks task)
+        public async Task<IEnumerable<Tasks>> GetAllTasksForATeamAsync(int teamId)
         {
-            _context.Tasks.Add(task);
+            return await _context.Tasks.Include(t => t.Team)
+                .Include(t => t.TaskPriority)
+                .Include(t => t.User)
+                .Include(t => t.Comments)
+                .Include(t => t.Log)
+                .Where(t => t.TeamId == teamId)
+                .ToListAsync();
         }
 
-        public async Task<int> SaveChangesAsync()
+        public async Task<int> AddTask(Tasks task)
         {
+            _context.Tasks.Add(task);
             return await _context.SaveChangesAsync();
         }
     }
