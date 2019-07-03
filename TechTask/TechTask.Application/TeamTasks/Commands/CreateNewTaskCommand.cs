@@ -107,7 +107,7 @@ namespace TechTask.Application.TeamTasks.Commands
             _tasksService.AddTask(taskToAdd);
             //await _tasksService.SaveChangesAsync();
 
-            var taskFromDbForMapping = await _tasksService.GetTaskAsync(taskToAdd.Id, true);
+            var taskFromDbForMapping = await _tasksService.GetTaskWithEagerLoadingAsync(taskToAdd.Id, true);
             //var taskToReturn = TaskDetailsDto.TaskDetailsWithNoUsers(taskFromDbForMapping);
             //taskToReturn.TrackerName = taskFromDbForMapping.TrackerId == null
             //    ? null

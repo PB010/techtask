@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
@@ -17,15 +18,13 @@ namespace TechTask.Application.TeamTasks.Queries
     public class GetSingleTaskForTeamHandler : IRequestHandler<GetSingleTaskForTeamQuery, TaskDetailsDto>
     {
         private readonly ITasksService _taskService;
-        private readonly ITeamService _teamService;
         private readonly IHttpContextAccessor _accessor;
         private readonly IMapper _mapper;
 
-        public GetSingleTaskForTeamHandler(ITasksService taskService, ITeamService teamService,
-            IHttpContextAccessor accessor, IMapper mapper)
+        public GetSingleTaskForTeamHandler(ITasksService taskService, IHttpContextAccessor accessor,
+            IMapper mapper)
         {
             _taskService = taskService;
-            _teamService = teamService;
             _accessor = accessor;
             _mapper = mapper;
         }
@@ -33,17 +32,19 @@ namespace TechTask.Application.TeamTasks.Queries
         public async Task<TaskDetailsDto> Handle(GetSingleTaskForTeamQuery request,
             CancellationToken cancellationToken)
         {
-            var teamFromDb = await _teamService.GetTeamWithoutEagerLoadingAsync(request.TeamId);
-            var taskFromDb = await _taskService.GetTaskAsync(request.TaskId, true);
+
+            if (!_accessor.HttpContext.User.IsInRole("Admin") &&
+                    _accessor.HttpContext.User.HasClaim(c => c.Type == "TeamId" &&
+                                                              c.Value != $"{request.TeamId}"))
+                    throw new AuthenticationException("Unauthorized access.");  
+
+            var taskFromDb = await _taskService.GetTaskWithEagerLoadingAsync(request.TaskId);
 
             /// De scos in clasa aparte.
             //if (!_accessor.HttpContext.User.IsInRole("Admin") &&
             //    !_accessor.HttpContext.User.HasClaim(c => c.Type == "TeamId" &&
             //                                              c.Value == $"{teamFromDb.UserId}"))
             //    throw new AuthenticationException("Unauthorized access.");  
-
-            //if (teamFromDb == null || taskFromDb == null)
-            //    throw new ArgumentNullException();
 
             return _mapper.Map<TaskDetailsDto>(taskFromDb);
         }

@@ -17,16 +17,18 @@ namespace TechTask.Infrastructure.Services
             _context = context;
         }
 
-        public async Task<Tasks> GetTaskAsync(int id, bool includeAllChildren)
+        public async Task<Tasks> GetTaskWithEagerLoadingAsync(int id)
         {
-            if (includeAllChildren)
-                return await _context.Tasks.Include(t => t.Team)
-                    .Include(t => t.TaskPriority)
-                    .Include(t => t.User)
-                    .Include(t => t.Comments)
-                    .Include(t => t.Log)
-                    .SingleOrDefaultAsync(t => t.Id == id);
+            return await _context.Tasks.Include(t => t.Team)
+                .Include(t => t.TaskPriority)
+                .Include(t => t.User)
+                .Include(t => t.Comments)
+                .Include(t => t.Log)
+                .SingleOrDefaultAsync(t => t.Id == id);
+        }
 
+        public async Task<Tasks> GetTaskWithoutEagerLoadingAsync(int id)
+        {
             return await _context.Tasks.Include(t => t.Team)
                 .Include(t => t.TaskPriority)
                 .SingleOrDefaultAsync(t => t.Id == id);
