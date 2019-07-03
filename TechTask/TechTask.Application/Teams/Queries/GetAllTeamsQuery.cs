@@ -1,7 +1,8 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Http;
-using System;
 using System.Collections.Generic;
+using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
@@ -17,26 +18,26 @@ namespace TechTask.Application.Teams.Queries
     {
         private readonly ITeamService _teamService;
         private readonly IHttpContextAccessor _accessor;
+        private readonly IMapper _mapper;
 
-        public GetAllTeamsHandler(ITeamService teamService, IHttpContextAccessor accessor)
+        public GetAllTeamsHandler(ITeamService teamService, IHttpContextAccessor accessor,
+            IMapper mapper)
         {
-            _teamService = teamService ?? throw new ArgumentNullException(nameof(teamService));
-            _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
+            _teamService = teamService;
+            _accessor = accessor;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<TeamDetailsDto>> Handle(GetAllTeamsQuery request, CancellationToken cancellationToken)
         {
             if (!_accessor.HttpContext.User.IsInRole("Admin"))
             {
-                var teamsFromDb = await _teamService.GetAllTeamsAsync(false);
-
-                //return teamsFromDb.Select(TeamDetailsDto.ConvertToTeamDetailsDto);
+                throw new AuthenticationException("Access denied.");
             }
 
-            var teamsForAdmins = await _teamService.GetAllTeamsAsync(true);
+            var teamsForAdmins = await _teamService.GetAllTeamsWithEagerLoadingAsync();
 
-            //return teamsForAdmins.Select(TeamDetailsDto.ConvertToTeamDetailsDto);
-            throw new Exception();
+            return _mapper.Map<IEnumerable<TeamDetailsDto>>(teamsForAdmins);
         }
     }
 }

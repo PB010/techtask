@@ -29,18 +29,20 @@ namespace TechTask.Infrastructure.Services
             return await _context.Teams.SingleOrDefaultAsync(t => t.Id == id);
         }
 
-        public async Task<IEnumerable<Team>> GetAllTeamsAsync(bool includeChild)
+        public async Task<IEnumerable<Team>> GetAllTeamsWithEagerLoadingAsync()
         {
-            if (includeChild)
-                return await _context.Teams.Include(t => t.Tasks)
-                    .Include(t => t.Users)
-                    .ThenInclude(u => u.Comments)
-                    .Include(t => t.Users)
-                    .ThenInclude(u => u.Log)
-                    .ToListAsync();
+            return await _context.Teams.Include(t => t.Tasks)
+                .Include(t => t.Users)
+                .ThenInclude(u => u.Comments)
+                .Include(t => t.Users)
+                .ThenInclude(u => u.Log)
+                .ToListAsync();
+        }
 
+        public async Task<IEnumerable<Team>> GetAllTeamsWithoutEagerLoadingAsync()
+        {
             return await _context.Teams.ToListAsync();
-        }   
+        }
 
         public async Task<int> RemoveUserFromTeam(User user)
         {
