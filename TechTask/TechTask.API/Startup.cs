@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using System.Text;
-using TechTask.Application.Common.Validators;
+using TechTask.Application.Filters.Validator;
 using TechTask.Application.Interfaces;
 using TechTask.Application.Users.Commands;
 using TechTask.Application.Users.Mapping;
