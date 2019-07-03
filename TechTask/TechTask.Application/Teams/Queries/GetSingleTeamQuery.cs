@@ -1,6 +1,6 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Http;
-using System;
 using System.Linq;
 using System.Security.Authentication;
 using System.Threading;
@@ -19,25 +19,24 @@ namespace TechTask.Application.Teams.Queries
     {
         private readonly ITeamService _teamService;
         private readonly IHttpContextAccessor _accessor;
+        private readonly IMapper _mapper;
 
-        public GetSingleTeamHandler(ITeamService teamService, IHttpContextAccessor accessor)
+        public GetSingleTeamHandler(ITeamService teamService, IHttpContextAccessor accessor,
+            IMapper mapper)
         {
-            _teamService = teamService ?? throw new ArgumentNullException(nameof(teamService));
-            _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
+            _teamService = teamService;
+            _accessor = accessor;
+            _mapper = mapper;
         }
 
         public async Task<TeamDetailsDto> Handle(GetSingleTeamQuery request, CancellationToken cancellationToken)
         {
             var teamFromDb = await _teamService.GetTeamAsync(request.Id, true);
 
-            if (teamFromDb == null)
-                throw new ArgumentNullException();
-
             if (_accessor.HttpContext.User.IsInRole("Admin") ||
                 _accessor.HttpContext.User.HasClaim(c => c.Type == "TeamId" &&
-                                                          teamFromDb.Users.Any(t => $"{t.TeamId}" == c.Value)))
-                //return TeamDetailsDto.ConvertToTeamDetailsDto(teamFromDb);
-                throw new Exception();
+                                                         teamFromDb.Users.Any(t => $"{t.TeamId}" == c.Value)))
+                return _mapper.Map<TeamDetailsDto>(teamFromDb);
 
             throw new AuthenticationException();
         }

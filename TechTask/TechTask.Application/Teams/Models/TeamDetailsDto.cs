@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using TechTask.Application.TeamTasks.Models;
-using TechTask.Persistence.Models.Task;
-using TechTask.Persistence.Models.Users;
+using TechTask.Application.Users.Models;
 
 namespace TechTask.Application.Teams.Models
 {
@@ -10,7 +8,6 @@ namespace TechTask.Application.Teams.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public int HoursOfWorkOnAllTasks { get; set; }
-        public IEnumerable<TaskDetailsDto> Tasks { get; set; }
-        public IEnumerable<User> Users { get; set; }
+        public IEnumerable<UserDetailsDto> Users { get; set; }
     }
 }

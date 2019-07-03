@@ -64,15 +64,5 @@ namespace TechTask.Application.Teams.Commands
                     .WithErrorCode("400");
             }
         }
-
-        public class IdRouteAttributesValidator : AbstractValidator<int>
-        {
-            public IdRouteAttributesValidator(AppDbContext context)
-            {
-                RuleFor(x => x).Must(m => context.Teams.Any(t => t.Id == m))
-                    .WithMessage("This team was not found.")
-                    .WithErrorCode("404");
-            }
-        }
     }
 }
