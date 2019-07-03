@@ -35,10 +35,11 @@ namespace TechTask.Application.TeamTasks.Queries
             var teamFromDb = await _teamService.GetTeamAsync(request.TeamId, false);
             var taskFromDb = await _taskService.GetTaskAsync(request.Id, true);
 
-            if (!_accessor.HttpContext.User.IsInRole("Admin") &&
-                !_accessor.HttpContext.User.HasClaim(c => c.Type == "TeamId" &&
-                                                          c.Value == $"{teamFromDb.Id}"))
-                throw new AuthenticationException("Unauthorized access.");
+            /// De scos in clasa aparte.
+            //if (!_accessor.HttpContext.User.IsInRole("Admin") &&
+            //    !_accessor.HttpContext.User.HasClaim(c => c.Type == "TeamId" &&
+            //                                              c.Value == $"{teamFromDb.Id}"))
+            //    throw new AuthenticationException("Unauthorized access.");  
 
             if (teamFromDb == null || taskFromDb == null)
                 throw new ArgumentNullException();
@@ -48,4 +49,6 @@ namespace TechTask.Application.TeamTasks.Queries
             return taskToReturn;
         }
     }
+
+
 }

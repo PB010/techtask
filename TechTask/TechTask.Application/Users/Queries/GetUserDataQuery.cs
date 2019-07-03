@@ -48,11 +48,11 @@ namespace TechTask.Application.Users.Queries
         }
     }
     
-    public class GetUserDataValidator : AbstractValidator<GetUserDataQuery>
+    public class GetUserDataValidator : AbstractValidator<Guid>
     {
         public GetUserDataValidator(IUserService service, IHttpContextAccessor context)
         {
-            RuleFor(x => x.Id)
+            RuleFor(x => x)
                 .Must(service.UserExists)
                 .WithMessage("This user doesn't exist.")
                 .WithErrorCode("404");

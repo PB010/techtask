@@ -1,7 +1,8 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Http;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,22 +19,25 @@ namespace TechTask.Application.Users.Queries
     {
         private readonly IUserService _userService;
         private readonly IHttpContextAccessor _accessor;
+        private readonly IMapper _mapper;
 
-        public GetAllUsersHandler(IUserService userService, IHttpContextAccessor accessor)
+        public GetAllUsersHandler(IUserService userService, IHttpContextAccessor accessor,
+            IMapper mapper)
         {
-            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
-            _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
+            _userService = userService;
+            _accessor = accessor;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<UserDetailsDto>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<UserDetailsDto>> Handle(GetAllUsersQuery request,
+            CancellationToken cancellationToken)
         {
             if (!_accessor.HttpContext.User.IsInRole("Admin"))
                 throw new AuthenticationException();
 
             var users = await _userService.GetAllUsersAsync();
 
-            throw new Exception();
-            //return users.Select(UserDetailsDto.ConvertToUserDetails);
+            return users.Select(_mapper.Map<UserDetailsDto>);
         }
     }
 }
