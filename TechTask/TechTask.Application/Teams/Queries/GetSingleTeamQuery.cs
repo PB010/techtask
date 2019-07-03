@@ -31,7 +31,7 @@ namespace TechTask.Application.Teams.Queries
 
         public async Task<TeamDetailsDto> Handle(GetSingleTeamQuery request, CancellationToken cancellationToken)
         {
-            var teamFromDb = await _teamService.GetTeamAsync(request.Id, true);
+            var teamFromDb = await _teamService.GetTeamWithEagerLoadingAsync(request.Id);
 
             if (_accessor.HttpContext.User.IsInRole("Admin") ||
                 _accessor.HttpContext.User.HasClaim(c => c.Type == "TeamId" &&

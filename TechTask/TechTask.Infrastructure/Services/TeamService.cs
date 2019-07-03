@@ -16,16 +16,18 @@ namespace TechTask.Infrastructure.Services
             _context = context;
         }
 
-        public async Task<Team> GetTeamAsync(int id, bool includeChild)
+        public async Task<Team> GetTeamWithEagerLoadingAsync(int id)
         {
-            if (includeChild)
-                return await _context.Teams.Include(t => t.Tasks)
-                    .Include(t => t.Users)
-                    .ThenInclude(u => u.Comments)
-                    .Include(t => t.Users)
-                    .ThenInclude(u => u.Log)
-                    .SingleOrDefaultAsync(t => t.Id == id);
+            return await _context.Teams.Include(t => t.Tasks)
+                .Include(t => t.Users)
+                .ThenInclude(u => u.Comments)
+                .Include(t => t.Users)
+                .ThenInclude(u => u.Log)
+                .SingleOrDefaultAsync(t => t.Id == id);
+        }
 
+        public async Task<Team> GetTeamWithoutEagerLoadingAsync(int id)
+        {
             return await _context.Teams.SingleOrDefaultAsync(t => t.Id == id);
         }
 
@@ -60,6 +62,12 @@ namespace TechTask.Infrastructure.Services
         {
             _context.Teams.Add(team);
             return await _context.SaveChangesAsync();
+        }
+
+        public async void UpdateTeamName(Team team, string name)
+        {
+            team.Name = name;
+            await _context.SaveChangesAsync();
         }
     }
 }

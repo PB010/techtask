@@ -38,7 +38,7 @@ namespace TechTask.Application.Teams.Commands
                 throw new AuthenticationException("Unauthorized access.");
 
             var userForDb = await _userService.GetUserAsync(request.UserId);
-            var teamForDb = await _teamService.GetTeamAsync(request.Id, false);
+            var teamForDb = await _teamService.GetTeamWithoutEagerLoadingAsync(request.Id);
 
             await _teamService.RemoveUserFromTeam(userForDb);
         }

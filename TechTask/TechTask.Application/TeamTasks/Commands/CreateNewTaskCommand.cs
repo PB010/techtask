@@ -78,7 +78,7 @@ namespace TechTask.Application.TeamTasks.Commands
         public async Task<TaskDetailsDto> Handle(CreateNewTaskCommand request, CancellationToken cancellationToken)
         {
             throw new EncoderFallbackException();
-            var teamFromDb = await _teamService.GetTeamAsync(request.TeamId, true);
+            var teamFromDb = await _teamService.GetTeamWithEagerLoadingAsync(request.TeamId);
             if (teamFromDb == null)
                 throw new ArgumentNullException();
             

@@ -36,7 +36,7 @@ namespace TechTask.Application.Teams.Commands
 
         public async Task<TeamDetailsDto> Handle(AssignUserToTeamCommand request, CancellationToken cancellationToken)
         {
-            var teamFromDb = await _teamService.GetTeamAsync(request.IdAttributesDto.Id, true);
+            var teamFromDb = await _teamService.GetTeamWithEagerLoadingAsync(request.IdAttributesDto.Id);
             var userFromDb = await _userService.GetUserAsync(request.IdAttributesDto.UserId);
 
             if (!_accessor.HttpContext.User.IsInRole("Admin"))

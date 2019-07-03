@@ -27,7 +27,7 @@ namespace TechTask.Application.TeamTasks.Queries
 
         public async Task<IEnumerable<TaskDetailsDto>> Handle(GetAllTasksForTeamQuery request, CancellationToken cancellationToken)
         {
-            var teamForTask = await _teamService.GetTeamAsync(request.TeamId, false);
+            var teamForTask = await _teamService.GetTeamWithoutEagerLoadingAsync(request.TeamId);
 
             if (teamForTask == null)
                 throw new ArgumentNullException();

@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
@@ -32,7 +31,7 @@ namespace TechTask.Application.TeamTasks.Queries
         public async Task<TaskDetailsDto> Handle(GetSingleTaskForTeamQuery request,
             CancellationToken cancellationToken)
         {
-            var teamFromDb = await _teamService.GetTeamAsync(request.TeamId, false);
+            var teamFromDb = await _teamService.GetTeamWithoutEagerLoadingAsync(request.TeamId);
             var taskFromDb = await _taskService.GetTaskAsync(request.Id, true);
 
             /// De scos in clasa aparte.

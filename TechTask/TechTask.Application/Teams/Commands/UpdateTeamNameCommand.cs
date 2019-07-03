@@ -1,6 +1,6 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Http;
-using System;
 using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,11 +19,14 @@ namespace TechTask.Application.Teams.Commands
     {
         private readonly ITeamService _teamService;
         private readonly IHttpContextAccessor _accessor;
+        private readonly IMapper _mapper;
 
-        public UpdateTeamNameHandler(ITeamService teamService, IHttpContextAccessor accessor)
+        public UpdateTeamNameHandler(ITeamService teamService, IHttpContextAccessor accessor,
+            IMapper mapper)
         {
-            _teamService = teamService ?? throw new ArgumentNullException(nameof(teamService));
-            _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
+            _teamService = teamService;
+            _accessor = accessor;
+            _mapper = mapper;
         }
 
         public async Task<TeamDetailsDto> Handle(UpdateTeamNameCommand request, CancellationToken cancellationToken)
@@ -31,17 +34,10 @@ namespace TechTask.Application.Teams.Commands
             if (!_accessor.HttpContext.User.IsInRole("Admin"))
                 throw new AuthenticationException("You don't have permission to do that.");
 
-            var teamFromDb = await _teamService.GetTeamAsync(request.Id, true);
+            var teamFromDb = await _teamService.GetTeamWithEagerLoadingAsync(request.Id);
+            _teamService.UpdateTeamName(teamFromDb, request.Name);
 
-            if (teamFromDb == null)
-                throw new ArgumentNullException();
-
-            teamFromDb.Name = request.Name;
-            //await _teamService.SaveChangesAsync();
-            //
-            //return TeamDetailsDto.ConvertToTeamDetailsDto(teamFromDb);
-
-            throw new Exception();
+            return _mapper.Map<TeamDetailsDto>(teamFromDb);
         }
     }
 }   
