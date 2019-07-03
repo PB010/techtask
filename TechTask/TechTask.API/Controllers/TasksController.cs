@@ -21,6 +21,7 @@ namespace TechTask.API.Controllers
         {}
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidateTaskForCreationDto))]
         public async Task<TaskDetailsDto> CreateATask([FromRoute] int teamId,
             [FromBody] TaskForCreationDto dto)
         {

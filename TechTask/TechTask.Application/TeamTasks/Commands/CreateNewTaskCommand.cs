@@ -2,7 +2,6 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading;
@@ -72,17 +71,9 @@ namespace TechTask.Application.TeamTasks.Commands
                 .NotNull().NotEmpty().WithMessage("Please provide a valid description.");
             RuleFor(x => x.EstimatedTimeToFinishInHours).NotEmpty()
                 .WithMessage("Please provide a valid time to finish.");
-            RuleFor(x => x.PriorityId).Must(m => context.TaskPriorities
+            RuleFor(x => x.TaskPriorityId).Must(m => context.TaskPriorities
                     .Any(p => p.Id == m))
                 .NotEmpty().WithMessage("Please provide a valid priority.");
-
-            When(c => c.UserId != null, () =>
-            {
-                RuleFor(x => new {x.UserId, x.TeamId}).Must(m => context.Teams
-                        .Include(t => t.Users)
-                        .Single(t => t.Id == m.TeamId).Users.Any(u => u.Id == m.UserId))
-                    .WithMessage("This user is not a part of the team.");
-            });
         }
     }
 }

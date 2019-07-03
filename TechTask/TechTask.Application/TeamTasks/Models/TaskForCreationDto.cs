@@ -13,7 +13,7 @@ namespace TechTask.Application.TeamTasks.Models
         public int EstimatedTimeToFinishInHours { get; set; }
         public List<Comment> Comments => new List<Comment>();
         public List<LoggedActivity> Log => new List<LoggedActivity>();
-        public int PriorityId { get; set; }
+        public int TaskPriorityId { get; set; }
         public Guid? TrackerId { get; set; }
         public Guid? UserId { get; set; } 
     }

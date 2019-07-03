@@ -9,7 +9,9 @@ namespace TechTask.Application.TeamTasks.Mapping
     {
         public TaskMappingProfile()
         {
-            CreateMap<Tasks, TaskDetailsDto>().ForMember(dest => dest.Balance, opt =>
+            CreateMap<Tasks, TaskDetailsDto>().ForMember(dest => dest.TaskId, opt =>
+                    opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Balance, opt =>
                     opt.MapFrom(src => src.Balance.ToString()))
                 .ForMember(dest => dest.TeamName, opt => opt.MapFrom(src =>
                     src.Team.Name))

@@ -68,6 +68,7 @@ namespace TechTask.API
             services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<ITasksService, TasksService>();
             services.AddScoped<ValidateRouteAttributes>();
+            services.AddScoped<ValidateTaskForCreationDto>();
 
             services.AddHttpContextAccessor();
             services.AddMediatR(typeof(RegisterUserCommand));
