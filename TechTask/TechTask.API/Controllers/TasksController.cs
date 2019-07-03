@@ -22,11 +22,11 @@ namespace TechTask.API.Controllers
 
         [HttpPost]
         public async Task<TaskDetailsDto> CreateATask([FromRoute] int teamId,
-            [FromBody] CreateNewTaskCommand command)
+            [FromBody] TaskForCreationDto dto)
         {
-            command.TeamId = teamId;
+            dto.TeamId = teamId;
 
-            return await _mediator.Send(command);
+            return await _mediator.Send(new CreateNewTaskCommand{TaskForCreationDto = dto});
         }
 
         [HttpGet]
