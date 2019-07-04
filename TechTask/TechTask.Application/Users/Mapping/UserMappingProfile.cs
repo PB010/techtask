@@ -1,5 +1,5 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
+using System;
 using TechTask.Application.Users.Models;
 using TechTask.Persistence.Models.Users;
 using TechTask.Persistence.Models.Users.Enums;
@@ -20,7 +20,9 @@ namespace TechTask.Application.Users.Mapping
             CreateMap<UserForLoginDto, UserWithTokenDto>().ForMember(dest => dest.Status,
                 opt => opt.MapFrom(src => "Successful login."));
 
-            CreateMap<User, UserDetailsDto>().ForMember(dest => dest.Age, opt =>
+            CreateMap<User, UserDetailsDto>().ForMember(dest => dest.UserId, opt =>
+                    opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Age, opt =>
                 opt.MapFrom(src => (DateTime.Now.Year - src.DateOfBirth.Year).ToString()))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src =>
                     $"{src.FirstName} {src.LastName}"))

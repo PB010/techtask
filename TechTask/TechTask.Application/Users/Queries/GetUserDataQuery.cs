@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Security.Authentication;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
@@ -20,15 +18,13 @@ namespace TechTask.Application.Users.Queries
     {
         private readonly IUserService _userService;
         private readonly ITokenAuthenticationService _authService;
-        private readonly IHttpContextAccessor _accessor;
         private readonly IMapper _mapper;
 
-        public GetUserDataHandler(IUserService userService, ITokenAuthenticationService authService
-        , IHttpContextAccessor accessor, IMapper mapper)
+        public GetUserDataHandler(IUserService userService, ITokenAuthenticationService authService,
+            IMapper mapper)
         {
             _userService = userService;
             _authService = authService;
-            _accessor = accessor;
             _mapper = mapper;
         }
 
@@ -38,9 +34,7 @@ namespace TechTask.Application.Users.Queries
             var userDetails = _mapper.Map<UserDetailsDto>(userFromDb);
 
 
-            if (_accessor.HttpContext.User.IsInRole("Admin") ||
-                _accessor.HttpContext.User.HasClaim(c => c.Type == ClaimTypes.Email &&
-                                                         c.Value == userFromDb.Email))
+            if (_authService.UserRoleAdminOrEmailMatches(userFromDb.Email))
                 return userDetails;
 
             throw new AuthenticationException("Unauthorized access.");

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Authentication;
@@ -18,22 +17,22 @@ namespace TechTask.Application.Users.Queries
     public class GetAllUsersHandler : IRequestHandler<GetAllUsersQuery, IEnumerable<UserDetailsDto>>
     {
         private readonly IUserService _userService;
-        private readonly IHttpContextAccessor _accessor;
-        private readonly IMapper _mapper;
+        private readonly IMapper _mapper;   
+        private readonly ITokenAuthenticationService _authService;
 
-        public GetAllUsersHandler(IUserService userService, IHttpContextAccessor accessor,
-            IMapper mapper)
+        public GetAllUsersHandler(IUserService userService,
+            IMapper mapper, ITokenAuthenticationService authService)
         {
             _userService = userService;
-            _accessor = accessor;
             _mapper = mapper;
+            _authService = authService;
         }
 
         public async Task<IEnumerable<UserDetailsDto>> Handle(GetAllUsersQuery request,
             CancellationToken cancellationToken)
         {
-            if (!_accessor.HttpContext.User.IsInRole("Admin"))
-                throw new AuthenticationException();
+            if (!_authService.UserRoleAdmin())
+                throw new AuthenticationException("You don't have permission to do that.");
 
             var users = await _userService.GetAllUsersAsync();
 

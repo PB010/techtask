@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,15 +16,18 @@ namespace TechTask.Infrastructure.Services
 {
     public class TokenAuthenticationService : ITokenAuthenticationService
     {
-        private readonly AppDbContext _context;
         private readonly TokenManagement _tokenManagement;
+        private readonly AppDbContext _context;
+        private readonly IHttpContextAccessor _accessor;
 
-    
 
-        public TokenAuthenticationService(IOptions<TokenManagement> tokenManagement, AppDbContext context)
+
+        public TokenAuthenticationService(IOptions<TokenManagement> tokenManagement, AppDbContext context,
+            IHttpContextAccessor accessor)
         {
-            _context = context;
             _tokenManagement = tokenManagement.Value;
+            _context = context;
+            _accessor = accessor;
         }
 
         public string GenerateToken(UserForLoginDto user)
@@ -62,6 +66,18 @@ namespace TechTask.Infrastructure.Services
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(jwtToken);
+        }
+
+        public bool UserRoleAdmin()
+        {
+            return _accessor.HttpContext.User.IsInRole("Admin");
+        }
+
+        public bool UserRoleAdminOrEmailMatches(string email)
+        {
+            return (_accessor.HttpContext.User.IsInRole("Admin") ||
+                   _accessor.HttpContext.User.HasClaim(c => c.Type == ClaimTypes.Email &&
+                                                            c.Value == email));
         }
     }
 }

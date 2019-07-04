@@ -5,5 +5,7 @@ namespace TechTask.Application.Interfaces
     public interface ITokenAuthenticationService
     {
         string GenerateToken(UserForLoginDto user);
+        bool UserRoleAdmin();
+        bool UserRoleAdminOrEmailMatches(string email);
     }
 }
