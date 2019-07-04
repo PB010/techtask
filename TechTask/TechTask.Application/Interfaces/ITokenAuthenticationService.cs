@@ -8,6 +8,8 @@ namespace TechTask.Application.Interfaces
         string GenerateToken(UserForLoginDto user);
         bool UserRoleAdmin();
         bool UserRoleAdminOrEmailMatches(string email);
-        bool UserRoleAdminOrTeamIdMatches(Team teamFromDb); 
+        bool UserRoleAdminOrTeamIdMatches(Team teamFromDb);
+        bool UserRoleAdminOrTeamIdMatches(int teamId);
+        string GetUserIdClaimValue();
     }
 }

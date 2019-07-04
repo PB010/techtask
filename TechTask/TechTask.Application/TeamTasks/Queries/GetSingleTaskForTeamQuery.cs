@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,14 +17,14 @@ namespace TechTask.Application.TeamTasks.Queries
     public class GetSingleTaskForTeamHandler : IRequestHandler<GetSingleTaskForTeamQuery, TaskDetailsDto>
     {
         private readonly ITasksService _taskService;
-        private readonly IHttpContextAccessor _accessor;
+        private readonly ITokenAuthenticationService _authService;
         private readonly IMapper _mapper;
 
-        public GetSingleTaskForTeamHandler(ITasksService taskService, IHttpContextAccessor accessor,
+        public GetSingleTaskForTeamHandler(ITasksService taskService, ITokenAuthenticationService authService,
             IMapper mapper)
         {
             _taskService = taskService;
-            _accessor = accessor;
+            _authService = authService;
             _mapper = mapper;
         }
 
@@ -33,18 +32,10 @@ namespace TechTask.Application.TeamTasks.Queries
             CancellationToken cancellationToken)
         {
 
-            if (!_accessor.HttpContext.User.IsInRole("Admin") &&
-                    _accessor.HttpContext.User.HasClaim(c => c.Type == "TeamId" &&
-                                                              c.Value != $"{request.TeamId}"))
+            if (!_authService.UserRoleAdminOrTeamIdMatches(request.TeamId))
                     throw new AuthenticationException("Unauthorized access.");  
 
             var taskFromDb = await _taskService.GetTaskWithEagerLoadingAsync(request.TaskId);
-
-            /// De scos in clasa aparte.
-            //if (!_accessor.HttpContext.User.IsInRole("Admin") &&
-            //    !_accessor.HttpContext.User.HasClaim(c => c.Type == "TeamId" &&
-            //                                              c.Value == $"{teamFromDb.UserId}"))
-            //    throw new AuthenticationException("Unauthorized access.");  
 
             return _mapper.Map<TaskDetailsDto>(taskFromDb);
         }

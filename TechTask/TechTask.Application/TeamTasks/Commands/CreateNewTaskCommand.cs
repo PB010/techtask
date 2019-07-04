@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
 using System.Threading;
@@ -22,15 +21,15 @@ namespace TechTask.Application.TeamTasks.Commands
     {
         private readonly ITasksService _tasksService;
         private readonly IUserService _userService;
-        private readonly IHttpContextAccessor _accessor;
+        private readonly ITokenAuthenticationService _authService;
         private readonly IMapper _mapper;
 
         public CreateNewTaskHandler(ITasksService tasksService, IUserService userService,   
-            IHttpContextAccessor accessor, IMapper mapper)
+            ITokenAuthenticationService authService, IMapper mapper)
         {
             _tasksService = tasksService;
             _userService = userService;
-            _accessor = accessor;
+            _authService = authService;
             _mapper = mapper;
         }   
 
@@ -38,8 +37,8 @@ namespace TechTask.Application.TeamTasks.Commands
         {
             var taskToAdd = _mapper.Map<Tasks>(request.TaskForCreationDto);
 
-            taskToAdd.TrackerId = _accessor.HttpContext.User.IsInRole("Admin")
-                ? new Guid(_accessor.HttpContext.User.Claims.Single(c => c.Type == "UserId").Value)
+            taskToAdd.TrackerId = _authService.UserRoleAdmin()
+                ? new Guid(_authService.GetUserIdClaimValue())
                 : taskToAdd.TrackerId;
 
             if (taskToAdd.TrackerId != null)

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Authentication;
@@ -19,23 +18,21 @@ namespace TechTask.Application.TeamTasks.Queries
     public class GetAllTasksForTeamHandler : IRequestHandler<GetAllTasksForTeamQuery, IEnumerable<TaskDetailsDto>>
     {
         private readonly ITasksService _taskService;
-        private readonly IHttpContextAccessor _accessor;
+        private readonly ITokenAuthenticationService _authService;
         private readonly IMapper _mapper;
 
-        public GetAllTasksForTeamHandler(ITasksService taskService, IHttpContextAccessor accessor,
+        public GetAllTasksForTeamHandler(ITasksService taskService, ITokenAuthenticationService authService,
             IMapper mapper)
         {
             _taskService = taskService;
-            _accessor = accessor;   
+            _authService = authService;
             _mapper = mapper;
         }
 
         public async Task<IEnumerable<TaskDetailsDto>> Handle(GetAllTasksForTeamQuery request,
             CancellationToken cancellationToken)
         {
-            if (!_accessor.HttpContext.User.IsInRole("Admin") &&
-                _accessor.HttpContext.User.HasClaim(c => c.Type == "TeamId" &&
-                                                         c.Value != $"{request.TeamId}"))
+            if (!_authService.UserRoleAdminOrTeamIdMatches(request.TeamId))
                 throw new AuthenticationException("Access denied");
 
             var tasksFromDb = await _taskService.GetAllTasksForATeamAsync(request.TeamId);

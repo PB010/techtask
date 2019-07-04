@@ -87,5 +87,17 @@ namespace TechTask.Infrastructure.Services
                    _accessor.HttpContext.User.HasClaim(c => c.Type == "TeamId" &&
                                                             teamFromDb.Users.Any(t => $"{t.TeamId}" == c.Value)));
         }
+
+        public bool UserRoleAdminOrTeamIdMatches(int teamId)
+        {
+            return (_accessor.HttpContext.User.IsInRole("Admin") ||
+                    _accessor.HttpContext.User.HasClaim(c => c.Type == "TeamId" &&
+                                                             c.Value == $"{teamId}"));
+        }
+
+        public string GetUserIdClaimValue()
+        {
+            return _accessor.HttpContext.User.Claims.Single(c => c.Type == "UserId").Value;
+        }
     }
 }
