@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using TechTask.Persistence.Context;
 
 namespace TechTask.Application.Filters.GeneralValidator
@@ -21,6 +21,7 @@ namespace TechTask.Application.Filters.GeneralValidator
             var userId = context.RouteData.Values["userId"];
             var teamId = context.RouteData.Values["teamId"];
             var taskId = context.RouteData.Values["taskId"];
+            var commentId = context.RouteData.Values["commentId"];
 
             if (userId != null)
             {
@@ -61,6 +62,22 @@ namespace TechTask.Application.Filters.GeneralValidator
                 if (!taskIdCheck)
                 {
                     context.ModelState.AddModelError("taskId", "This team doesn't have this task or it doesn't exist at all.");
+                    var httpResult = new BadRequestObjectResult(context.ModelState) { StatusCode = 404 };
+                    context.Result = httpResult;
+                    return;
+                }
+            }
+
+            if (commentId != null)
+            {
+                var commentIdAsInt = int.Parse(commentId.ToString());
+                var commentIdCheck = _context.Tasks.Include(t => t.Comments)
+                    .Single(t => t.Id == int.Parse(taskId.ToString()))
+                    .Comments.Any(c => c.Id == commentIdAsInt);
+
+                if (!commentIdCheck)
+                {
+                    context.ModelState.AddModelError("commentId", "This task doesn't have this comment or it doesn't exist at all.");
                     var httpResult = new BadRequestObjectResult(context.ModelState) { StatusCode = 404 };
                     context.Result = httpResult;
                     return;

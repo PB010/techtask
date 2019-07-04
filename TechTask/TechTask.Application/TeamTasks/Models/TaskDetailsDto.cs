@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TechTask.Application.Comments.Models;
 using TechTask.Persistence.Models.Task;
 using TechTask.Persistence.Models.Users;
 
@@ -11,7 +12,7 @@ namespace TechTask.Application.TeamTasks.Models
         public string Description { get; set; }
         public int EstimatedTimeToFinishInHours { get; set; }
         public int TotalHoursOfWork { get; set; }
-        public List<Comment> Comments { get; set; }
+        public List<CommentDetailsDto> Comments { get; set; }
         public List<LoggedActivity> Log { get; set; }
         public TaskPriority TaskPriority { get; set; }  
         public string Status { get; set; }
