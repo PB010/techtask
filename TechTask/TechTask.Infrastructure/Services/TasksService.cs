@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
+using TechTask.Application.TeamTasks.Models;
 using TechTask.Persistence.Context;
 using TechTask.Persistence.Models.Task;
 
@@ -59,6 +60,25 @@ namespace TechTask.Infrastructure.Services
         public async Task<int> AddTask(Tasks task)
         {
             _context.Tasks.Add(task);
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> UpdateTask(Tasks task, TaskForUpdateDto dto)
+        {
+            task.Name = dto.Name ?? task.Name;
+            task.Description = dto.Description ?? task.Description;
+            task.EstimatedTimeToFinishInHours = dto.EstimatedTimeToFinishInHours ??
+                task.EstimatedTimeToFinishInHours;
+            task.TaskPriorityId = dto.TaskPriorityId ?? task.TaskPriorityId;
+            task.Status = dto.Status ?? task.Status;
+            task.Balance = dto.Balance ?? task.Balance;
+            task.AdminApprovalOfTaskCompletion = dto.AdminApprovalOfTaskCompletion ??
+                                                 task.AdminApprovalOfTaskCompletion;
+            task.TrackerId = dto.TrackerId ?? task.TrackerId;
+            task.TrackerFirstName = dto.TrackerFirstName ?? task.TrackerFirstName;
+            task.TrackerLastName = dto.TrackerLastName ?? task.TrackerLastName;
+            task.UserId = dto.UserId ?? task.UserId;
+
             return await _context.SaveChangesAsync();
         }
 

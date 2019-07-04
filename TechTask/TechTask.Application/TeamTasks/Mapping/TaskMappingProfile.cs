@@ -32,6 +32,8 @@ namespace TechTask.Application.TeamTasks.Mapping
                     opt.MapFrom(src => 0))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src =>
                     src.UserId == null ? TaskStatus.Unassigned : TaskStatus.Assigned));
+
+            CreateMap<TaskForUpdateDto, Tasks>();
         }
     }
 }

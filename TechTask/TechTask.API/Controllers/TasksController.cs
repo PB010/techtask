@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -61,6 +62,21 @@ namespace TechTask.API.Controllers
         {
             command.TaskId = taskId;
         
+            return await _mediator.Send(command);
+        }
+
+        [HttpPatch("{taskId}")]
+        public async Task<TaskDetailsDto> UpdateTaskInfo([FromRoute] int teamId,
+            [FromRoute] int taskId, [FromBody] JsonPatchDocument<TaskForUpdateDto> dto)
+        {
+            var command = new UpdateTaskInfoCommand
+            {
+                TaskForUpdateDto = new TaskForUpdateDto()
+            };
+
+            dto.ApplyTo(command.TaskForUpdateDto);
+            command.TaskForUpdateDto.TaskId = taskId;
+
             return await _mediator.Send(command);
         }
         
