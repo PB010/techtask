@@ -2,6 +2,7 @@
 using FluentValidation;
 using MediatR;
 using System;
+using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTask.Application.Comments.Models;
@@ -31,6 +32,9 @@ namespace TechTask.Application.Comments.Commands
 
         public async Task<CommentDetailsDto> Handle(CreateNewCommentCommand request, CancellationToken cancellationToken)
         {
+            if (!_authService.UserRoleAdminOrTeamIdMatches(request.CommentForCreationDto.TeamId))
+                throw new AuthenticationException();
+
             request.CommentForCreationDto.UserId = new Guid(_authService.GetUserIdClaimValue());
 
             var commentToAdd = _mapper.Map<Comment>(request.CommentForCreationDto);

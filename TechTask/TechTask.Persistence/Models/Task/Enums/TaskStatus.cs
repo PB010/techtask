@@ -6,6 +6,6 @@
         Assigned,
         InProgress,
         Done,
-        Cancelled   
+        Pending 
     }
 }
