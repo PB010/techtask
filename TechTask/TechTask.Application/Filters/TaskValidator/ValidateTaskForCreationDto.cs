@@ -31,7 +31,7 @@ namespace TechTask.Application.Filters.TaskValidator
                 if (!usersTeamCheck)
                 {
                     context.ModelState.AddModelError("userId", "This user is not a part of this team.");
-                    var httpResult = new BadRequestObjectResult(context.ModelState) { StatusCode = 404 };
+                    var httpResult = new BadRequestObjectResult(context.ModelState) { StatusCode = 400 };
                     context.Result = httpResult;
                     return;
                 }

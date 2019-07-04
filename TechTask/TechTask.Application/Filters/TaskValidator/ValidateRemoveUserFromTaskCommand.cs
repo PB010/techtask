@@ -7,36 +7,36 @@ using TechTask.Persistence.Context;
 
 namespace TechTask.Application.Filters.TaskValidator
 {
-    public class ValidateAssignToUserCommand : ActionFilterAttribute
+    public class ValidateRemoveUserFromTaskCommand : ActionFilterAttribute
     {
         private readonly AppDbContext _appDbContext;
 
-        public ValidateAssignToUserCommand(AppDbContext appDbContext)
+        public ValidateRemoveUserFromTaskCommand(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
         }
 
+
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            var assignToTaskCommand = context.ActionArguments["command"] as AssignUserToTaskCommand;
-            var teamId = context.RouteData.Values["teamId"];
+            var assignToTaskCommand = context.ActionArguments["command"] as RemoveUserFromTaskCommand;
+            var taskId = context.RouteData.Values["taskId"];
 
             if (assignToTaskCommand.UserId != null)
             {
-                var teamIdAsInt = int.Parse(teamId.ToString());
-                var usersTeamCheck = _appDbContext.Teams
-                    .Include(t => t.Users)
-                    .Single(t => t.Id == teamIdAsInt).Users.Any(u => u.Id == assignToTaskCommand.UserId);
+                var taskIdAsInt = int.Parse(taskId.ToString());
+                var taskCheck = _appDbContext.Tasks
+                    .Include(t => t.User)
+                    .Single(t => t.Id == taskIdAsInt).UserId.HasValue;
 
-                if (!usersTeamCheck)
+                if (!taskCheck)
                 {
-                    context.ModelState.AddModelError("userId", "This user is not a part of this team.");
+                    context.ModelState.AddModelError("userId", "This task doesn't have anyone assigned to it.");
                     var httpResult = new BadRequestObjectResult(context.ModelState) { StatusCode = 400 };
                     context.Result = httpResult;
                     return;
                 }
             }
-
             base.OnActionExecuting(context);
         }
     }

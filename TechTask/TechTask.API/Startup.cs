@@ -72,6 +72,7 @@ namespace TechTask.API
             services.AddScoped<ValidateRouteAttributes>();
             services.AddScoped<ValidateTaskForCreationDto>();
             services.AddScoped<ValidateAssignToUserCommand>();
+            services.AddScoped<ValidateRemoveUserFromTaskCommand>();
 
             services.AddHttpContextAccessor();
             services.AddMediatR(typeof(RegisterUserCommand));

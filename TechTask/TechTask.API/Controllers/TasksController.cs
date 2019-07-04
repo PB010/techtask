@@ -53,5 +53,16 @@ namespace TechTask.API.Controllers
 
             return await _mediator.Send(command);
         }
+
+        [HttpDelete("{taskId}")]
+        [ServiceFilter(typeof(ValidateRemoveUserFromTaskCommand))]
+        public async Task<Unit> RemoveUserFromTask([FromRoute] int teamId,
+            [FromRoute] int taskId, [FromBody] RemoveUserFromTaskCommand command)
+        {
+            command.TaskId = taskId;
+        
+            return await _mediator.Send(command);
+        }
+        
     }
 }

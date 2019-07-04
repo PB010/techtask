@@ -12,6 +12,7 @@ namespace TechTask.Application.Interfaces
         Task<IEnumerable<Tasks>> GetAllTasksAsync();
         Task<IEnumerable<Tasks>> GetAllTasksForATeamAsync(int teamId);
         Task<int> AddTask(Tasks task);
-        Task<int> AddUserToTaskAsync(Tasks task, Guid userId);  
+        Task<int> AddUserToTaskAsync(Tasks task, Guid userId);
+        Task<int> RemoveUserFromTaskAsync(Tasks task);
     }
 }

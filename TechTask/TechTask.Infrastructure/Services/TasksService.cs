@@ -67,5 +67,11 @@ namespace TechTask.Infrastructure.Services
             task.UserId = userId;
             return await _context.SaveChangesAsync();
         }
+
+        public async Task<int> RemoveUserFromTaskAsync(Tasks task)
+        {
+            task.UserId = null;
+            return await _context.SaveChangesAsync();
+        }
     }
 }
