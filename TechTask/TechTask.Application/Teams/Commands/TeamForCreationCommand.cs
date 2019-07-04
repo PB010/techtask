@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Security.Authentication;
 using System.Threading;
@@ -21,20 +20,20 @@ namespace TechTask.Application.Teams.Commands
     public class TeamForCreationHandler : IRequestHandler<TeamForCreationCommand, TeamDetailsDto>
     {
         private readonly ITeamService _teamService;
-        private readonly IHttpContextAccessor _accessor;
+        private readonly ITokenAuthenticationService _authService;
         private readonly IMapper _mapper;
 
-        public TeamForCreationHandler(ITeamService teamService, IHttpContextAccessor accessor,
+        public TeamForCreationHandler(ITeamService teamService, ITokenAuthenticationService authService,
             IMapper mapper)
         {
             _teamService = teamService;
-            _accessor = accessor;
+            _authService = authService;
             _mapper = mapper;
         }
 
         public async Task<TeamDetailsDto> Handle(TeamForCreationCommand request, CancellationToken cancellationToken)
         {
-            if (!_accessor.HttpContext.User.IsInRole("Admin"))
+            if (!_authService.UserRoleAdmin())
                 throw new AuthenticationException("You don't have permission to do that.");
 
             var teamToAdd = _mapper.Map<Team>(request);

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Security.Authentication;
@@ -22,15 +21,15 @@ namespace TechTask.Application.Teams.Commands
     {
         private readonly ITeamService _teamService;
         private readonly IUserService _userService;
-        private readonly IHttpContextAccessor _accessor;
+        private readonly ITokenAuthenticationService _authService;
         private readonly IMapper _mapper;
 
-        public AssignUserToTeamHandler(ITeamService teamService, IUserService userService,
-            IHttpContextAccessor accessor, IMapper mapper)
+        public AssignUserToTeamHandler(ITeamService teamService, IUserService userService, 
+            ITokenAuthenticationService authService, IMapper mapper)
         {
             _teamService = teamService;
             _userService = userService;
-            _accessor = accessor;
+            _authService = authService;
             _mapper = mapper;
         }
 
@@ -39,7 +38,7 @@ namespace TechTask.Application.Teams.Commands
             var teamFromDb = await _teamService.GetTeamWithEagerLoadingAsync(request.IdAttributesDto.TeamId);
             var userFromDb = await _userService.GetUserAsync(request.IdAttributesDto.UserId);
 
-            if (!_accessor.HttpContext.User.IsInRole("Admin"))
+            if (!_authService.UserRoleAdmin())
                 throw new AuthenticationException("You don't have permission to do that.");
 
             await _teamService.AssignUserToTeam(teamFromDb, userFromDb);

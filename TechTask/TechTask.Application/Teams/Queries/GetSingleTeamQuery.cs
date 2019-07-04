@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using System.Linq;
 using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,14 +16,14 @@ namespace TechTask.Application.Teams.Queries
     public class GetSingleTeamHandler : IRequestHandler<GetSingleTeamQuery, TeamDetailsDto>
     {
         private readonly ITeamService _teamService;
-        private readonly IHttpContextAccessor _accessor;
+        private readonly ITokenAuthenticationService _authService;
         private readonly IMapper _mapper;
 
-        public GetSingleTeamHandler(ITeamService teamService, IHttpContextAccessor accessor,
+        public GetSingleTeamHandler(ITeamService teamService, ITokenAuthenticationService authService,
             IMapper mapper)
         {   
             _teamService = teamService;
-            _accessor = accessor;
+            _authService = authService;
             _mapper = mapper;
         }
 
@@ -33,9 +31,7 @@ namespace TechTask.Application.Teams.Queries
         {
             var teamFromDb = await _teamService.GetTeamWithEagerLoadingAsync(request.TeamId);
 
-            if (_accessor.HttpContext.User.IsInRole("Admin") ||
-                _accessor.HttpContext.User.HasClaim(c => c.Type == "TeamId" &&
-                                                         teamFromDb.Users.Any(t => $"{t.TeamId}" == c.Value)))
+            if (_authService.UserRoleAdminOrTeamIdMatches(teamFromDb))
                 return _mapper.Map<TeamDetailsDto>(teamFromDb);
 
             throw new AuthenticationException();

@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -21,19 +20,19 @@ namespace TechTask.Application.Teams.Commands
     {
         private readonly IUserService _userService;
         private readonly ITeamService _teamService;
-        private readonly IHttpContextAccessor _accessor;
+        private readonly ITokenAuthenticationService _authService;
 
         public RemoveUserFromTeamHandler(IUserService userService, ITeamService teamService,
-            IHttpContextAccessor accessor)
+            ITokenAuthenticationService authService)
         {
             _userService = userService;
             _teamService = teamService;
-            _accessor = accessor;
+            _authService = authService;
         }
 
         protected override async Task Handle(RemoveUserFromTeamCommand request, CancellationToken cancellationToken)
         {
-            if (!_accessor.HttpContext.User.IsInRole("Admin"))
+            if (!_authService.UserRoleAdmin())
                 throw new AuthenticationException("Unauthorized access.");
 
             var userForDb = await _userService.GetUserAsync(request.UserId);

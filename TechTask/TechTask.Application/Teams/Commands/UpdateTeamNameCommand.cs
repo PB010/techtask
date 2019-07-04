@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,20 +17,20 @@ namespace TechTask.Application.Teams.Commands
     public class UpdateTeamNameHandler : IRequestHandler<UpdateTeamNameCommand, TeamDetailsDto>
     {
         private readonly ITeamService _teamService;
-        private readonly IHttpContextAccessor _accessor;
+        private readonly ITokenAuthenticationService _authService;
         private readonly IMapper _mapper;
 
-        public UpdateTeamNameHandler(ITeamService teamService, IHttpContextAccessor accessor,
+        public UpdateTeamNameHandler(ITeamService teamService, ITokenAuthenticationService authService,
             IMapper mapper)
         {
             _teamService = teamService;
-            _accessor = accessor;
+            _authService = authService;
             _mapper = mapper;
         }
 
         public async Task<TeamDetailsDto> Handle(UpdateTeamNameCommand request, CancellationToken cancellationToken)
         {
-            if (!_accessor.HttpContext.User.IsInRole("Admin"))
+            if (!_authService.UserRoleAdmin())
                 throw new AuthenticationException("You don't have permission to do that.");
 
             var teamFromDb = await _teamService.GetTeamWithEagerLoadingAsync(request.TeamId);

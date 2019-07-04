@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Security.Authentication;
 using System.Threading;
@@ -17,20 +16,20 @@ namespace TechTask.Application.Teams.Queries
     public class GetAllTeamsHandler : IRequestHandler<GetAllTeamsQuery, IEnumerable<TeamDetailsDto>>
     {
         private readonly ITeamService _teamService;
-        private readonly IHttpContextAccessor _accessor;
+        private readonly ITokenAuthenticationService _authService;
         private readonly IMapper _mapper;
 
-        public GetAllTeamsHandler(ITeamService teamService, IHttpContextAccessor accessor,
+        public GetAllTeamsHandler(ITeamService teamService, ITokenAuthenticationService authService,
             IMapper mapper)
         {
             _teamService = teamService;
-            _accessor = accessor;
+            _authService = authService;
             _mapper = mapper;
         }
 
         public async Task<IEnumerable<TeamDetailsDto>> Handle(GetAllTeamsQuery request, CancellationToken cancellationToken)
         {
-            if (!_accessor.HttpContext.User.IsInRole("Admin"))
+            if (!_authService.UserRoleAdmin())
             {
                 throw new AuthenticationException("Access denied.");
             }

@@ -1,4 +1,5 @@
 ﻿using TechTask.Application.Users.Models;
+using TechTask.Persistence.Models.Users;
 
 namespace TechTask.Application.Interfaces
 {
@@ -7,5 +8,6 @@ namespace TechTask.Application.Interfaces
         string GenerateToken(UserForLoginDto user);
         bool UserRoleAdmin();
         bool UserRoleAdminOrEmailMatches(string email);
+        bool UserRoleAdminOrTeamIdMatches(Team teamFromDb); 
     }
 }
