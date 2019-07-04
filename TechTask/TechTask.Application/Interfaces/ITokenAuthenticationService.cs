@@ -1,5 +1,6 @@
 ﻿using System;
 using TechTask.Application.Users.Models;
+using TechTask.Persistence.Models.Task;
 using TechTask.Persistence.Models.Users;
 
 namespace TechTask.Application.Interfaces
@@ -12,6 +13,7 @@ namespace TechTask.Application.Interfaces
         bool UserRoleAdminOrTeamIdMatches(Team teamFromDb);
         bool UserRoleAdminOrTeamIdMatches(int teamId);
         bool UserRoleAdminOrUserIdMatches(Guid userId);
+        bool UserRoleAdminOrWorkingOnTask(Tasks task);
         string GetUserIdClaimValue();
     }
 }

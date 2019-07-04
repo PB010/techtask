@@ -69,6 +69,7 @@ namespace TechTask.API
             services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<ITasksService, TasksService>();
             services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<ILogService, LogService>();
 
             services.AddScoped<ValidateRouteAttributes>();
             services.AddScoped<ValidateTaskForCreationDto>();
