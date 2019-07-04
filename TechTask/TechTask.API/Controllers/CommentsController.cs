@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TechTask.Application.Comments.Commands;
 using TechTask.Application.Comments.Models;
@@ -34,6 +35,13 @@ namespace TechTask.API.Controllers
             [FromRoute] int taskId, [FromRoute] int commentId)
         {
             return await _mediator.Send(new GetCommentQuery {CommentId = commentId, TeamId = teamId});
+        }
+
+        [HttpGet]
+        public async Task<IEnumerable<CommentDetailsDto>> GetAllCommentsForTask([FromRoute] int teamId,
+            [FromRoute] int taskId)
+        {
+            return await _mediator.Send(new GetAllCommentsQuery {TeamId = teamId});
         }
     }
 }
