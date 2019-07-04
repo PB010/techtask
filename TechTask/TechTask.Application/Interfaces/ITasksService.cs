@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TechTask.Persistence.Models.Task;
 
@@ -11,5 +12,6 @@ namespace TechTask.Application.Interfaces
         Task<IEnumerable<Tasks>> GetAllTasksAsync();
         Task<IEnumerable<Tasks>> GetAllTasksForATeamAsync(int teamId);
         Task<int> AddTask(Tasks task);
+        Task<int> AddUserToTaskAsync(Tasks task, Guid userId);  
     }
 }

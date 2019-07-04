@@ -95,6 +95,13 @@ namespace TechTask.Infrastructure.Services
                                                              c.Value == $"{teamId}"));
         }
 
+        public bool UserRoleAdminOrUserIdMatches(Guid userId)
+        {
+            return (_accessor.HttpContext.User.IsInRole("Admin") ||
+                    _accessor.HttpContext.User.HasClaim(c => c.Type == "UserId" &&
+                                                             c.Value == $"{userId}"));
+        }
+
         public string GetUserIdClaimValue()
         {
             return _accessor.HttpContext.User.Claims.Single(c => c.Type == "UserId").Value;

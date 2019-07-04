@@ -5,7 +5,7 @@ using System.Linq;
 using TechTask.Application.TeamTasks.Models;
 using TechTask.Persistence.Context;
 
-namespace TechTask.Application.Filters.Validator
+namespace TechTask.Application.Filters.TaskValidator
 {
     public class ValidateTaskForCreationDto : ActionFilterAttribute
     {
@@ -22,7 +22,7 @@ namespace TechTask.Application.Filters.Validator
             var teamId = context.RouteData.Values["teamId"];
 
             if (taskDto.UserId != null)
-            {
+            {   
                 var teamIdAsInt = int.Parse(teamId.ToString());
                 var usersTeamCheck = _appDbContext.Teams
                     .Include(t => t.Users)

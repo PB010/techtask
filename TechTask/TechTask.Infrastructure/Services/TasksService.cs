@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -58,6 +59,12 @@ namespace TechTask.Infrastructure.Services
         public async Task<int> AddTask(Tasks task)
         {
             _context.Tasks.Add(task);
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> AddUserToTaskAsync(Tasks task, Guid userId)  
+        {
+            task.UserId = userId;
             return await _context.SaveChangesAsync();
         }
     }

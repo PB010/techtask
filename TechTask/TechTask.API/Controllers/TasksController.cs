@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TechTask.Application.Filters.Validator;
+using TechTask.Application.Filters.GeneralValidator;
+using TechTask.Application.Filters.TaskValidator;
 using TechTask.Application.TeamTasks.Commands;
 using TechTask.Application.TeamTasks.Models;
 using TechTask.Application.TeamTasks.Queries;
@@ -41,6 +42,16 @@ namespace TechTask.API.Controllers
             [FromRoute] int taskId)
         {
             return await _mediator.Send(new GetSingleTaskForTeamQuery {TaskId = taskId, TeamId = teamId});
+        }
+
+        [HttpPost("{taskId}")]
+        [ServiceFilter(typeof(ValidateAssignToUserCommand))]
+        public async Task<TaskDetailsDto> AssignUserToTask([FromRoute] int teamId,
+            [FromRoute] int taskId, [FromBody] AssignUserToTaskCommand command)
+        {
+            command.TaskId = taskId;
+
+            return await _mediator.Send(command);
         }
     }
 }

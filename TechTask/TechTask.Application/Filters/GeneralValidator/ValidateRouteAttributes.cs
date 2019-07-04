@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using System;
+﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using TechTask.Persistence.Context;
 
-namespace TechTask.Application.Filters.Validator
+namespace TechTask.Application.Filters.GeneralValidator
 {
     public class ValidateRouteAttributes : ActionFilterAttribute
     {
@@ -60,7 +60,7 @@ namespace TechTask.Application.Filters.Validator
 
                 if (!taskIdCheck)
                 {
-                    context.ModelState.AddModelError("taskId", "This task doesn't exist.");
+                    context.ModelState.AddModelError("taskId", "This team doesn't have this task or it doesn't exist at all.");
                     var httpResult = new BadRequestObjectResult(context.ModelState) { StatusCode = 404 };
                     context.Result = httpResult;
                     return;
