@@ -9,5 +9,6 @@ namespace TechTask.Application.Interfaces
         Task<Comment> GetCommentAsync(int commentId);
         Task<IEnumerable<Comment>> GetAllCommentsAsync();
         Task<int> AddNewCommentAsync(Comment comment);
+        Task<int> RemoveCommentAsync(int commentId);
     }
 }

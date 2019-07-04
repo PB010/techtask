@@ -31,5 +31,14 @@ namespace TechTask.Infrastructure.Services
             _context.Comments.Add(comment);
             return await _context.SaveChangesAsync();
         }
+
+        public async Task<int> RemoveCommentAsync(int commentId)
+        {
+            var commentToRemove = await _context.Comments
+                .SingleOrDefaultAsync(c => c.Id == commentId);
+
+            _context.Comments.Remove(commentToRemove);
+            return await _context.SaveChangesAsync();
+        }
     }
 }

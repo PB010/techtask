@@ -43,5 +43,12 @@ namespace TechTask.API.Controllers
         {
             return await _mediator.Send(new GetAllCommentsQuery {TeamId = teamId});
         }
+
+        [HttpDelete("{commentId}")]
+        public async Task<Unit> DeleteComment([FromRoute] int teamId,
+            [FromRoute] int taskId, [FromRoute] int commentId)
+        {
+            return await _mediator.Send(new DeleteCommentCommand {CommentId = commentId});
+        }
     }
 }
