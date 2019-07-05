@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +18,12 @@ namespace TechTask.Infrastructure.Services
     public class TasksService : ITasksService
     {
         private readonly AppDbContext _context;
+        private readonly IHttpContextAccessor _accessor;
 
-        public TasksService(AppDbContext context)
+        public TasksService(AppDbContext context, IHttpContextAccessor accessor)
         {
             _context = context;
+            _accessor = accessor;
         }
 
         public async Task<Tasks> GetTaskWithEagerLoadingAsync(int id)
@@ -111,6 +114,13 @@ namespace TechTask.Infrastructure.Services
         {
             task.Status = log.TaskStatus;
 
+            if (_accessor.HttpContext.User.IsInRole("Admin") &&
+                task.Status == TaskStatus.Done)
+            {
+                task.AdminApprovalOfTaskCompletion = TrackerTaskStatus.Approved;
+                return await _context.SaveChangesAsync();
+            }
+
             if (task.Status == TaskStatus.Done &&
                 task.AdminApprovalOfTaskCompletion != TrackerTaskStatus.Approved)
                 task.Status = TaskStatus.Pending;
@@ -132,13 +142,37 @@ namespace TechTask.Infrastructure.Services
 
         public void AssignDateTimeToCreatedAt(TaskDetailsDto dto)
         {
-            var createdAt = _context.LoggedActivities.Select(s => EF.Property<DateTime>(s, "CreatedAt"))
+            var createdAt = _context.LoggedActivities.Where(l => l.TasksId == dto.TaskId)
+                .Select(s => EF.Property<DateTime>(s, "CreatedAt"))
                 .ToList();
 
             for (var i = 0; i < dto.Log.Count; i++)
             {
                 dto.Log[i].CreatedAt = createdAt[i].ToString("dd MMM yy");
             }
+        }
+
+        public async Task<int> ChangeTasksAdminApprovalState(Tasks task)
+        {
+            task.AdminApprovalOfTaskCompletion = task.AdminApprovalOfTaskCompletion == TrackerTaskStatus.Approved
+                ? task.AdminApprovalOfTaskCompletion = TrackerTaskStatus.Denied
+                : task.AdminApprovalOfTaskCompletion = TrackerTaskStatus.Approved;
+
+            _accessor.HttpContext.Request.Method == // if post then approve if delete then deny
+
+            switch (task.AdminApprovalOfTaskCompletion)
+            {
+                case TrackerTaskStatus.Approved:
+                    task.Status = TaskStatus.Done;
+                    break;
+                case TrackerTaskStatus.Denied:
+                    task.Status = TaskStatus.InProgress;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return await _context.SaveChangesAsync();
         }
     }
 }

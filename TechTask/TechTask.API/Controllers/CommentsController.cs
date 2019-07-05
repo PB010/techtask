@@ -41,7 +41,7 @@ namespace TechTask.API.Controllers
         public async Task<IEnumerable<CommentDetailsDto>> GetAllCommentsForTask([FromRoute] int teamId,
             [FromRoute] int taskId)
         {
-            return await _mediator.Send(new GetAllCommentsQuery {TeamId = teamId});
+            return await _mediator.Send(new GetAllCommentsQuery {TeamId = teamId, TaskId = taskId});
         }
 
         [HttpDelete("{commentId}")]

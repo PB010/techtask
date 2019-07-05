@@ -11,7 +11,8 @@ namespace TechTask.Application.Comments.Queries
 {
     public class GetAllCommentsQuery : IRequest<IEnumerable<CommentDetailsDto>>
     {
-        public int TeamId { get; set; } 
+        public int TeamId { get; set; }
+        public int TaskId { get; set; } 
     }
 
     public class GetAllCommentsHandler : IRequestHandler<GetAllCommentsQuery, IEnumerable<CommentDetailsDto>>
@@ -34,7 +35,7 @@ namespace TechTask.Application.Comments.Queries
             if (!_authService.UserRoleAdminOrTeamIdMatches(request.TeamId))
                 throw new AuthenticationException();
 
-            var commentsToReturn = await _commentService.GetAllCommentsAsync();
+            var commentsToReturn = await _commentService.GetAllCommentsAsync(request.TaskId);
 
             return _mapper.Map<IEnumerable<CommentDetailsDto>>(commentsToReturn);
         }

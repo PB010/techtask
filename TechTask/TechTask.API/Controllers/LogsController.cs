@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TechTask.Application.Filters.GeneralValidator;
 using TechTask.Application.Logs.Commands;
 using TechTask.Application.Logs.Models;
+using TechTask.Application.Logs.Queries;
 using TechTask.Application.TeamTasks.Models;
 
 namespace TechTask.API.Controllers
@@ -28,6 +30,13 @@ namespace TechTask.API.Controllers
             dto.TeamId = teamId;
 
             return await _mediator.Send(new AddLogToATaskCommand {LogForCreationDto = dto});
+        }
+
+        [HttpGet]
+        public async Task<IEnumerable<LogDetailsDto>> GetAllLogs([FromRoute] int teamId,
+            [FromRoute] int taskId)
+        {
+            return await _mediator.Send(new GetAllLogsForTaskQuery {TeamId = teamId, TaskId = taskId});
         }
     }
 }

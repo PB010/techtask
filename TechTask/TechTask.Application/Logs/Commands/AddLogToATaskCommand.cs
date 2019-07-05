@@ -45,12 +45,12 @@ namespace TechTask.Application.Logs.Commands
             request.LogForCreationDto.UserId = new Guid(_authService.GetUserIdClaimValue());
 
             var logToAdd = _mapper.Map<LoggedActivity>(request.LogForCreationDto);
-            await _logService.AddNewLog(logToAdd);
+            await _logService.AddNewLogAsync(logToAdd);
             await _taskService.CalculateNewWorkBalanceAsync(taskFromDb, logToAdd);
             await _taskService.ChangeStatusBasedOnAdminApproval(taskFromDb, request.LogForCreationDto);
 
             var teamForUpdate = await _teamService.GetTeamWithoutEagerLoadingAsync(request.LogForCreationDto.TeamId);
-            await _teamService.CalculateTotalHoursOfWorkAsync(teamForUpdate, taskFromDb);
+            await _teamService.CalculateTotalHoursOfWorkAsync(teamForUpdate, logToAdd);
 
             var taskToReturn  = _mapper.Map<TaskDetailsDto>(taskFromDb);
             _taskService.AssignDateTimeToCreatedAt(taskToReturn);

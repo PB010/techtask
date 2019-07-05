@@ -21,6 +21,7 @@ namespace TechTask.Application.Interfaces
         Task<int> AddUserToTaskAsync(Tasks task, Guid userId);
         Task<int> RemoveUserFromTaskAsync(Tasks task);
         void AssignDateTimeToCreatedAt(TaskDetailsDto dto);
+        Task<int> ChangeTasksAdminApprovalState(Tasks task);
     }
 }
     

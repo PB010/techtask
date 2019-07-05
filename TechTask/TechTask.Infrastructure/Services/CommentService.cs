@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
 using TechTask.Persistence.Context;
@@ -21,9 +22,10 @@ namespace TechTask.Infrastructure.Services
             return await _context.Comments.SingleOrDefaultAsync(c => c.Id == commentId);
         }
 
-        public async Task<IEnumerable<Comment>> GetAllCommentsAsync()
+        public async Task<IEnumerable<Comment>> GetAllCommentsAsync(int taskId)
         {
-            return await _context.Comments.ToListAsync();
+            return await _context.Comments.Where(c => c.TasksId == taskId)
+                .ToListAsync();
         }
 
         public async Task<int> AddNewCommentAsync(Comment comment)

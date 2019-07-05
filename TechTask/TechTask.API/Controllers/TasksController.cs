@@ -79,6 +79,13 @@ namespace TechTask.API.Controllers
 
             return await _mediator.Send(command);
         }
-        
+
+        [HttpPost("{taskId}/approveCompletionRequest")]
+        [ServiceFilter(typeof(ValidateApproveTaskCompletion))]
+        public async Task<TaskDetailsDto> ApproveTaskCompletion([FromRoute] int teamId,
+            [FromRoute] int taskId)
+        {
+            return await _mediator.Send(new ApproveTaskCompletionCommand{TaskId = taskId});
+        }
     }
 }
