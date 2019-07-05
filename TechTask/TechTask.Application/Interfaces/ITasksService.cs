@@ -18,10 +18,11 @@ namespace TechTask.Application.Interfaces
         Task<int> UpdateTask(Tasks task, TaskForUpdateDto dto);
         Task<int> CalculateNewWorkBalanceAsync(Tasks task, LoggedActivity log);
         Task<int> ChangeStatusBasedOnAdminApproval(Tasks task, LogForCreationDto log);
+        Task<int> ChangeTasksAdminApprovalState(Tasks task);
+        Task<int> ReopenTask(Tasks task);
         Task<int> AddUserToTaskAsync(Tasks task, Guid userId);
         Task<int> RemoveUserFromTaskAsync(Tasks task);
         void AssignDateTimeToCreatedAt(TaskDetailsDto dto);
-        Task<int> ChangeTasksAdminApprovalState(Tasks task);
     }
 }
     

@@ -128,30 +128,6 @@ namespace TechTask.Infrastructure.Services
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<int> AddUserToTaskAsync(Tasks task, Guid userId)  
-        {
-            task.UserId = userId;
-            return await _context.SaveChangesAsync();
-        }
-
-        public async Task<int> RemoveUserFromTaskAsync(Tasks task)
-        {
-            task.UserId = null;
-            return await _context.SaveChangesAsync();
-        }
-
-        public void AssignDateTimeToCreatedAt(TaskDetailsDto dto)
-        {
-            var createdAt = _context.LoggedActivities.Where(l => l.TasksId == dto.TaskId)
-                .Select(s => EF.Property<DateTime>(s, "CreatedAt"))
-                .ToList();
-
-            for (var i = 0; i < dto.Log.Count; i++)
-            {
-                dto.Log[i].CreatedAt = createdAt[i].ToString("dd MMM yy");
-            }
-        }
-
         public async Task<int> ChangeTasksAdminApprovalState(Tasks task)
         {
             switch (_accessor.HttpContext.Request.Method)
@@ -179,6 +155,36 @@ namespace TechTask.Infrastructure.Services
             }
 
             return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> ReopenTask(Tasks task)
+        {
+            task.Status = TaskStatus.InProgress;
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> AddUserToTaskAsync(Tasks task, Guid userId)  
+        {
+            task.UserId = userId;
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> RemoveUserFromTaskAsync(Tasks task)
+        {
+            task.UserId = null;
+            return await _context.SaveChangesAsync();
+        }
+
+        public void AssignDateTimeToCreatedAt(TaskDetailsDto dto)
+        {
+            var createdAt = _context.LoggedActivities.Where(l => l.TasksId == dto.TaskId)
+                .Select(s => EF.Property<DateTime>(s, "CreatedAt"))
+                .ToList();
+
+            for (var i = 0; i < dto.Log.Count; i++)
+            {
+                dto.Log[i].CreatedAt = createdAt[i].ToString("dd MMM yy");
+            }
         }
     }
 }

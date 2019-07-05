@@ -97,5 +97,13 @@ namespace TechTask.API.Controllers
             return await _mediator.Send(new DenyTaskCompletionCommand {TaskId = taskId});
         }
 
+        [HttpPut("{taskId}/reopenTask")]
+        [ServiceFilter(typeof(ValidateReopenTask))]
+        public async Task<TaskDetailsDto> ReopenTask([FromRoute] int teamId,
+            [FromRoute] int taskId)
+        {
+            return await _mediator.Send(new ReopenTaskCommand {TaskId = taskId});
+        }
+
     }
 }
