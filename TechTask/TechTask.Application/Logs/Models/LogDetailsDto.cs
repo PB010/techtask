@@ -9,5 +9,6 @@ namespace TechTask.Application.Logs.Models
         public int HoursSpent { get; set; } 
         public int TasksId { get; set; }
         public Guid UserId { get; set; }
+        public string CreatedAt { get; set; }
     }
 }

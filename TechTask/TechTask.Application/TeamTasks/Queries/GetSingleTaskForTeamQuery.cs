@@ -31,7 +31,6 @@ namespace TechTask.Application.TeamTasks.Queries
         public async Task<TaskDetailsDto> Handle(GetSingleTaskForTeamQuery request,
             CancellationToken cancellationToken)
         {
-
             if (!_authService.UserRoleAdminOrTeamIdMatches(request.TeamId))
                     throw new AuthenticationException("Unauthorized access.");  
 

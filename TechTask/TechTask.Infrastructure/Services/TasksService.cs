@@ -4,9 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
+using TechTask.Application.Logs.Models;
 using TechTask.Application.TeamTasks.Models;
 using TechTask.Persistence.Context;
 using TechTask.Persistence.Models.Task;
+using TechTask.Persistence.Models.Task.Enums;
+using TechTask.Persistence.Models.Users;
+using TaskStatus = TechTask.Persistence.Models.Task.Enums.TaskStatus;
 
 namespace TechTask.Infrastructure.Services
 {
@@ -82,6 +86,38 @@ namespace TechTask.Infrastructure.Services
             return await _context.SaveChangesAsync();
         }
 
+        public async Task<int> CalculateNewWorkBalanceAsync(Tasks task, LoggedActivity log)
+        {
+            task.TotalHoursOfWork += log.HoursSpent;
+                
+            if (task.EstimatedTimeToFinishInHours / 4 >= task.TotalHoursOfWork)
+                task.Balance = WorkBalance.Excellent;   
+
+            if (task.EstimatedTimeToFinishInHours / 2 >= task.TotalHoursOfWork &&
+                task.EstimatedTimeToFinishInHours / 4 < task.TotalHoursOfWork)
+                task.Balance = WorkBalance.Good;
+
+            if (task.EstimatedTimeToFinishInHours / 1 >= task.TotalHoursOfWork &&
+                task.EstimatedTimeToFinishInHours / 2 < task.TotalHoursOfWork)
+                task.Balance = WorkBalance.Average;
+
+            if (task.EstimatedTimeToFinishInHours / 1 < task.TotalHoursOfWork)
+                task.Balance = WorkBalance.Bad;
+
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> ChangeStatusBasedOnAdminApproval(Tasks task, LogForCreationDto log)
+        {
+            task.Status = log.TaskStatus;
+
+            if (task.Status == TaskStatus.Done &&
+                task.AdminApprovalOfTaskCompletion != TrackerTaskStatus.Approved)
+                task.Status = TaskStatus.Pending;
+                
+            return await _context.SaveChangesAsync();
+        }
+
         public async Task<int> AddUserToTaskAsync(Tasks task, Guid userId)  
         {
             task.UserId = userId;
@@ -92,6 +128,17 @@ namespace TechTask.Infrastructure.Services
         {
             task.UserId = null;
             return await _context.SaveChangesAsync();
+        }
+
+        public void AssignDateTimeToCreatedAt(TaskDetailsDto dto)
+        {
+            var createdAt = _context.LoggedActivities.Select(s => EF.Property<DateTime>(s, "CreatedAt"))
+                .ToList();
+
+            for (var i = 0; i < dto.Log.Count; i++)
+            {
+                dto.Log[i].CreatedAt = createdAt[i].ToString("dd MMM yy");
+            }
         }
     }
 }

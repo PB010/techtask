@@ -22,6 +22,8 @@ namespace TechTask.Application.Filters.GeneralValidator
             var teamId = context.RouteData.Values["teamId"];
             var taskId = context.RouteData.Values["taskId"];
             var commentId = context.RouteData.Values["commentId"];
+            var logId = context.RouteData.Values["logId"];
+
 
             if (userId != null)
             {
@@ -83,7 +85,23 @@ namespace TechTask.Application.Filters.GeneralValidator
                     return;
                 }
             }
-            
+
+            if (logId != null)
+            {
+                var logIdAsInt = int.Parse(logId.ToString());
+                var logIdCheck = _context.Tasks.Include(t => t.Log)
+                    .Single(t => t.Id == int.Parse(taskId.ToString()))
+                    .Log.Any(c => c.Id == logIdAsInt);
+
+                if (!logIdCheck)
+                {
+                    context.ModelState.AddModelError("logId", "This task doesn't have this log or it doesn't exist at all.");
+                    var httpResult = new BadRequestObjectResult(context.ModelState) { StatusCode = 404 };
+                    context.Result = httpResult;
+                    return;
+                }
+            }
+
 
             base.OnActionExecuting(context);
         }

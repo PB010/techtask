@@ -10,7 +10,6 @@ using TechTask.Application.Interfaces;
 using TechTask.Application.Users.Models;
 using TechTask.Infrastructure.Authentication;
 using TechTask.Persistence.Context;
-using TechTask.Persistence.Models.Task;
 using TechTask.Persistence.Models.Users;
 using TechTask.Persistence.Models.Users.Enums;
 
@@ -96,18 +95,11 @@ namespace TechTask.Infrastructure.Services
                                                              c.Value == $"{teamId}"));
         }
 
-        public bool UserRoleAdminOrUserIdMatches(Guid userId)
+        public bool UserRoleAdminOrUserIdMatches(Guid? userId)
         {
             return (_accessor.HttpContext.User.IsInRole("Admin") ||
                     _accessor.HttpContext.User.HasClaim(c => c.Type == "UserId" &&
                                                              c.Value == $"{userId}"));
-        }
-
-        public bool UserRoleAdminOrWorkingOnTask(Tasks task)
-        {
-            return (_accessor.HttpContext.User.IsInRole("Admin") ||
-                   _accessor.HttpContext.User.HasClaim(c => c.Type == "UserId" &&
-                                                            c.Value == $"{task.UserId}"));
         }
 
         public string GetUserIdClaimValue()

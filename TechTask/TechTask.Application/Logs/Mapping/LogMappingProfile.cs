@@ -8,9 +8,11 @@ namespace TechTask.Application.Logs.Mapping
     {
         public LogMappingProfile()
         {
+
             CreateMap<LogForCreationDto, LoggedActivity>();
-            CreateMap<LoggedActivity, LogDetailsDto>().ForMember(dest => dest.LogId, opt => 
+            var check = CreateMap<LoggedActivity, LogDetailsDto>().ForMember(dest => dest.LogId, opt =>
                 opt.MapFrom(src => src.Id));
         }
+
     }
 }

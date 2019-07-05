@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
 using TechTask.Persistence.Context;
+using TechTask.Persistence.Models.Task;
 using TechTask.Persistence.Models.Users;
 
 namespace TechTask.Infrastructure.Services
@@ -44,6 +45,12 @@ namespace TechTask.Infrastructure.Services
         public async Task<IEnumerable<Team>> GetAllTeamsWithoutEagerLoadingAsync()
         {
             return await _context.Teams.ToListAsync();
+        }
+
+        public async Task<int> CalculateTotalHoursOfWorkAsync(Team team, Tasks task)
+        {
+            team.HoursOfWorkOnAllTasks += task.TotalHoursOfWork;
+            return await _context.SaveChangesAsync();
         }
 
         public async Task<int> RemoveUserFromTeam(User user)
