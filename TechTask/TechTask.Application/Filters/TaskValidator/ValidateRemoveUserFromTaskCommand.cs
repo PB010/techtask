@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using TechTask.Application.TeamTasks.Commands;
 using TechTask.Persistence.Context;
+using TechTask.Persistence.Models.Task.Enums;
 
 namespace TechTask.Application.Filters.TaskValidator
 {
@@ -32,6 +33,17 @@ namespace TechTask.Application.Filters.TaskValidator
                 if (!taskCheck)
                 {
                     context.ModelState.AddModelError("userId", "This task doesn't have anyone assigned to it.");
+                    var httpResult = new BadRequestObjectResult(context.ModelState) { StatusCode = 400 };
+                    context.Result = httpResult;
+                    return;
+                }
+
+                var taskCompletionCheck = _appDbContext.Tasks.Single(t => t.Id == taskIdAsInt);
+
+                if (taskCompletionCheck.Status == TaskStatus.Done ||
+                    taskCompletionCheck.Status == TaskStatus.Pending)
+                {
+                    context.ModelState.AddModelError("userId", "You cannot remove someone from a finished task.");
                     var httpResult = new BadRequestObjectResult(context.ModelState) { StatusCode = 400 };
                     context.Result = httpResult;
                     return;

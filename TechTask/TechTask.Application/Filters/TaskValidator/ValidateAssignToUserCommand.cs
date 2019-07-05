@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using TechTask.Application.TeamTasks.Commands;
 using TechTask.Persistence.Context;
+using TechTask.Persistence.Models.Task.Enums;
 
 namespace TechTask.Application.Filters.TaskValidator
 {
@@ -20,6 +21,7 @@ namespace TechTask.Application.Filters.TaskValidator
         {
             var assignToTaskCommand = context.ActionArguments["command"] as AssignUserToTaskCommand;
             var teamId = context.RouteData.Values["teamId"];
+            var taskId = context.RouteData.Values["taskId"];
 
             if (assignToTaskCommand.UserId != null)
             {
@@ -31,6 +33,18 @@ namespace TechTask.Application.Filters.TaskValidator
                 if (!usersTeamCheck)
                 {
                     context.ModelState.AddModelError("userId", "This user is not a part of this team.");
+                    var httpResult = new BadRequestObjectResult(context.ModelState) { StatusCode = 400 };
+                    context.Result = httpResult;
+                    return;
+                }
+
+                var taskIdAsInt = int.Parse(taskId.ToString());
+                var taskCompletionCheck = _appDbContext.Tasks.Single(t => t.Id == taskIdAsInt);
+
+                if (taskCompletionCheck.Status == TaskStatus.Done ||
+                    taskCompletionCheck.Status == TaskStatus.Pending)
+                {
+                    context.ModelState.AddModelError("userId", "You cannot assign someone to a finished task.");
                     var httpResult = new BadRequestObjectResult(context.ModelState) { StatusCode = 400 };
                     context.Result = httpResult;
                     return;
