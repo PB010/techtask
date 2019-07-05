@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using System.Text;
 using TechTask.Application.Filters.GeneralValidator;
+using TechTask.Application.Filters.LogValidator;
 using TechTask.Application.Filters.TaskValidator;
 using TechTask.Application.Interfaces;
 using TechTask.Application.Users.Commands;
@@ -78,6 +79,7 @@ namespace TechTask.API
             services.AddScoped<ValidateApproveTaskCompletion>();
             services.AddScoped<ValidateReopenTask>();
             services.AddScoped<ValidateTaskForUpdate>();
+            services.AddScoped<ValidateAddLogToTask>();
 
             services.AddHttpContextAccessor();
             services.AddMediatR(typeof(RegisterUserCommand));

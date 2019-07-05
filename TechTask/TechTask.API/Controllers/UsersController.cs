@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TechTask.Application.Filters;
 using TechTask.Application.Filters.GeneralValidator;
 using TechTask.Application.Users.Commands;
 using TechTask.Application.Users.Models;

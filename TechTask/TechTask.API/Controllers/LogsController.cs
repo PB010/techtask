@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Routing;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TechTask.Application.Filters.GeneralValidator;
+using TechTask.Application.Filters.LogValidator;
 using TechTask.Application.Logs.Commands;
 using TechTask.Application.Logs.Models;
 using TechTask.Application.Logs.Queries;
@@ -23,6 +24,7 @@ namespace TechTask.API.Controllers
         {}
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidateAddLogToTask))]
         public async Task<TaskDetailsDto> AddNewLog([FromRoute] int teamId,
             [FromRoute] int taskId, [FromBody] LogForCreationDto dto)
         {
