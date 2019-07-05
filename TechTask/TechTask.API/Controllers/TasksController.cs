@@ -20,7 +20,8 @@ namespace TechTask.API.Controllers
     public class TasksController : BaseController
     {
         public TasksController(IMediator mediator) : base(mediator)
-        {}
+        {
+        }
 
         [HttpPost]
         [ServiceFilter(typeof(ValidateTaskForCreationDto))]
@@ -29,13 +30,13 @@ namespace TechTask.API.Controllers
         {
             dto.TeamId = teamId;
 
-            return await _mediator.Send(new CreateNewTaskCommand{TaskForCreationDto = dto});
+            return await _mediator.Send(new CreateNewTaskCommand {TaskForCreationDto = dto});
         }
 
         [HttpGet]
         public async Task<IEnumerable<TaskDetailsDto>> GetAllTasksForTeam([FromRoute] int teamId)
         {
-            return await _mediator.Send(new GetAllTasksForTeamQuery{TeamId = teamId});
+            return await _mediator.Send(new GetAllTasksForTeamQuery {TeamId = teamId});
         }
 
         [HttpGet("{taskId}")]
@@ -61,7 +62,7 @@ namespace TechTask.API.Controllers
             [FromRoute] int taskId, [FromBody] RemoveUserFromTaskCommand command)
         {
             command.TaskId = taskId;
-        
+
             return await _mediator.Send(command);
         }
 
@@ -85,7 +86,16 @@ namespace TechTask.API.Controllers
         public async Task<TaskDetailsDto> ApproveTaskCompletion([FromRoute] int teamId,
             [FromRoute] int taskId)
         {
-            return await _mediator.Send(new ApproveTaskCompletionCommand{TaskId = taskId});
+            return await _mediator.Send(new ApproveTaskCompletionCommand {TaskId = taskId});
         }
+
+        [HttpDelete("{taskId}/approveCompletionRequest")]
+        [ServiceFilter(typeof(ValidateApproveTaskCompletion))]
+        public async Task<TaskDetailsDto> DenyTaskCompletion([FromRoute] int teamId,
+            [FromRoute] int taskId)
+        {
+            return await _mediator.Send(new DenyTaskCompletionCommand {TaskId = taskId});
+        }
+
     }
 }

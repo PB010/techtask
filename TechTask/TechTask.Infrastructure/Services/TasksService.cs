@@ -154,11 +154,17 @@ namespace TechTask.Infrastructure.Services
 
         public async Task<int> ChangeTasksAdminApprovalState(Tasks task)
         {
-            task.AdminApprovalOfTaskCompletion = task.AdminApprovalOfTaskCompletion == TrackerTaskStatus.Approved
-                ? task.AdminApprovalOfTaskCompletion = TrackerTaskStatus.Denied
-                : task.AdminApprovalOfTaskCompletion = TrackerTaskStatus.Approved;
-
-            _accessor.HttpContext.Request.Method == // if post then approve if delete then deny
+            switch (_accessor.HttpContext.Request.Method)
+            {
+                case "POST":
+                    task.AdminApprovalOfTaskCompletion = TrackerTaskStatus.Approved;
+                    break;
+                case "DELETE":
+                    task.AdminApprovalOfTaskCompletion = TrackerTaskStatus.Denied;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
             switch (task.AdminApprovalOfTaskCompletion)
             {

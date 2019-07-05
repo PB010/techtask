@@ -26,7 +26,7 @@ namespace TechTask.Application.Filters.TaskValidator
 
                 if (taskIdCheck.Status != TaskStatus.Pending)
                 {
-                    context.ModelState.AddModelError("status", "You can only approve the completion of a pending task.");
+                    context.ModelState.AddModelError("status", "You can change the approval status of a pending task only.");
                     var httpResult = new BadRequestObjectResult(context.ModelState) { StatusCode = 400 };
                     context.Result = httpResult;
                     return;
