@@ -77,6 +77,7 @@ namespace TechTask.API
             services.AddScoped<ValidateRemoveUserFromTaskCommand>();
             services.AddScoped<ValidateApproveTaskCompletion>();
             services.AddScoped<ValidateReopenTask>();
+            services.AddScoped<ValidateTaskForUpdate>();
 
             services.AddHttpContextAccessor();
             services.AddMediatR(typeof(RegisterUserCommand));

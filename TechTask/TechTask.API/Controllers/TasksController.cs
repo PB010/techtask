@@ -67,6 +67,7 @@ namespace TechTask.API.Controllers
         }
 
         [HttpPatch("{taskId}")]
+        [ServiceFilter(typeof(ValidateTaskForUpdate))]
         public async Task<TaskDetailsDto> UpdateTaskInfo([FromRoute] int teamId,
             [FromRoute] int taskId, [FromBody] JsonPatchDocument<TaskForUpdateDto> dto)
         {
