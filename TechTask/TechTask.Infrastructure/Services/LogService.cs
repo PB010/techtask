@@ -47,5 +47,14 @@ namespace TechTask.Infrastructure.Services
                 dto[i].CreatedAt = createdAt[i].ToString("dd MMM yy");
             }
         }
+
+        public void AssignDateTimeToLogDetailsDto(LogDetailsDto dto)
+        {
+            var logFromDb = _context.LoggedActivities.Single(l => l.Id == dto.LogId);
+            dynamic createdAt = _context.Entry(logFromDb).Property("CreatedAt").OriginalValue;
+            //var createdAtAsDateTime = DateTime.Parse(createdAt.ToString());
+
+            dto.CreatedAt = createdAt.ToString("dd MMM yy");
+        }
     }
 }

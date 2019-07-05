@@ -11,5 +11,6 @@ namespace TechTask.Application.Interfaces
         Task<LoggedActivity> GetLogAsync(int id);
         Task<int> AddNewLogAsync(LoggedActivity log);
         void AssignDateTimeToListLogDetailsDto(List<LogDetailsDto> dto, int taskId);
+        void AssignDateTimeToLogDetailsDto(LogDetailsDto dto);
     }
 }

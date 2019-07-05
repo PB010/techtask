@@ -38,5 +38,15 @@ namespace TechTask.API.Controllers
         {
             return await _mediator.Send(new GetAllLogsForTaskQuery {TeamId = teamId, TaskId = taskId});
         }
+
+        [HttpGet("{logId}")]
+        public async Task<LogDetailsDto> GetLog([FromRoute] int teamId,
+            [FromRoute] int taskId, [FromRoute] int logId)
+        {
+            return await _mediator.Send(new GetLogForTaskCommand
+            {
+                TaskId = taskId, TeamId = teamId, LogId = logId
+            });
+        }
     }
 }
