@@ -51,7 +51,7 @@ namespace TechTask.Application.Logs.Commands
             await _logService.AddNewLogAsync(logToAdd);
             await _taskService.CalculateNewWorkBalanceAsync(taskFromDb, logToAdd);
             await _emailService.SendEmailIfStatusChangedAsync(taskFromDb, request.LogForCreationDto.TaskStatus,
-                "test@tech.com",
+                "admin@tech.com",
                 "Status change",
                 $"Status for task '{taskFromDb.Name}' has changed to {taskFromDb.Status.ToString()}");
             await _taskService.ChangeStatusBasedOnAdminApproval(taskFromDb, request.LogForCreationDto);

@@ -37,7 +37,7 @@ namespace TechTask.Application.TeamTasks.Commands
             var taskFromDb = await _taskService.GetTaskWithEagerLoadingAsync(request.TaskId);
             await _taskService.ReopenTask(taskFromDb);
             await _emailService.SendEmailAsync(
-                "test@tech.com",
+                "admin@tech.com",
                 "Status change",
                 $"Status for task '{taskFromDb.Name}' has changed to {taskFromDb.Status.ToString()}");
 

@@ -37,7 +37,7 @@ namespace TechTask.Application.TeamTasks.Commands
                 throw new AuthenticationException("Only admins are allowed to remove users from task.");
 
             await _emailService.SendEmailIfStatusChangedAsync(taskFromDb, request.TaskForRemovalDto.TaskStatus,
-                "test@tech.com",
+                "admin@tech.com",
                 "Status change",
                 $"Status for task '{taskFromDb.Name}' has changed to {taskFromDb.Status.ToString()}");
             await _taskService.RemoveUserFromTaskAsync(taskFromDb, request.TaskForRemovalDto.TaskStatus);

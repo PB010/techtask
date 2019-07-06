@@ -31,7 +31,7 @@ namespace TechTask.Application.TeamTasks.Commands
             var taskFromDb = await _taskService.GetTaskWithEagerLoadingAsync(request.TaskForUpdateDto.TaskId);
 
             await _emailService.SendEmailIfStatusChangedAsync(taskFromDb, request.TaskForUpdateDto.Status,
-                "test@tech.com",
+                "admin@tech.com",
                 "Status change",
                 $"Status for task '{taskFromDb.Name}' has changed to {taskFromDb.Status.ToString()}");
             await _taskService.UpdateTask(taskFromDb, request.TaskForUpdateDto);
