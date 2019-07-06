@@ -11,7 +11,8 @@ namespace TechTask.Application.Logs.Mapping
             CreateMap<LogForCreationDto, LoggedActivity>();
             CreateMap<LoggedActivity, LogDetailsDto>().ForMember(dest => dest.LogId, opt =>
                 opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore());
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src =>
+                    src.CreatedAt.ToString("dd MMM yy")));
         }
 
     }

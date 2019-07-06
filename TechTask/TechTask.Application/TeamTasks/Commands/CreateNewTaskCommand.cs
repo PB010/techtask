@@ -57,10 +57,7 @@ namespace TechTask.Application.TeamTasks.Commands
 
             var taskFromDbForMapping = await _tasksService.GetTaskWithEagerLoadingAsync(taskToAdd.Id);
             var taskToReturn = _mapper.Map<TaskDetailsDto>(taskFromDbForMapping);
-            await _emailService.SendEmailAsync(
-                "admin@tech.com",
-                "New Task",
-                $"New task with id {taskFromDbForMapping.Id} was created.");
+            await _emailService.SendEmailAsync(taskFromDbForMapping);
 
             return taskToReturn;
         }   

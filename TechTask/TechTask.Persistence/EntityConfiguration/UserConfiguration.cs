@@ -19,7 +19,7 @@ namespace TechTask.Persistence.EntityConfiguration
             builder.Property(b => b.Role).IsRequired();
 
             builder.HasData(
-                new 
+                new User
                 {
                     Id = new Guid("bfd23b66-1a4e-41de-4aa7-08d6fae3b08b"),
                     DateOfBirth = new DateTime(1984, 09, 13),
@@ -28,11 +28,9 @@ namespace TechTask.Persistence.EntityConfiguration
                     Email = "will.s@tech.com",
                     Password = "Will123",
                     Role = Roles.Admin,
-                    TeamId = 1,
-                    CreatedAt = DateTime.Parse("01/07/2019 16:22"),
-                    UpdatedAt = DateTime.Parse("01/07/2019 16:22")
+                    TeamId = 1
                 },
-                new 
+                new User
                 {
                     Id = new Guid("76aebd31-0235-4ef3-a123-08d6fbc1bdcd"),
                     DateOfBirth = new DateTime(1993, 04, 28),
@@ -40,11 +38,9 @@ namespace TechTask.Persistence.EntityConfiguration
                     LastName = "Smith",
                     Email = "john.s@tech.com",
                     Password = "John123",
-                    Role = Roles.User,
-                    CreatedAt = DateTime.Parse("01/07/2019 16:22"),
-                    UpdatedAt = DateTime.Parse("01/07/2019 16:22")
+                    Role = Roles.User
                 },
-                new 
+                new User
                 {
                     Id = new Guid("ed09fe47-84c0-47b5-8007-ae2ea4350a8b"),
                     DateOfBirth = new DateTime(1973, 10, 30),
@@ -53,11 +49,9 @@ namespace TechTask.Persistence.EntityConfiguration
                     Email = "jane.w@tech.com",
                     Password = "Jane123",
                     Role = Roles.Admin,
-                    TeamId = 2,
-                    CreatedAt = DateTime.Parse("01/07/2019 16:22"),
-                    UpdatedAt = DateTime.Parse("01/07/2019 16:22")
+                    TeamId = 2
                 },
-                new 
+                new User
                 {
                     Id = new Guid("f3c88d42-fb42-43c4-a9d4-1a738a2bd20c"),
                     DateOfBirth = new DateTime(1988, 03, 31),
@@ -65,9 +59,7 @@ namespace TechTask.Persistence.EntityConfiguration
                     LastName = "Russell",
                     Email = "anthony.r@tech.com",
                     Password = "Anthony123",
-                    Role = Roles.User,
-                    CreatedAt = DateTime.Parse("01/07/2019 16:22"),
-                    UpdatedAt = DateTime.Parse("01/07/2019 16:22")
+                    Role = Roles.User
                 });
         }
     }

@@ -39,10 +39,8 @@ namespace TechTask.Application.Logs.Queries
                 throw new AuthenticationException();
 
             var logFromDb = await _logService.GetLogAsync(request.LogId);
-            var logToReturn = _mapper.Map<LogDetailsDto>(logFromDb);
-            _logService.AssignDateTimeToLogDetailsDto(logToReturn);
 
-            return logToReturn;
+            return _mapper.Map<LogDetailsDto>(logFromDb);
         }
     }
 }

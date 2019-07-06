@@ -30,10 +30,7 @@ namespace TechTask.Application.Filters.Email
 
             foreach (var user in usersWithNoTasksInProgress)
             {
-                _emailService.SendEmailAsync(
-                    "test@tech.com",
-                    $"User has no task assigned to him.",
-                    $"{user.FirstName} {user.LastName} has no task assigned to him, please make sure he gets one.");
+                _emailService.SendEmailWhenUsersHaveNoTasksAsync(user);
             }
 
             base.OnActionExecuting(context);

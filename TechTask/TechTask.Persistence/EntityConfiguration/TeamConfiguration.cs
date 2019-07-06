@@ -14,21 +14,17 @@ namespace TechTask.Persistence.EntityConfiguration
             builder.Property(b => b.HoursOfWorkOnAllTasks).IsRequired();
 
             builder.HasData(
-                new 
+                new Team
                 {
                     Id = 1,
                     Name = "Alpha",
-                    HoursOfWorkOnAllTasks = 0,
-                    CreatedAt = DateTime.Parse("01/07/2019 16:22"),
-                    UpdatedAt = DateTime.Parse("01/07/2019 16:22")
+                    HoursOfWorkOnAllTasks = 0
                 },
-                new 
+                new Team
                 {
                     Id = 2,
                     Name = "Beta",
-                    HoursOfWorkOnAllTasks = 0,
-                    CreatedAt = DateTime.Parse("01/07/2019 16:22"),
-                    UpdatedAt = DateTime.Parse("01/07/2019 16:22")
+                    HoursOfWorkOnAllTasks = 0
                 });
         }
     }

@@ -10,5 +10,6 @@ namespace TechTask.Persistence.Models.Users
         public int HoursSpent { get; set; }
         public int TasksId { get; set; }    
         public Guid UserId { get; set; }
+        public DateTime CreatedAt { get; set; } 
     }
 }

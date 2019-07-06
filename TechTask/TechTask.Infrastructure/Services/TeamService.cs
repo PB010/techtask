@@ -10,10 +10,12 @@ namespace TechTask.Infrastructure.Services
     public class TeamService : ITeamService
     {
         private readonly AppDbContext _context;
+        private readonly IDbLogService _dbLogService;
 
-        public TeamService(AppDbContext context)
+        public TeamService(AppDbContext context, IDbLogService dbLogService)
         {
             _context = context;
+            _dbLogService = dbLogService;
         }
 
         public async Task<Team> GetTeamWithEagerLoadingAsync(int id)
@@ -67,7 +69,9 @@ namespace TechTask.Infrastructure.Services
         public async Task<int> AddTeam(Team team)
         {
             _context.Teams.Add(team);
-            return await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+
+            return await _dbLogService.LogOnCreationOfEntity(team);
         }
 
         public async void UpdateTeamName(Team team, string name)

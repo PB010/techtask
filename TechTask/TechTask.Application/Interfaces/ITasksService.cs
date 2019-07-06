@@ -23,7 +23,6 @@ namespace TechTask.Application.Interfaces
         Task<int> ReopenTask(Tasks task);
         Task<int> AddUserToTaskAsync(Tasks task, Guid userId);
         Task<int> RemoveUserFromTaskAsync(Tasks task, TaskStatus status);
-        void AssignDateTimeToCreatedAt(TaskDetailsDto dto);
     }
 }
     

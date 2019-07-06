@@ -13,26 +13,20 @@ namespace TechTask.Persistence.EntityConfiguration
             builder.Property(b => b.Name).IsRequired().HasMaxLength(50);
 
             builder.HasData(
-                new 
+                new TaskPriority
                 {
                     Id = 1,
-                    Name = "Low",
-                    CreatedAt = DateTime.Parse("01/07/2019 16:22"),
-                    UpdatedAt = DateTime.Parse("01/07/2019 16:22")
+                    Name = "Low"
                 },
-                new 
+                new TaskPriority
                 {
                     Id = 2,
-                    Name = "Normal",
-                    CreatedAt = DateTime.Parse("01/07/2019 16:22"),
-                    UpdatedAt = DateTime.Parse("01/07/2019 16:22")
+                    Name = "Normal"
                 },
-                new 
+                new TaskPriority
                 {
                     Id = 3,
-                    Name = "Urgent",
-                    CreatedAt = DateTime.Parse("01/07/2019 16:22"),
-                    UpdatedAt = DateTime.Parse("01/07/2019 16:22")
+                    Name = "Urgent"
                 });
         }
     }

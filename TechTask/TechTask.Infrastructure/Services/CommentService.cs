@@ -12,10 +12,12 @@ namespace TechTask.Infrastructure.Services
     public class CommentService : ICommentService
     {
         private readonly AppDbContext _context;
+        private readonly IDbLogService _dbLogService;
 
-        public CommentService(AppDbContext context)
+        public CommentService(AppDbContext context, IDbLogService dbLogService)
         {
             _context = context;
+            _dbLogService = dbLogService;
         }
 
         public async Task<Comment> GetCommentAsync(int commentId)
@@ -32,7 +34,9 @@ namespace TechTask.Infrastructure.Services
         public async Task<int> AddNewCommentAsync(Comment comment)
         {
             _context.Comments.Add(comment);
-            return await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            
+            return await _dbLogService.LogOnCreationOfEntity(comment);
         }
 
         public async Task<int> RemoveCommentAsync(int commentId)

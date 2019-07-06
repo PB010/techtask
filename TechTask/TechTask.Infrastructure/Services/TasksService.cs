@@ -19,11 +19,14 @@ namespace TechTask.Infrastructure.Services
     {
         private readonly AppDbContext _context;
         private readonly IHttpContextAccessor _accessor;
+        private readonly IDbLogService _dbLogService;
 
-        public TasksService(AppDbContext context, IHttpContextAccessor accessor)
+        public TasksService(AppDbContext context, IHttpContextAccessor accessor,
+            IDbLogService dbLogService)
         {
             _context = context;
             _accessor = accessor;
+            _dbLogService = dbLogService;
         }
 
         public async Task<Tasks> GetTaskWithEagerLoadingAsync(int id)
@@ -67,7 +70,8 @@ namespace TechTask.Infrastructure.Services
         public async Task<int> AddTask(Tasks task)
         {
             _context.Tasks.Add(task);
-            return await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            return await _dbLogService.LogOnCreationOfEntity(task);
         }
 
         public async Task<int> UpdateTask(Tasks task, TaskForUpdateDto dto)
@@ -174,18 +178,6 @@ namespace TechTask.Infrastructure.Services
             task.UserId = null;
             task.Status = status;
             return await _context.SaveChangesAsync();
-        }
-
-        public void AssignDateTimeToCreatedAt(TaskDetailsDto dto)
-        {
-            var createdAt = _context.LoggedActivities.Where(l => l.TasksId == dto.TaskId)
-                .Select(s => EF.Property<DateTime>(s, "CreatedAt"))
-                .ToList();
-
-            for (var i = 0; i < dto.Log.Count; i++)
-            {
-                dto.Log[i].CreatedAt = createdAt[i].ToString("dd MMM yy");
-            }
         }
     }
 }

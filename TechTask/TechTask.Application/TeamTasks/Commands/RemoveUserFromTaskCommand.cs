@@ -36,10 +36,7 @@ namespace TechTask.Application.TeamTasks.Commands
             if (!_authService.UserRoleAdmin())
                 throw new AuthenticationException("Only admins are allowed to remove users from task.");
 
-            await _emailService.SendEmailIfStatusChangedAsync(taskFromDb, request.TaskForRemovalDto.TaskStatus,
-                "admin@tech.com",
-                "Status change",
-                $"Status for task '{taskFromDb.Name}' has changed to {taskFromDb.Status.ToString()}");
+            await _emailService.SendEmailIfStatusChangedAsync(taskFromDb, request.TaskForRemovalDto.TaskStatus);
             await _taskService.RemoveUserFromTaskAsync(taskFromDb, request.TaskForRemovalDto.TaskStatus);
         }
     }
