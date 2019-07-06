@@ -19,11 +19,14 @@ namespace TechTask.Application.TeamTasks.Commands
     {
         private readonly ITasksService _taskService;
         private readonly ITokenAuthenticationService _authService;
+        private readonly IEmailService _emailService;
 
-        public RemoveUserFromTaskHandler(ITasksService taskService, ITokenAuthenticationService authService)
+        public RemoveUserFromTaskHandler(ITasksService taskService, ITokenAuthenticationService authService,
+            IEmailService emailService)
         {
             _taskService = taskService;
             _authService = authService;
+            _emailService = emailService;
         }
 
         protected override async Task Handle(RemoveUserFromTaskCommand request, CancellationToken cancellationToken)
@@ -33,6 +36,10 @@ namespace TechTask.Application.TeamTasks.Commands
             if (!_authService.UserRoleAdmin())
                 throw new AuthenticationException("Only admins are allowed to remove users from task.");
 
+            await _emailService.SendEmailIfStatusChangedAsync(taskFromDb, request.TaskForRemovalDto.TaskStatus,
+                "test@tech.com",
+                "Status change",
+                $"Status for task '{taskFromDb.Name}' has changed to {taskFromDb.Status.ToString()}");
             await _taskService.RemoveUserFromTaskAsync(taskFromDb, request.TaskForRemovalDto.TaskStatus);
         }
     }

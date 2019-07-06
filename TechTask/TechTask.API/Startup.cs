@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using System.Text;
+using TechTask.Application.Filters.Email;
 using TechTask.Application.Filters.GeneralValidator;
 using TechTask.Application.Filters.LogValidator;
 using TechTask.Application.Filters.TaskValidator;
@@ -72,6 +73,7 @@ namespace TechTask.API
             services.AddScoped<ITasksService, TasksService>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<ILogService, LogService>();
+            services.AddScoped<IEmailService, EmailService>();
 
             services.AddScoped<ValidateRouteAttributes>();
             services.AddScoped<ValidateTaskForCreationDto>();
@@ -82,6 +84,7 @@ namespace TechTask.API
             services.AddScoped<ValidateTaskForUpdate>();
             services.AddScoped<ValidateAddLogToTask>();
             services.AddScoped<ValidateUserForUpdate>();
+            services.AddScoped<EmailSenderService>();
 
             services.AddHttpContextAccessor();
             services.AddMediatR(typeof(RegisterUserCommand));
@@ -102,6 +105,7 @@ namespace TechTask.API
                 app.UseHsts();
             }
 
+            
             app.UseHttpsRedirection();
             app.UseMvc();
         }

@@ -25,7 +25,8 @@ namespace TechTask.Application.Filters.TaskValidator
                 var taskIdCheck = _appDbContext.Tasks.Single(t => t.Id == taskIdAsInt);
 
                 if (taskIdCheck.Status == TaskStatus.Done ||
-                    taskIdCheck.Status == TaskStatus.Pending)
+                    taskIdCheck.Status == TaskStatus.Pending ||
+                    taskIdCheck.Status == TaskStatus.Canceled)
                 {
                     context.ModelState.AddModelError("status", "You can only edit tasks in progress.");
                     var httpResult = new BadRequestObjectResult(context.ModelState) { StatusCode = 400 };

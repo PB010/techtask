@@ -28,7 +28,7 @@ namespace TechTask.Application.Filters.TaskValidator
                     taskIdCheck.Status == TaskStatus.Assigned ||
                     taskIdCheck.Status == TaskStatus.Unassigned)
                 {
-                    context.ModelState.AddModelError("status", "You can only reopen requests marked as done or those that are pending.");
+                    context.ModelState.AddModelError("status", "You can only reopen requests marked as done, cancelled or those that are pending.");
                     var httpResult = new BadRequestObjectResult(context.ModelState) {StatusCode = 400};
                     context.Result = httpResult;
                     return;

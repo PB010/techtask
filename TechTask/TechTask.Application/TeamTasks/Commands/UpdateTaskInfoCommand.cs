@@ -16,17 +16,24 @@ namespace TechTask.Application.TeamTasks.Commands
     {
         private readonly ITasksService _taskService;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
 
-        public UpdateTaskInfoHandler(ITasksService taskService, IMapper mapper)
+        public UpdateTaskInfoHandler(ITasksService taskService, IMapper mapper,
+            IEmailService emailService)
         {
             _taskService = taskService;
             _mapper = mapper;
+            _emailService = emailService;
         }
 
         public async Task<TaskDetailsDto> Handle(UpdateTaskInfoCommand request, CancellationToken cancellationToken)
         {
             var taskFromDb = await _taskService.GetTaskWithEagerLoadingAsync(request.TaskForUpdateDto.TaskId);
 
+            await _emailService.SendEmailIfStatusChangedAsync(taskFromDb, request.TaskForUpdateDto.Status,
+                "test@tech.com",
+                "Status change",
+                $"Status for task '{taskFromDb.Name}' has changed to {taskFromDb.Status.ToString()}");
             await _taskService.UpdateTask(taskFromDb, request.TaskForUpdateDto);
 
             return _mapper.Map<TaskDetailsDto>(taskFromDb);

@@ -24,15 +24,18 @@ namespace TechTask.Application.Logs.Commands
         private readonly ITeamService _teamService;
         private readonly ITokenAuthenticationService _authService;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
 
         public AddLogToATaskHandler(ILogService logService, ITasksService taskService,
-            ITeamService teamService, ITokenAuthenticationService authService, IMapper mapper)  
+            ITeamService teamService, ITokenAuthenticationService authService, IMapper mapper,
+            IEmailService emailService)  
         {
             _logService = logService;
             _taskService = taskService;
             _teamService = teamService; 
             _authService = authService;
             _mapper = mapper;
+            _emailService = emailService;
         }
             
         public async Task<TaskDetailsDto> Handle(AddLogToATaskCommand request, CancellationToken cancellationToken)
@@ -47,6 +50,10 @@ namespace TechTask.Application.Logs.Commands
             var logToAdd = _mapper.Map<LoggedActivity>(request.LogForCreationDto);
             await _logService.AddNewLogAsync(logToAdd);
             await _taskService.CalculateNewWorkBalanceAsync(taskFromDb, logToAdd);
+            await _emailService.SendEmailIfStatusChangedAsync(taskFromDb, request.LogForCreationDto.TaskStatus,
+                "test@tech.com",
+                "Status change",
+                $"Status for task '{taskFromDb.Name}' has changed to {taskFromDb.Status.ToString()}");
             await _taskService.ChangeStatusBasedOnAdminApproval(taskFromDb, request.LogForCreationDto);
 
             var teamForUpdate = await _teamService.GetTeamWithoutEagerLoadingAsync(request.LogForCreationDto.TeamId);

@@ -18,13 +18,15 @@ namespace TechTask.Application.TeamTasks.Commands
         private readonly ITasksService _taskService;
         private readonly ITokenAuthenticationService _authService;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
 
         public ApproveTaskCompletionHandler(ITasksService taskService, ITokenAuthenticationService authService,
-            IMapper mapper)
+            IMapper mapper, IEmailService emailService)
         {
             _taskService = taskService;
             _authService = authService;
             _mapper = mapper;
+            _emailService = emailService;
         }
 
         public async Task<TaskDetailsDto> Handle(ApproveTaskCompletionCommand request,
@@ -35,6 +37,10 @@ namespace TechTask.Application.TeamTasks.Commands
 
             var taskFromDb = await _taskService.GetTaskWithEagerLoadingAsync(request.TaskId);
             await _taskService.ChangeTasksAdminApprovalState(taskFromDb);
+            await _emailService.SendEmailAsync(
+                "test@tech.com",
+                "Status change",
+                $"Status for task '{taskFromDb.Name}' has changed to {taskFromDb.Status.ToString()}");
 
             return _mapper.Map<TaskDetailsDto>(taskFromDb);
         }

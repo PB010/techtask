@@ -23,14 +23,16 @@ namespace TechTask.Application.TeamTasks.Commands
         private readonly IUserService _userService;
         private readonly ITokenAuthenticationService _authService;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
 
         public CreateNewTaskHandler(ITasksService tasksService, IUserService userService,   
-            ITokenAuthenticationService authService, IMapper mapper)
+            ITokenAuthenticationService authService, IMapper mapper, IEmailService emailService)
         {
             _tasksService = tasksService;
             _userService = userService;
             _authService = authService;
             _mapper = mapper;
+            _emailService = emailService;
         }   
 
         public async Task<TaskDetailsDto> Handle(CreateNewTaskCommand request, CancellationToken cancellationToken)
@@ -55,7 +57,11 @@ namespace TechTask.Application.TeamTasks.Commands
 
             var taskFromDbForMapping = await _tasksService.GetTaskWithEagerLoadingAsync(taskToAdd.Id);
             var taskToReturn = _mapper.Map<TaskDetailsDto>(taskFromDbForMapping);
-          
+            await _emailService.SendEmailAsync(
+                "test@tech.com",
+                "New Task",
+                $"New task with id {taskFromDbForMapping.Id} was created.");
+
             return taskToReturn;
         }   
     }
