@@ -14,6 +14,7 @@ using System.Text;
 using TechTask.Application.Filters.GeneralValidator;
 using TechTask.Application.Filters.LogValidator;
 using TechTask.Application.Filters.TaskValidator;
+using TechTask.Application.Filters.UserValidator;
 using TechTask.Application.Interfaces;
 using TechTask.Application.Users.Commands;
 using TechTask.Application.Users.Mapping;
@@ -80,6 +81,7 @@ namespace TechTask.API
             services.AddScoped<ValidateReopenTask>();
             services.AddScoped<ValidateTaskForUpdate>();
             services.AddScoped<ValidateAddLogToTask>();
+            services.AddScoped<ValidateUserForUpdate>();
 
             services.AddHttpContextAccessor();
             services.AddMediatR(typeof(RegisterUserCommand));

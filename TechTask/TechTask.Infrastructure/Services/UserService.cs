@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
+using TechTask.Application.Users.Models;
 using TechTask.Persistence.Context;
 using TechTask.Persistence.Models.Users;
 
@@ -23,6 +24,7 @@ namespace TechTask.Infrastructure.Services
             var user = await _context.Users.Include(u => u.Comments)
                 .Include(u => u.Tasks)
                 .Include(u => u.Log)
+                .Include(t => t.Team)
                 .SingleOrDefaultAsync(u => u.Id == id);
 
             return user;
@@ -53,6 +55,14 @@ namespace TechTask.Infrastructure.Services
         public async Task<int> AddUser(User user)  
         {
             _context.Users.Add(user);
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> UpdateUser(User user, UserForUpdateDto dto)
+        {
+            user.Role = dto.Role ?? user.Role;
+            user.TeamId = dto.TeamId ?? user.TeamId;
+
             return await _context.SaveChangesAsync();
         }
     }

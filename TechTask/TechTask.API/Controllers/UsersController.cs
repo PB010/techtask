@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TechTask.Application.Filters.GeneralValidator;
+using TechTask.Application.Filters.UserValidator;
 using TechTask.Application.Users.Commands;
 using TechTask.Application.Users.Models;
 using TechTask.Application.Users.Queries;
@@ -15,6 +16,7 @@ namespace TechTask.API.Controllers
     [Route("/api/users/")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
+    [ServiceFilter(typeof(ValidateRouteAttributes))]
     public class UsersController : BaseController   
     {
         public UsersController(IMediator mediator) : base(mediator)
@@ -46,6 +48,21 @@ namespace TechTask.API.Controllers
         public async Task<IEnumerable<UserDetailsDto>> GetAllUsers()
         {
             return await _mediator.Send(new GetAllUsersQuery());
+        }
+
+        [HttpPut("{userId}")]
+        [ServiceFilter(typeof(ValidateUserForUpdate))]
+        public async Task<UserDetailsDto> UpdateUserRoleOrTeam([FromRoute] Guid userId,
+            [FromBody] UserForUpdateDto dto)
+        {
+            var command = new UpdateUserInfoCommand
+            {
+                UserForUpdateDto = dto
+            };
+
+            command.UserForUpdateDto.UserId = userId;
+
+            return await _mediator.Send(command);
         }
     }
 }

@@ -18,5 +18,6 @@ namespace TechTask.Persistence.Models.Users
         public List<Comment> Comments { get; set; }
         public List<LoggedActivity> Log { get; set; } 
         public int? TeamId { get; set; }
+        public Team Team { get; set; }  
     }
 }   

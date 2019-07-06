@@ -22,6 +22,8 @@ namespace TechTask.Application.Users.Mapping
 
             CreateMap<User, UserDetailsDto>().ForMember(dest => dest.UserId, opt =>
                     opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.TeamName, opt => opt.MapFrom(src =>
+                    src.Team.Name))
                 .ForMember(dest => dest.Age, opt =>
                 opt.MapFrom(src => (DateTime.Now.Year - src.DateOfBirth.Year).ToString()))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src =>
