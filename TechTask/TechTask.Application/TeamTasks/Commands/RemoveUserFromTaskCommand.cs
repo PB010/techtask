@@ -1,17 +1,18 @@
 ﻿using FluentValidation;
 using MediatR;
-using System;
 using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTask.Application.Interfaces;
+using TechTask.Application.TeamTasks.Models;
 
 namespace TechTask.Application.TeamTasks.Commands
 {
     public class RemoveUserFromTaskCommand : IRequest
     {
         public int TaskId { get; set; }
-        public Guid UserId { get; set; }
+        public TaskForRemovalDto TaskForRemovalDto { get; set; }
+        
     }
 
     public class RemoveUserFromTaskHandler : AsyncRequestHandler<RemoveUserFromTaskCommand>
@@ -32,11 +33,11 @@ namespace TechTask.Application.TeamTasks.Commands
             if (!_authService.UserRoleAdmin())
                 throw new AuthenticationException("Only admins are allowed to remove users from task.");
 
-            await _taskService.RemoveUserFromTaskAsync(taskFromDb);
+            await _taskService.RemoveUserFromTaskAsync(taskFromDb, request.TaskForRemovalDto.TaskStatus);
         }
     }
 
-    public class RemoveUserFromTaskValidator : AbstractValidator<RemoveUserFromTaskCommand>
+    public class RemoveUserFromTaskValidator : AbstractValidator<TaskForRemovalDto>
     {
         public RemoveUserFromTaskValidator()
         {

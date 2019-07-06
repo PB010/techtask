@@ -47,10 +47,10 @@ namespace TechTask.Application.Users.Commands
     {
         public UpdateUserInfoValidator()
         {
-            
-            RuleFor(x => new {x.Role, x.TeamId}).NotEmpty().NotNull()
-                .WithMessage("You have to provide both a new Team Id and User Role to update this user.");
-            
+
+            RuleFor(x => x.Role).NotEmpty().WithMessage("Please provide the role.");
+            RuleFor(x => x.TeamId).NotEmpty().WithMessage("Please provide the team id.");
+
         }
     }
 }

@@ -23,7 +23,7 @@ namespace TechTask.Application.Filters.TaskValidator
             var assignToTaskCommand = context.ActionArguments["command"] as RemoveUserFromTaskCommand;
             var taskId = context.RouteData.Values["taskId"];
 
-            if (assignToTaskCommand.UserId != null)
+            if (assignToTaskCommand.TaskForRemovalDto.UserId != null)
             {
                 var taskIdAsInt = int.Parse(taskId.ToString());
                 var taskCheck = _appDbContext.Tasks

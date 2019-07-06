@@ -169,9 +169,10 @@ namespace TechTask.Infrastructure.Services
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<int> RemoveUserFromTaskAsync(Tasks task)
+        public async Task<int> RemoveUserFromTaskAsync(Tasks task, TaskStatus status)
         {
             task.UserId = null;
+            task.Status = status;
             return await _context.SaveChangesAsync();
         }
 

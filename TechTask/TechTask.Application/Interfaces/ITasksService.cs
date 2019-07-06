@@ -5,6 +5,7 @@ using TechTask.Application.Logs.Models;
 using TechTask.Application.TeamTasks.Models;
 using TechTask.Persistence.Models.Task;
 using TechTask.Persistence.Models.Users;
+using TaskStatus = TechTask.Persistence.Models.Task.Enums.TaskStatus;
 
 namespace TechTask.Application.Interfaces
 {
@@ -21,7 +22,7 @@ namespace TechTask.Application.Interfaces
         Task<int> ChangeTasksAdminApprovalState(Tasks task);
         Task<int> ReopenTask(Tasks task);
         Task<int> AddUserToTaskAsync(Tasks task, Guid userId);
-        Task<int> RemoveUserFromTaskAsync(Tasks task);
+        Task<int> RemoveUserFromTaskAsync(Tasks task, TaskStatus status);
         void AssignDateTimeToCreatedAt(TaskDetailsDto dto);
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TechTask.Application.Comments.Mapping;
 using TechTask.Application.Interfaces;
 using TechTask.Persistence.Context;
 using TechTask.Persistence.Models.Task;
@@ -40,6 +41,14 @@ namespace TechTask.Infrastructure.Services
                 .SingleOrDefaultAsync(c => c.Id == commentId);
 
             _context.Comments.Remove(commentToRemove);
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> UpdateComment(Comment comment, CommentForUpdateDto dto)
+        {
+            comment.Description = dto.Description ??
+                comment.Description;
+
             return await _context.SaveChangesAsync();
         }
     }
