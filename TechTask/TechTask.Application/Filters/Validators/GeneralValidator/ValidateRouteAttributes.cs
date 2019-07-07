@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 using TechTask.Persistence.Context;
 
-namespace TechTask.Application.Filters.GeneralValidator
+namespace TechTask.Application.Filters.Validators.GeneralValidator
 {
     public class ValidateRouteAttributes : ActionFilterAttribute
     {

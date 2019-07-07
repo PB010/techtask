@@ -12,10 +12,11 @@ using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using System.Text;
 using TechTask.Application.Filters.Email;
-using TechTask.Application.Filters.GeneralValidator;
-using TechTask.Application.Filters.LogValidator;
-using TechTask.Application.Filters.TaskValidator;
-using TechTask.Application.Filters.UserValidator;
+using TechTask.Application.Filters.Validators.CommentValidator;
+using TechTask.Application.Filters.Validators.GeneralValidator;
+using TechTask.Application.Filters.Validators.LogValidator;
+using TechTask.Application.Filters.Validators.TaskValidator;
+using TechTask.Application.Filters.Validators.UserValidator;
 using TechTask.Application.Interfaces;
 using TechTask.Application.Users.Commands;
 using TechTask.Application.Users.Mapping;
@@ -86,6 +87,7 @@ namespace TechTask.API
             services.AddScoped<ValidateAddLogToTask>();
             services.AddScoped<ValidateUserForUpdate>();
             services.AddScoped<EmailSenderService>();
+            services.AddScoped<ValidateAddComment>();
 
             services.AddHttpContextAccessor();
             services.AddMediatR(typeof(RegisterUserCommand));

@@ -9,7 +9,8 @@ using TechTask.Application.Comments.Commands;
 using TechTask.Application.Comments.Mapping;
 using TechTask.Application.Comments.Models;
 using TechTask.Application.Comments.Queries;
-using TechTask.Application.Filters.GeneralValidator;
+using TechTask.Application.Filters.Validators.CommentValidator;
+using TechTask.Application.Filters.Validators.GeneralValidator;
 
 namespace TechTask.API.Controllers
 {
@@ -23,6 +24,7 @@ namespace TechTask.API.Controllers
         {}
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidateAddComment))]
         public async Task<CommentDetailsDto> PostNewComment([FromRoute] int teamId,
             [FromRoute] int taskId, [FromBody] CommentForCreationDto dto)
         {

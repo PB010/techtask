@@ -43,6 +43,7 @@ namespace TechTask.Infrastructure.Services
         {
             var commentToRemove = await _context.Comments
                 .SingleOrDefaultAsync(c => c.Id == commentId);
+            _dbLogService.LogOnEntityDelete(commentToRemove);
 
             _context.Comments.Remove(commentToRemove);
             return await _context.SaveChangesAsync();
@@ -52,6 +53,7 @@ namespace TechTask.Infrastructure.Services
         {
             comment.Description = dto.Description ??
                 comment.Description;
+            _dbLogService.LogOnUpdateOfAnEntity(comment);
 
             return await _context.SaveChangesAsync();
         }

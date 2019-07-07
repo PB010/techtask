@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TechTask.Application.Filters;
-using TechTask.Application.Filters.GeneralValidator;
+using TechTask.Application.Filters.Validators.GeneralValidator;
 using TechTask.Application.Teams.Commands;
 using TechTask.Application.Teams.Models;
 using TechTask.Application.Teams.Queries;

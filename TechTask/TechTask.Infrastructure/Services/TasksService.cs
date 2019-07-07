@@ -89,6 +89,7 @@ namespace TechTask.Infrastructure.Services
             task.TrackerFirstName = dto.TrackerFirstName ?? task.TrackerFirstName;
             task.TrackerLastName = dto.TrackerLastName ?? task.TrackerLastName;
             task.UserId = dto.UserId ?? task.UserId;
+            _dbLogService.LogOnUpdateOfAnEntity(task);
 
             return await _context.SaveChangesAsync();
         }
@@ -177,6 +178,8 @@ namespace TechTask.Infrastructure.Services
         {
             task.UserId = null;
             task.Status = status;
+            _dbLogService.LogOnEntityDelete(task);
+
             return await _context.SaveChangesAsync();
         }
     }

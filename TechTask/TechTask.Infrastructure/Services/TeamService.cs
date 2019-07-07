@@ -57,6 +57,8 @@ namespace TechTask.Infrastructure.Services
         public async Task<int> RemoveUserFromTeam(User user)
         {
             user.TeamId = null;
+            _dbLogService.LogOnEntityDelete(user);
+
             return await _context.SaveChangesAsync();
         }
 
@@ -77,6 +79,8 @@ namespace TechTask.Infrastructure.Services
         public async void UpdateTeamName(Team team, string name)
         {
             team.Name = name;
+            _dbLogService.LogOnUpdateOfAnEntity(team);
+
             await _context.SaveChangesAsync();
         }
     }

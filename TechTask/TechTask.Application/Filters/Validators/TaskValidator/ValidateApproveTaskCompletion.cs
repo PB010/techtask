@@ -1,16 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.Linq;
 using TechTask.Persistence.Context;
 using TechTask.Persistence.Models.Task.Enums;
 
-namespace TechTask.Application.Filters.LogValidator
+namespace TechTask.Application.Filters.Validators.TaskValidator
 {
-    public class ValidateAddLogToTask : ActionFilterAttribute
+    public class ValidateApproveTaskCompletion : ActionFilterAttribute
     {
         private readonly AppDbContext _appDbContext;
 
-        public ValidateAddLogToTask(AppDbContext appDbContext)
+        public ValidateApproveTaskCompletion(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
         }
@@ -22,13 +22,11 @@ namespace TechTask.Application.Filters.LogValidator
             if (taskId != null)
             {
                 var taskIdAsInt = int.Parse(taskId.ToString());
-                var taskCheck = _appDbContext.Tasks
-                    .Single(t => t.Id == taskIdAsInt);
+                var taskIdCheck = _appDbContext.Tasks.Single(t => t.Id == taskIdAsInt);
 
-                if (taskCheck.Status == TaskStatus.Done ||
-                    taskCheck.Status == TaskStatus.Pending)
+                if (taskIdCheck.Status != TaskStatus.Pending)
                 {
-                    context.ModelState.AddModelError("taskId", "You cannot do logging on a finished task.");
+                    context.ModelState.AddModelError("status", "You can change the approval status of a pending task only.");
                     var httpResult = new BadRequestObjectResult(context.ModelState) { StatusCode = 400 };
                     context.Result = httpResult;
                     return;

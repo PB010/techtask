@@ -13,10 +13,12 @@ namespace TechTask.Infrastructure.Services
     public class UserService : IUserService
     {
         private readonly AppDbContext _context;
+        private readonly IDbLogService _dbLogService;
 
-        public UserService(AppDbContext context)
+        public UserService(AppDbContext context, IDbLogService dbLogService)
         {
             _context = context;
+            _dbLogService = dbLogService;
         }
 
         public async Task<User> GetUserAsync(Guid id)
@@ -55,13 +57,16 @@ namespace TechTask.Infrastructure.Services
         public async Task<int> AddUser(User user)  
         {
             _context.Users.Add(user);
-            return await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+
+            return await _dbLogService.LogOnCreationOfEntity(user);
         }
 
         public async Task<int> UpdateUser(User user, UserForUpdateDto dto)
         {
             user.Role = dto.Role ?? user.Role;
             user.TeamId = dto.TeamId ?? user.TeamId;
+            _dbLogService.LogOnUpdateOfAnEntity(user);
 
             return await _context.SaveChangesAsync();
         }

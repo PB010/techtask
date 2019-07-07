@@ -5,7 +5,7 @@ using System.Linq;
 using TechTask.Application.TeamTasks.Models;
 using TechTask.Persistence.Context;
 
-namespace TechTask.Application.Filters.TaskValidator
+namespace TechTask.Application.Filters.Validators.TaskValidator
 {
     public class ValidateTaskForCreationDto : ActionFilterAttribute
     {

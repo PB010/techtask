@@ -4,13 +4,13 @@ using System.Linq;
 using TechTask.Persistence.Context;
 using TechTask.Persistence.Models.Task.Enums;
 
-namespace TechTask.Application.Filters.TaskValidator
+namespace TechTask.Application.Filters.Validators.CommentValidator
 {
-    public class ValidateTaskForUpdate : ActionFilterAttribute
+    public class ValidateAddComment : ActionFilterAttribute
     {
         private readonly AppDbContext _appDbContext;
 
-        public ValidateTaskForUpdate(AppDbContext appDbContext)
+        public ValidateAddComment(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
         }
@@ -22,13 +22,14 @@ namespace TechTask.Application.Filters.TaskValidator
             if (taskId != null)
             {
                 var taskIdAsInt = int.Parse(taskId.ToString());
-                var taskIdCheck = _appDbContext.Tasks.Single(t => t.Id == taskIdAsInt);
+                var taskCheck = _appDbContext.Tasks
+                    .Single(t => t.Id == taskIdAsInt);
 
-                if (taskIdCheck.Status == TaskStatus.Done ||
-                    taskIdCheck.Status == TaskStatus.Pending ||
-                    taskIdCheck.Status == TaskStatus.Canceled)
+                if (taskCheck.Status == TaskStatus.Done ||
+                    taskCheck.Status == TaskStatus.Pending ||
+                    taskCheck.Status == TaskStatus.Canceled)
                 {
-                    context.ModelState.AddModelError("status", "You can only edit tasks in progress.");
+                    context.ModelState.AddModelError("taskId", "You cannot comment on a finished/cancelled task.");
                     var httpResult = new BadRequestObjectResult(context.ModelState) { StatusCode = 400 };
                     context.Result = httpResult;
                     return;

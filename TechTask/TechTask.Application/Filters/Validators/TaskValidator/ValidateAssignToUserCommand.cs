@@ -6,49 +6,51 @@ using TechTask.Application.TeamTasks.Commands;
 using TechTask.Persistence.Context;
 using TechTask.Persistence.Models.Task.Enums;
 
-namespace TechTask.Application.Filters.TaskValidator
+namespace TechTask.Application.Filters.Validators.TaskValidator
 {
-    public class ValidateRemoveUserFromTaskCommand : ActionFilterAttribute
+    public class ValidateAssignToUserCommand : ActionFilterAttribute
     {
         private readonly AppDbContext _appDbContext;
 
-        public ValidateRemoveUserFromTaskCommand(AppDbContext appDbContext)
+        public ValidateAssignToUserCommand(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
         }
 
-
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            var assignToTaskCommand = context.ActionArguments["command"] as RemoveUserFromTaskCommand;
+            var assignToTaskCommand = context.ActionArguments["command"] as AssignUserToTaskCommand;
+            var teamId = context.RouteData.Values["teamId"];
             var taskId = context.RouteData.Values["taskId"];
 
-            if (assignToTaskCommand.TaskForRemovalDto.UserId != null)
+            if (assignToTaskCommand.UserId != null)
             {
-                var taskIdAsInt = int.Parse(taskId.ToString());
-                var taskCheck = _appDbContext.Tasks
-                    .Include(t => t.User)
-                    .Single(t => t.Id == taskIdAsInt).UserId.HasValue;
+                var teamIdAsInt = int.Parse(teamId.ToString());
+                var usersTeamCheck = _appDbContext.Teams
+                    .Include(t => t.Users)
+                    .Single(t => t.Id == teamIdAsInt).Users.Any(u => u.Id == assignToTaskCommand.UserId);
 
-                if (!taskCheck)
+                if (!usersTeamCheck)
                 {
-                    context.ModelState.AddModelError("userId", "This task doesn't have anyone assigned to it.");
+                    context.ModelState.AddModelError("userId", "This user is not a part of this team.");
                     var httpResult = new BadRequestObjectResult(context.ModelState) { StatusCode = 400 };
                     context.Result = httpResult;
                     return;
                 }
 
+                var taskIdAsInt = int.Parse(taskId.ToString());
                 var taskCompletionCheck = _appDbContext.Tasks.Single(t => t.Id == taskIdAsInt);
 
                 if (taskCompletionCheck.Status == TaskStatus.Done ||
                     taskCompletionCheck.Status == TaskStatus.Pending)
                 {
-                    context.ModelState.AddModelError("userId", "You cannot remove someone from a finished task.");
+                    context.ModelState.AddModelError("userId", "You cannot assign someone to a finished task.");
                     var httpResult = new BadRequestObjectResult(context.ModelState) { StatusCode = 400 };
                     context.Result = httpResult;
                     return;
                 }
             }
+
             base.OnActionExecuting(context);
         }
     }

@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TechTask.Application.Filters.GeneralValidator;
-using TechTask.Application.Filters.TaskValidator;
+using TechTask.Application.Filters.Validators.GeneralValidator;
+using TechTask.Application.Filters.Validators.TaskValidator;
 using TechTask.Application.TeamTasks.Commands;
 using TechTask.Application.TeamTasks.Models;
 using TechTask.Application.TeamTasks.Queries;
@@ -59,11 +59,15 @@ namespace TechTask.API.Controllers
         [HttpDelete("{taskId}")]
         [ServiceFilter(typeof(ValidateRemoveUserFromTaskCommand))]
         public async Task<Unit> RemoveUserFromTask([FromRoute] int teamId,
-            [FromRoute] int taskId, [FromBody] RemoveUserFromTaskCommand command)
+            [FromRoute] int taskId, [FromBody] TaskForRemovalDto dto)
         {
-            command.TaskId = taskId;
+            
 
-            return await _mediator.Send(command);
+            return await _mediator.Send(new RemoveUserFromTaskCommand
+            {
+                TaskId = taskId,
+                TaskForRemovalDto = dto
+            });
         }
 
         [HttpPatch("{taskId}")]

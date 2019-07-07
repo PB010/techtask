@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.Linq;
 using TechTask.Application.Users.Models;
 using TechTask.Persistence.Context;
 
-namespace TechTask.Application.Filters.UserValidator
+namespace TechTask.Application.Filters.Validators.UserValidator
 {
     public class ValidateUserForUpdate : ActionFilterAttribute
     {
