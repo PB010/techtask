@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TechTask.Application.DbLogs.Models;
 using TechTask.Application.Interfaces;
 using TechTask.Persistence.Context;
 using TechTask.Persistence.Models.Logs;
@@ -16,7 +19,24 @@ namespace TechTask.Infrastructure.Services
         public DbLogService(AppDbContext context)
         {
             _context = context;
-        }   
+        }
+
+        public async Task<IEnumerable<UpdateLog>> GetAllLogs(DbLogQueryParameters query)
+        {
+            var listOfLogs = await _context.UpdateLogs.ToListAsync();
+
+            if (query.Name != null)
+                listOfLogs = listOfLogs.Where(l => l.Name.ToLowerInvariant()
+                    .Contains(query.Name)).ToList();
+
+
+            if (query.CreatedAt != null)
+                listOfLogs = listOfLogs.Where(l => l.CreatedAt.ToString("dd MMM yy")
+                    .ToLowerInvariant()
+                    .Contains(query.CreatedAt)).ToList();
+
+            return listOfLogs;
+        }
 
         public async Task<int> LogOnCreationOfEntity(object entity)
         {
