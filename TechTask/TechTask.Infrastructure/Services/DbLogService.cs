@@ -21,7 +21,7 @@ namespace TechTask.Infrastructure.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<UpdateLog>> GetAllLogs(DbLogQueryParameters query)
+        public async Task<IEnumerable<UpdateLog>> GetAllLogsAsync(DbLogQueryParameters query)
         {
             var listOfLogs = await _context.UpdateLogs.ToListAsync();
 
@@ -36,6 +36,11 @@ namespace TechTask.Infrastructure.Services
                     .Contains(query.CreatedAt)).ToList();
 
             return listOfLogs;
+        }
+
+        public async Task<UpdateLog> GetLogAsync(int id)
+        {
+            return await _context.UpdateLogs.SingleOrDefaultAsync(l => l.Id == id);
         }
 
         public async Task<int> LogOnCreationOfEntity(object entity)

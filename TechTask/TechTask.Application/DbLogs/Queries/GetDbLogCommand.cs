@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using System.Collections.Generic;
 using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,18 +8,18 @@ using TechTask.Application.Interfaces;
 
 namespace TechTask.Application.DbLogs.Queries
 {
-    public class GetAllDbLogsCommand : IRequest<IEnumerable<DbLogDetailsDto>>
+    public class GetDbLogCommand : IRequest<DbLogDetailsDto>
     {
-        public DbLogQueryParameters DbLogQueryParameters { get; set; }
+        public int LogId { get; set; }  
     }
 
-    public class GetAllDbLogsHandler : IRequestHandler<GetAllDbLogsCommand, IEnumerable<DbLogDetailsDto>>
+    public class GetDbLogCommandHandler : IRequestHandler<GetDbLogCommand, DbLogDetailsDto>
     {
         private readonly IDbLogService _dbLogService;
         private readonly ITokenAuthenticationService _authService;
         private readonly IMapper _mapper;
 
-        public GetAllDbLogsHandler(IDbLogService dbLogService, ITokenAuthenticationService authService,
+        public GetDbLogCommandHandler(IDbLogService dbLogService, ITokenAuthenticationService authService,
             IMapper mapper)
         {
             _dbLogService = dbLogService;
@@ -28,15 +27,14 @@ namespace TechTask.Application.DbLogs.Queries
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<DbLogDetailsDto>> Handle(GetAllDbLogsCommand request,
-            CancellationToken cancellationToken)
+        public async Task<DbLogDetailsDto> Handle(GetDbLogCommand request, CancellationToken cancellationToken)
         {
             if (!_authService.UserRoleAdmin())
                 throw new AuthenticationException();
 
-            var logs = await _dbLogService.GetAllLogsAsync(request.DbLogQueryParameters);
+            var logFromDb = await _dbLogService.GetLogAsync(request.LogId);
 
-            return _mapper.Map<IEnumerable<DbLogDetailsDto>>(logs);
+            return _mapper.Map<DbLogDetailsDto>(logFromDb);
         }
     }
 }

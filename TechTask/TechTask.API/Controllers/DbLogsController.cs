@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TechTask.Application.DbLogs.Models;
 using TechTask.Application.DbLogs.Queries;
+using TechTask.Application.Filters.Validators.DbLogValidator;
 
 namespace TechTask.API.Controllers
 {
@@ -22,6 +23,13 @@ namespace TechTask.API.Controllers
             DbLogQueryParameters query)
         {
             return await _mediator.Send(new GetAllDbLogsCommand {DbLogQueryParameters = query});
+        }
+
+        [HttpGet("{logId}")]
+        [ServiceFilter(typeof(ValidateGetDbLog))]
+        public async Task<DbLogDetailsDto> GetLog([FromRoute] int logId)
+        {
+            return await _mediator.Send(new GetDbLogCommand {LogId = logId});
         }
     }
 }

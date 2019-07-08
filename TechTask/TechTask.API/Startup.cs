@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Text;
 using TechTask.Application.Filters.Email;
 using TechTask.Application.Filters.Validators.CommentValidator;
+using TechTask.Application.Filters.Validators.DbLogValidator;
 using TechTask.Application.Filters.Validators.GeneralValidator;
 using TechTask.Application.Filters.Validators.LogValidator;
 using TechTask.Application.Filters.Validators.TaskValidator;
@@ -88,6 +89,7 @@ namespace TechTask.API
             services.AddScoped<ValidateUserForUpdate>();
             services.AddScoped<EmailSenderService>();
             services.AddScoped<ValidateAddComment>();
+            services.AddScoped<ValidateGetDbLog>();
 
             services.AddHttpContextAccessor();
             services.AddMediatR(typeof(RegisterUserCommand));
