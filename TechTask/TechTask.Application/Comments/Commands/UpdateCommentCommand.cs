@@ -33,9 +33,6 @@ namespace TechTask.Application.Comments.Commands
 
         public async Task<CommentDetailsDto> Handle(UpdateCommentCommand request, CancellationToken cancellationToken)
         {
-            //var validator = new UpdateCommentValidator();
-            //validator.Validate(selector => request.CommentForUpdateDto);
-            
             var taskFromDb = await _taskService.GetTaskWithoutEagerLoadingAsync(request.CommentForUpdateDto.TaskId);
 
             if (!_authService.UserRoleAdminOrUserIdMatches(taskFromDb.UserId))
