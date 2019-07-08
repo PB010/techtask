@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using NSubstitute;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTask.Application.DbLogs.Models;
@@ -9,13 +10,13 @@ using Xunit;
 
 namespace TechTask.Test.DbLogs.Queries
 {
-    public class GetDbLogCommandTest
+    public class GetAllDbLogsCommandTest
     {
         private readonly IDbLogService _dbLogService;
         private readonly ITokenAuthenticationService _authService;
         private readonly IMapper _mapper;
 
-        public GetDbLogCommandTest()
+        public GetAllDbLogsCommandTest()
         {
             _dbLogService = Substitute.For<IDbLogService>();
             _authService = Substitute.For<ITokenAuthenticationService>();
@@ -23,17 +24,17 @@ namespace TechTask.Test.DbLogs.Queries
         }
 
         [Fact]
-        public async Task GetLogCommand_QueryTheDb_GetSpecificLog()
+        public async Task GetAllLogsCommand_QueryTheDb_GetAllLogs()
         {
-            var testHandler = new GetDbLogCommandHandler(_dbLogService, _authService, _mapper);
-            var testCommand = new GetDbLogCommand();
-            var dto = new DbLogDetailsDto();
+            var testHandler = new GetAllDbLogsHandler(_dbLogService, _authService, _mapper);
+            var testCommand = new GetAllDbLogsCommand();
+            var dto = new List<DbLogDetailsDto>();
 
             _authService.UserRoleAdmin().Returns(true);
             await testHandler.Handle(testCommand, new CancellationToken());
 
-            var testLogFromDb =  _dbLogService.Received(1).GetLogAsync(testCommand.LogId);
-            _mapper.Map<DbLogDetailsDto>(testLogFromDb).Returns(dto);
+            var testLogsFromDb = await _dbLogService.Received(1).GetAllLogsAsync(testCommand.DbLogQueryParameters);
+            _mapper.Map<List<DbLogDetailsDto>>(testLogsFromDb).Returns(dto);
         }
     }
 }
