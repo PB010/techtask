@@ -26,9 +26,9 @@ namespace TechTask.Test.DbLogs.Queries
         [Fact]
         public async Task GetAllLogsCommand_QueryTheDb_GetAllLogs()
         {
-            var testHandler = new GetAllDbLogsHandler(_dbLogService, _authService, _mapper);
-            var testCommand = new GetAllDbLogsCommand();
             var dto = new List<DbLogDetailsDto>();
+            var testCommand = new GetAllDbLogsCommand();
+            var testHandler = new GetAllDbLogsHandler(_dbLogService, _authService, _mapper);
 
             _authService.UserRoleAdmin().Returns(true);
             await testHandler.Handle(testCommand, new CancellationToken());

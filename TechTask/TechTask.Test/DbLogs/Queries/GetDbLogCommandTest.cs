@@ -25,9 +25,9 @@ namespace TechTask.Test.DbLogs.Queries
         [Fact]
         public async Task GetLogCommand_QueryTheDb_GetSpecificLog()
         {
-            var testHandler = new GetDbLogCommandHandler(_dbLogService, _authService, _mapper);
-            var testCommand = new GetDbLogCommand();
             var dto = new DbLogDetailsDto();
+            var testCommand = new GetDbLogCommand();
+            var testHandler = new GetDbLogCommandHandler(_dbLogService, _authService, _mapper);
 
             _authService.UserRoleAdmin().Returns(true);
             await testHandler.Handle(testCommand, new CancellationToken());
