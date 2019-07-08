@@ -65,7 +65,8 @@ namespace TechTask.Application.Logs.Commands
         public AddLogToTaskValidator()
         {
             RuleFor(x => x.HoursSpent).NotEmpty();
-            RuleFor(x => x.Description).NotEmpty().WithMessage("Please specify the work you've done on this request.");
+            RuleFor(x => x.Description).NotEmpty()
+                .WithMessage("Please specify the work you've done on this request.");
             RuleFor(x => x.TaskStatus).NotEmpty();
         }
     }

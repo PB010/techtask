@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 using TechTask.Persistence.Models.Users;
 
 namespace TechTask.Persistence.EntityConfiguration
@@ -18,7 +17,7 @@ namespace TechTask.Persistence.EntityConfiguration
                 {
                     Id = 1,
                     Name = "Alpha",
-                    HoursOfWorkOnAllTasks = 0
+                    HoursOfWorkOnAllTasks = 1
                 },
                 new Team
                 {

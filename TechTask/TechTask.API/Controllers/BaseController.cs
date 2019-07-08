@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using TechTask.Application.Filters.Email;
 
 namespace TechTask.API.Controllers
@@ -12,7 +11,7 @@ namespace TechTask.API.Controllers
 
         public BaseController(IMediator mediator)
         {
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _mediator = mediator;
         }
     }
 }
