@@ -36,7 +36,7 @@ namespace TechTask.Infrastructure.Services
             _context.Comments.Add(comment);
             await _context.SaveChangesAsync();
             
-            return await _dbLogService.LogOnCreationOfEntity(comment);
+            return await _dbLogService.LogOnCreationOfEntityAsync(comment);
         }
 
         public async Task<int> RemoveCommentAsync(int commentId)

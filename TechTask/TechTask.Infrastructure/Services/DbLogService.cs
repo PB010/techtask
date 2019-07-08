@@ -43,10 +43,10 @@ namespace TechTask.Infrastructure.Services
             return await _context.UpdateLogs.SingleOrDefaultAsync(l => l.Id == id);
         }
 
-        public async Task<int> LogOnCreationOfEntity(object entity)
+        public async Task<int> LogOnCreationOfEntityAsync(object entity)
         {
             var logToAdd = new UpdateLog {CreatedAt = DateTime.Now};
-
+                
             switch (entity)
             {
                 case User user:

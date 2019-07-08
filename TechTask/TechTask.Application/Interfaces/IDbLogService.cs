@@ -9,7 +9,7 @@ namespace TechTask.Application.Interfaces
     {
         Task<IEnumerable<UpdateLog>> GetAllLogsAsync(DbLogQueryParameters query);
         Task<UpdateLog> GetLogAsync(int id);
-        Task<int> LogOnCreationOfEntity(object entity); 
+        Task<int> LogOnCreationOfEntityAsync(object entity); 
         void LogOnUpdateOfAnEntity(object oldEntity);
         void LogOnEntityDelete(object oldEntity);
     }

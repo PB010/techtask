@@ -73,7 +73,7 @@ namespace TechTask.Infrastructure.Services
             _context.Teams.Add(team);
             await _context.SaveChangesAsync();
 
-            return await _dbLogService.LogOnCreationOfEntity(team);
+            return await _dbLogService.LogOnCreationOfEntityAsync(team);
         }
 
         public async void UpdateTeamName(Team team, string name)

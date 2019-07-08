@@ -71,7 +71,7 @@ namespace TechTask.Infrastructure.Services
         {
             _context.Tasks.Add(task);
             await _context.SaveChangesAsync();
-            return await _dbLogService.LogOnCreationOfEntity(task);
+            return await _dbLogService.LogOnCreationOfEntityAsync(task);
         }
 
         public async Task<int> UpdateTask(Tasks task, TaskForUpdateDto dto)

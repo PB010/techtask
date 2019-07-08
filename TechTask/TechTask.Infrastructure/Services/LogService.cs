@@ -35,7 +35,7 @@ namespace TechTask.Infrastructure.Services
             _context.Add(log);
             await _context.SaveChangesAsync();
 
-            return await _dbLogService.LogOnCreationOfEntity(log);
+            return await _dbLogService.LogOnCreationOfEntityAsync(log);
         }
     }
 }

@@ -59,7 +59,7 @@ namespace TechTask.Infrastructure.Services
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return await _dbLogService.LogOnCreationOfEntity(user);
+            return await _dbLogService.LogOnCreationOfEntityAsync(user);
         }
 
         public async Task<int> UpdateUser(User user, UserForUpdateDto dto)
