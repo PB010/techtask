@@ -8,7 +8,7 @@ using TechTask.Application.DbLogs.Queries;
 using TechTask.Application.Interfaces;
 using Xunit;
 
-namespace TechTask.Test.DbLogs.Queries
+namespace TechTask.Test.DbLogsTest.Queries
 {
     public class GetAllDbLogsCommandTest
     {
