@@ -13,7 +13,7 @@ namespace TechTask.Application.Users.Mapping
             CreateMap<User, UserForLoginDto>();
 
             CreateMap<UserForRegistrationDto, User>().ForMember(dest => dest.Id,
-                opt => opt.MapFrom(src => new Guid()))
+                    opt => opt.MapFrom(src => new Guid()))
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(
                     src => Roles.User));
 

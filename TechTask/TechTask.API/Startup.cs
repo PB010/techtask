@@ -77,6 +77,7 @@ namespace TechTask.API
             services.AddScoped<ILogService, LogService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IDbLogService, DbLogService>();
+            services.AddScoped<IFirebaseService, FirebaseService>();
 
             services.AddScoped<ValidateRouteAttributes>();
             services.AddScoped<ValidateTaskForCreationDto>();
@@ -110,7 +111,6 @@ namespace TechTask.API
                 app.UseHsts();
             }
 
-            
             app.UseHttpsRedirection();
             app.UseMvc();
         }

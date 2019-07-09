@@ -38,10 +38,10 @@ namespace TechTask.Application.Users.Commands
 
     public class UserForLoginValidator : AbstractValidator<UserForLoginDto>
     {
-        public UserForLoginValidator(IUserService service)
+        public UserForLoginValidator(ITokenAuthenticationService service)
         {
             RuleFor(x => new {x.Email, x.Password})
-                .Must(m => service.UserExists(m.Email, m.Password)).WithErrorCode("404")
+                .Must(m => service.UserPasswordCheck(m.Email, m.Password)).WithErrorCode("404")
                 .WithMessage("Invalid email or password, please try again.");
         }
     }

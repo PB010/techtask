@@ -13,5 +13,7 @@ namespace TechTask.Application.Interfaces
         bool UserRoleAdminOrTeamIdMatches(int teamId);
         bool UserRoleAdminOrUserIdMatches(Guid? userId);
         string GetUserIdClaimValue();
+        bool UserPasswordCheck(string email, string password);
+        string GenerateHashedPassword(string password);
     }
 }

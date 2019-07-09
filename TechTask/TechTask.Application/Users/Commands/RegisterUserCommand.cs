@@ -19,21 +19,28 @@ namespace TechTask.Application.Users.Commands
     public class RegisterCommandHandler : IRequestHandler<RegisterUserCommand, UserForLoginDto>
     {
         private readonly IUserService _service;
+        private readonly ITokenAuthenticationService _authService;
         private readonly IMapper _mapper;
 
-        public RegisterCommandHandler(IUserService userService, IMapper mapper)
+        public RegisterCommandHandler(IUserService userService, ITokenAuthenticationService authService,
+            IMapper mapper)
         {
             _service = userService;
+            _authService = authService;
             _mapper = mapper;
         }
 
         public async Task<UserForLoginDto> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
             var user = _mapper.Map<User>(request.UserForRegistrationDto);
+            user.Password = _authService.GenerateHashedPassword(request.UserForRegistrationDto.Password);
 
             await _service.AddUser(user);
 
-            return _mapper.Map<UserForLoginDto>(user);
+            var userDto = _mapper.Map<UserForLoginDto>(user);
+            userDto.Password = request.UserForRegistrationDto.Password;
+
+            return userDto;
         }
     }
 

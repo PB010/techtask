@@ -5,6 +5,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using TechTask.Application.Interfaces;
 using TechTask.Application.Users.Models;
@@ -33,9 +34,8 @@ namespace TechTask.Infrastructure.Services
 
         public string GenerateToken(UserForLoginDto user)
         {
-            var claim = new Claim[4];   
-            var userRole = _context.Users.Single(u => u.Email == user.Email &&
-                                                      u.Password == user.Password);
+            var claim = new Claim[4];
+            var userRole = _context.Users.Single(u => u.Email == user.Email);
 
             switch (userRole.Role)
             {
@@ -105,6 +105,31 @@ namespace TechTask.Infrastructure.Services
         public string GetUserIdClaimValue()
         {
             return _accessor.HttpContext.User.Claims.Single(c => c.Type == "UserId").Value;
+        }
+
+        public bool UserPasswordCheck(string email, string password)
+        {
+            var userPassword = _context.Users.Single(u => u.Email == email).Password;
+            var dbHashBytesPassword = Convert.FromBase64String(userPassword);
+
+            var salt = new byte[16];
+            Array.Copy(dbHashBytesPassword, 0, salt, 0, 16);
+
+            var inputHashBytesPassword = new Rfc2898DeriveBytes(password, salt, 10000);
+            var hashFromInput = inputHashBytesPassword.GetBytes(20);
+
+            for (var i = 0; i < 20; i++)
+                if (dbHashBytesPassword[i + 16] != hashFromInput[i])
+                    return false;
+
+            return true;
+        }
+
+        public string GenerateHashedPassword(string password)
+        {
+            var securePassword = new PasswordHasher(password);
+
+            return securePassword.HashedPassword;
         }
     }
 }
