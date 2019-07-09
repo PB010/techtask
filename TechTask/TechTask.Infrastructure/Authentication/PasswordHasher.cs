@@ -38,5 +38,22 @@ namespace TechTask.Infrastructure.Authentication
 
             return hashBytes;
         }
+
+        public static bool DecryptPassword(string dbPassword, string loginPassword)
+        {
+            var dbHashBytesPassword = Convert.FromBase64String(dbPassword);
+
+            var salt = new byte[16];
+            Array.Copy(dbHashBytesPassword, 0, salt, 0, 16);
+
+            var inputHashBytesPassword = new Rfc2898DeriveBytes(loginPassword, salt, 10000);
+            var hashFromInput = inputHashBytesPassword.GetBytes(20);
+
+            for (var i = 0; i < 20; i++)
+                if (dbHashBytesPassword[i + 16] != hashFromInput[i])
+                    return false;
+
+            return true;
+        }
     }
 }

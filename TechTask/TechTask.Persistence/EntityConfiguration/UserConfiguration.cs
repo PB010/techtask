@@ -26,7 +26,7 @@ namespace TechTask.Persistence.EntityConfiguration
                     FirstName = "Will",
                     LastName = "Stevens",
                     Email = "will.s@tech.com",
-                    Password = "Will123",
+                    Password = "XwnePnyMST/z0kzsHhlzBpX+Wo3H+HMDHI221qWUJKe1Towf",
                     Role = Roles.Admin,
                     TeamId = 1
                 },
@@ -37,7 +37,7 @@ namespace TechTask.Persistence.EntityConfiguration
                     FirstName = "John",
                     LastName = "Smith",
                     Email = "john.s@tech.com",
-                    Password = "John123",
+                    Password = "7QvxqokZvh+C79cWRlso+HdjtqHc3OZfRpHNrElEFhLyv8iP",
                     Role = Roles.User
                 },
                 new User
@@ -47,7 +47,7 @@ namespace TechTask.Persistence.EntityConfiguration
                     FirstName = "Jane",
                     LastName = "Williams",
                     Email = "jane.w@tech.com",
-                    Password = "Jane123",
+                    Password = "6wUwTkF0Po8dpEYJdPjV6aq2NyR1NW7Dxi0E7zHvVJncUUhF",
                     Role = Roles.Admin,
                     TeamId = 2
                 },
@@ -58,7 +58,7 @@ namespace TechTask.Persistence.EntityConfiguration
                     FirstName = "Anthony",
                     LastName = "Russell",
                     Email = "anthony.r@tech.com",
-                    Password = "Anthony123",
+                    Password = "gUFuNWS8RcSqnTauVupMn2YDyUB5yjapA7pJjAn+fdwGOWXY",
                     Role = Roles.User
                 });
         }

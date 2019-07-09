@@ -19,15 +19,13 @@ namespace TechTask.Application.Users.Queries
         private readonly IUserService _userService;
         private readonly IMapper _mapper;   
         private readonly ITokenAuthenticationService _authService;
-        private readonly IFirebaseService _firebase;
 
         public GetAllUsersHandler(IUserService userService,
-            IMapper mapper, ITokenAuthenticationService authService, IFirebaseService firebase)
+            IMapper mapper, ITokenAuthenticationService authService)
         {
             _userService = userService;
             _mapper = mapper;
             _authService = authService;
-            _firebase = firebase;
         }
 
         public async Task<IEnumerable<UserDetailsDto>> Handle(GetAllUsersQuery request,
@@ -36,8 +34,6 @@ namespace TechTask.Application.Users.Queries
             if (!_authService.UserRoleAdmin())
                 throw new AuthenticationException("You don't have permission to do that.");
 
-            _firebase.Check();
-            
             var users = await _userService.GetAllUsersAsync();
 
             return users.Select(_mapper.Map<UserDetailsDto>);

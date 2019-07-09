@@ -5,7 +5,6 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using TechTask.Application.Interfaces;
 using TechTask.Application.Users.Models;
@@ -112,17 +111,7 @@ namespace TechTask.Infrastructure.Services
             var userPassword = _context.Users.Single(u => u.Email == email).Password;
             var dbHashBytesPassword = Convert.FromBase64String(userPassword);
 
-            var salt = new byte[16];
-            Array.Copy(dbHashBytesPassword, 0, salt, 0, 16);
-
-            var inputHashBytesPassword = new Rfc2898DeriveBytes(password, salt, 10000);
-            var hashFromInput = inputHashBytesPassword.GetBytes(20);
-
-            for (var i = 0; i < 20; i++)
-                if (dbHashBytesPassword[i + 16] != hashFromInput[i])
-                    return false;
-
-            return true;
+            return PasswordHasher.DecryptPassword(userPassword, password);
         }
 
         public string GenerateHashedPassword(string password)
